@@ -1,0 +1,696 @@
+<title>regexleaderboard — preview run</title>
+<style>
+  :root {
+    --ground: #F5F7F8;
+    --surface: #FFFFFF;
+    --surface-2: #ECEFF1;
+    --ink: #101619;
+    --ink-2: #3B474D;
+    --muted: #66757C;
+    --rule: #D6DDE0;
+    --rule-strong: #B4C0C4;
+    --accent: #0B5F63;
+    --accent-soft: #D3E6E6;
+    --warn: #A34211;
+    --warn-soft: #F2DFD3;
+    --good: #2C6B45;
+    --dead: #8B9298;
+
+    --f-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --f-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    --step-0: 0.9375rem;
+    --step-1: 1.125rem;
+    --step-2: 1.5rem;
+    --step-3: 2.25rem;
+    --step-4: 3.25rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0C1113;
+      --surface: #141B1E;
+      --surface-2: #1D262A;
+      --ink: #E8EDEE;
+      --ink-2: #B4C0C4;
+      --muted: #87979D;
+      --rule: #263136;
+      --rule-strong: #3A4A50;
+      --accent: #5EC8C4;
+      --accent-soft: #17383A;
+      --warn: #E8915C;
+      --warn-soft: #3A2517;
+      --good: #7CC79A;
+      --dead: #626C71;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0C1113;
+    --surface: #141B1E;
+    --surface-2: #1D262A;
+    --ink: #E8EDEE;
+    --ink-2: #B4C0C4;
+    --muted: #87979D;
+    --rule: #263136;
+    --rule-strong: #3A4A50;
+    --accent: #5EC8C4;
+    --accent-soft: #17383A;
+    --warn: #E8915C;
+    --warn-soft: #3A2517;
+    --good: #7CC79A;
+    --dead: #626C71;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--f-sans);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0 1.5rem 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 60rem; margin: 0 auto; }
+  .flow { display: flex; flex-direction: column; }
+
+  /* ---------- masthead ---------- */
+  header.masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 4.5rem 0 2.25rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .eyebrow {
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+  h1 {
+    font-family: var(--f-mono);
+    font-size: var(--step-4);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+    margin: 0;
+    text-wrap: balance;
+  }
+  h1 .slash { color: var(--muted); font-weight: 400; }
+  .standfirst {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 46ch;
+    margin: 0;
+    text-wrap: pretty;
+  }
+  .runbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 2rem;
+    font-family: var(--f-mono);
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+  .runbar b { color: var(--ink-2); font-weight: 500; }
+
+  /* ---------- preview warning ---------- */
+  .caveat {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 1rem;
+    margin-top: 2.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn);
+  }
+  .caveat-tag {
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--warn);
+    padding-top: 0.15rem;
+  }
+  .caveat p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+  .caveat p + p { margin-top: 0.6rem; }
+
+  /* ---------- sections ---------- */
+  section { padding-top: 3.5rem; }
+  h2 {
+    font-family: var(--f-mono);
+    font-size: var(--step-2);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    margin: 0 0 0.4rem;
+    text-wrap: balance;
+  }
+  .section-note {
+    color: var(--muted);
+    margin: 0 0 1.75rem;
+    max-width: 64ch;
+  }
+  h3 {
+    font-family: var(--f-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.35rem;
+  }
+
+  /* ---------- the gap chart: the thesis ---------- */
+  .gap-list { display: flex; flex-direction: column; gap: 1.4rem; }
+  .gap-row {
+    display: grid;
+    grid-template-columns: 13rem 1fr;
+    gap: 0 1.25rem;
+    align-items: center;
+  }
+  .gap-name {
+    font-family: var(--f-mono);
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+  }
+  .gap-track {
+    position: relative;
+    height: 2.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+  }
+  .gap-pass, .gap-usable {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+  }
+  .gap-pass {
+    background: repeating-linear-gradient(
+      -45deg, var(--warn-soft) 0 5px, transparent 5px 10px
+    );
+    border-right: 2px solid var(--warn);
+  }
+  .gap-usable { background: var(--accent); }
+  .gap-labels {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.25rem;
+    padding: 0 0.75rem;
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
+  }
+  .gap-dead {
+    display: flex;
+    align-items: center;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    color: var(--dead);
+    background: var(--surface-2);
+    border: 1px dashed var(--rule-strong);
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .legend span { display: flex; align-items: center; gap: 0.5rem; }
+  .swatch { width: 1.5rem; height: 0.75rem; display: inline-block; }
+  .swatch.usable { background: var(--accent); }
+  .swatch.lost {
+    background: repeating-linear-gradient(-45deg, var(--warn-soft) 0 5px, transparent 5px 10px);
+    border: 1px solid var(--warn);
+  }
+
+  /* ---------- table ---------- */
+  .table-scroll { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 46rem; }
+  caption { text-align: left; caption-side: bottom; padding-top: 0.85rem; font-size: 0.8125rem; color: var(--muted); }
+  th, td {
+    padding: 0.7rem 0.85rem;
+    text-align: right;
+    font-family: var(--f-mono);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid var(--rule);
+  }
+  th {
+    font-weight: 600;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--rule-strong);
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.headline { font-weight: 600; color: var(--accent); font-size: 0.875rem; }
+  td.model { color: var(--ink); overflow-wrap: anywhere; }
+  td.dim { color: var(--muted); }
+  tr.failed td { color: var(--dead); }
+  tr.failed td.model { color: var(--ink-2); }
+  .fail-pill {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    background: var(--warn-soft);
+    color: var(--warn);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .star { color: var(--warn); }
+
+  /* ---------- findings ---------- */
+  .findings { display: flex; flex-direction: column; gap: 0; }
+  .finding {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0 1rem;
+    padding: 1.75rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .finding:last-child { border-bottom: 1px solid var(--rule); }
+  .finding-num {
+    font-family: var(--f-mono);
+    font-size: 0.8125rem;
+    color: var(--accent);
+    padding-top: 0.15rem;
+  }
+  .finding p { margin: 0; color: var(--ink-2); max-width: 66ch; }
+  .finding p + p { margin-top: 0.7rem; }
+  code {
+    font-family: var(--f-mono);
+    font-size: 0.875em;
+    background: var(--surface-2);
+    padding: 0.1em 0.35em;
+    color: var(--ink);
+  }
+
+  .swing {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+    padding: 0.85rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    flex-wrap: wrap;
+  }
+  .swing .from { color: var(--muted); text-decoration: line-through; }
+  .swing .to { color: var(--good); font-weight: 600; }
+  .swing .why { color: var(--muted); }
+
+  /* ---------- controls ---------- */
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+  .control {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .control-name {
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .control-pattern {
+    font-family: var(--f-mono);
+    font-size: 1rem;
+    color: var(--ink);
+  }
+  .control-verdict {
+    font-family: var(--f-mono);
+    font-size: 0.8125rem;
+    color: var(--good);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .control-expect { font-size: 0.8125rem; color: var(--muted); }
+
+  /* ---------- cost ---------- */
+  .cost-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .cost-cell { background: var(--surface); padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  .cost-figure { font-family: var(--f-mono); font-size: var(--step-2); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .cost-label { font-size: 0.8125rem; color: var(--muted); }
+
+  footer {
+    margin-top: 4.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  a { color: var(--accent); }
+  a:focus-visible, :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 44rem) {
+    :root { --step-4: 2.25rem; --step-3: 1.75rem; --step-2: 1.25rem; }
+    .gap-row { grid-template-columns: 1fr; gap: 0.4rem; }
+    .caveat { grid-template-columns: 1fr; gap: 0.5rem; }
+    .finding { grid-template-columns: 1fr; gap: 0.4rem; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Foothills Labs · preview run</p>
+    <h1>regex<span class="slash">·</span>leaderboard</h1>
+    <p class="standfirst">
+      Natural language to regex, scored on whether the pattern passes,
+      whether it means the same thing as the reference, and whether it can
+      hang your server.
+    </p>
+    <div class="runbar">
+      <span><b>2026-08-11</b> run date</span>
+      <span><b>Re(gEx|DoS)Eval</b> corpus</span>
+      <span><b>regexbench 0.4.0</b> @05d7547b</span>
+      <span><b>k=1</b> · temp 0.0</span>
+    </div>
+  </header>
+
+  <div class="caveat">
+    <span class="caveat-tag">Preview</span>
+    <div>
+      <p>
+        This is a <b>10-task, 4-model pilot</b> run to validate the pipeline
+        and price the real sweep. Ten tasks carries a confidence interval of
+        roughly &plusmn;30 points on <code>pass@1</code> &mdash; <b>this is not a
+        ranking</b>, and the model ordering below should not be cited.
+      </p>
+      <p>
+        What it does establish: the collection, pinning, control and scoring
+        path all work end to end, and three findings that will survive to
+        the full run.
+      </p>
+    </div>
+  </div>
+
+  <section>
+    <h2>The gap is the point</h2>
+    <p class="section-note">
+      <code>usable@1</code> means correct <em>and</em> not ReDoS-vulnerable
+      <em>and</em> never proven different from the reference. Everything
+      between the two marks is a pattern that passes its tests and still
+      should not ship.
+    </p>
+
+    <div class="gap-list">
+      <div class="gap-row">
+        <div class="gap-name">openai/gpt-4o-mini</div>
+        <div class="gap-track">
+          <div class="gap-pass" style="width: 40%"></div>
+          <div class="gap-usable" style="width: 10%"></div>
+          <div class="gap-labels">
+            <span>pass 40.0%</span><span>usable 10.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-row">
+        <div class="gap-name">meta-llama/llama-3.1-8b</div>
+        <div class="gap-track">
+          <div class="gap-pass" style="width: 20%"></div>
+          <div class="gap-usable" style="width: 0%"></div>
+          <div class="gap-labels">
+            <span>pass 20.0%</span><span>usable 0.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-row">
+        <div class="gap-name">qwen/qwen-2.5-7b</div>
+        <div class="gap-track">
+          <div class="gap-pass" style="width: 10%"></div>
+          <div class="gap-usable" style="width: 0%"></div>
+          <div class="gap-labels">
+            <span>pass 10.0%</span><span>usable 0.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-row">
+        <div class="gap-name">mistralai/mistral-small-3.2</div>
+        <div class="gap-dead">no data &mdash; pinned provider rate-limited, 10/10 requests failed</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span><i class="swatch usable"></i> usable &mdash; correct and safe</span>
+      <span><i class="swatch lost"></i> passes tests, not usable</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Full table</h2>
+    <p class="section-note">
+      Sorted by <code>usable@1</code>. Every value recomputable from the raw
+      responses committed in <code>predictions/</code>.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Provider (pinned)</th>
+            <th>usable@1</th>
+            <th>pass@1</th>
+            <th>dfa-eq@1</th>
+            <th>dfa-eq@1 dec.</th>
+            <th>vuln@1</th>
+            <th>fails</th>
+            <th>$/task</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="model">openai/gpt-4o-mini</td>
+            <td class="dim">OpenAI</td>
+            <td class="headline">10.0%</td>
+            <td>40.0%</td>
+            <td>10.0%</td>
+            <td>12.5%</td>
+            <td>20.0%</td>
+            <td class="dim">0/10</td>
+            <td class="dim">$0.000038</td>
+          </tr>
+          <tr>
+            <td class="model">qwen/qwen-2.5-7b-instruct</td>
+            <td class="dim">Together</td>
+            <td class="headline">0.0%</td>
+            <td>10.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>10.0%</td>
+            <td class="dim">0/10</td>
+            <td class="dim">$0.000047</td>
+          </tr>
+          <tr>
+            <td class="model">meta-llama/llama-3.1-8b-instruct</td>
+            <td class="dim">DeepInfra&nbsp;fp8</td>
+            <td class="headline">0.0%</td>
+            <td>20.0%<span class="star">*</span></td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td class="dim">0/10</td>
+            <td class="dim">$0.000003</td>
+          </tr>
+          <tr class="failed">
+            <td class="model">mistralai/mistral-small-3.2-24b</td>
+            <td class="dim">DeepInfra&nbsp;fp8</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td><span class="fail-pill">10/10</span></td>
+            <td>&mdash;</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p style="font-size:0.8125rem;color:var(--muted);margin:0.85rem 0 0;">
+        <span class="star">*</span> normalized score &mdash; strict
+        <code>pass@1</code> is 0.0%. See finding 3.
+      </p>
+  </section>
+
+  <section>
+    <h2>What ten tasks already showed</h2>
+    <div class="findings">
+
+      <div class="finding">
+        <div class="finding-num">01</div>
+        <div>
+          <h3>Correct is not usable, and the ratio is 4&times;</h3>
+          <p>
+            gpt-4o-mini passes 40% of tasks and only 10% are usable. A fifth
+            of its patterns are ReDoS-vulnerable; others pass the examples
+            they were given while being provably a different language from
+            the reference. A leaderboard reporting correctness alone would
+            rank this model four times better than it deserves for anything
+            that touches untrusted input.
+          </p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-num">02</div>
+        <div>
+          <h3>A pinned provider that fails is visible, not substituted</h3>
+          <p>
+            <code>mistral-small-3.2</code> returned nothing usable across all
+            ten tasks: DeepInfra was rate-limited upstream
+            (<code>engine_overloaded</code>), and because the request set
+            <code>allow_fallbacks: false</code>, OpenRouter refused to quietly
+            reroute to another provider serving different weights at a
+            different quantization.
+          </p>
+          <p>
+            That is the designed outcome. It is reported as a response-failure
+            rate with the model left in the table, rather than dropped &mdash;
+            a visible failure beats an invisible substitution.
+          </p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-num">03</div>
+        <div>
+          <h3>The wrapper problem &mdash; our harness, not their ability</h3>
+          <p>
+            Llama-3.1-8b wrapped five of ten answers in Python raw-string
+            syntax &mdash; <code>r'\d+$'</code> where the pattern is
+            <code>\d+$</code>. Scored literally those match nothing, and the
+            model reads as a flat zero.
+          </p>
+          <div class="swing">
+            <span class="from">pass@1 0.0%</span>
+            <span>&rarr;</span>
+            <span class="to">pass@1 20.0%</span>
+            <span class="why">&mdash; from stripping one layer of quoting</span>
+          </div>
+          <p>
+            A 20-point swing produced entirely by an extraction rule in our
+            harness, and it penalizes small models hardest. Both scores are
+            published with the count of normalized responses and a
+            before/after record of every strip, because silently picking one
+            rule would bias the board in a direction no reader could detect.
+          </p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-num">04</div>
+        <div>
+          <h3>Nobody reproduces the reference</h3>
+          <p>
+            <code>exact@1</code> is 0.0% for every model &mdash; not one
+            string-identical answer &mdash; and semantic equivalence tops out
+            at 12.5% even where <code>pass@1</code> reaches 40%. Passing the
+            examples is a far easier problem than reproducing the reference
+            language, which is the case for reporting both.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>Controls</h2>
+    <p class="section-note">
+      Three synthetic predictions ride the identical scoring path in every
+      model's run, because a scorer silently returning zeros looks exactly
+      like a model that failed. All four models' controls came back as
+      expected &mdash; including mistral-small, which is how we know its
+      zeros are a collection failure and not a scoring one.
+    </p>
+    <div class="controls">
+      <div class="control">
+        <span class="control-name">known good</span>
+        <span class="control-pattern">the task's own reference</span>
+        <span class="control-expect">must pass, must be usable</span>
+        <span class="control-verdict">&check; 100% pass · 100% usable</span>
+      </div>
+      <div class="control">
+        <span class="control-name">known bad</span>
+        <span class="control-pattern">z{5}</span>
+        <span class="control-expect">must fail everything</span>
+        <span class="control-verdict">&check; 0% pass · 0% usable</span>
+      </div>
+      <div class="control">
+        <span class="control-name">known vulnerable</span>
+        <span class="control-pattern">(a+)+b</span>
+        <span class="control-expect">must be flagged vulnerable</span>
+        <span class="control-verdict">&check; 100% vulnerable</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What it cost, and what the sweep will</h2>
+    <p class="section-note">
+      Measured, not estimated: 105 prompt and 36 completion tokens per task
+      on average, with cost returned per request by OpenRouter and logged
+      against every response.
+    </p>
+    <div class="cost-grid">
+      <div class="cost-cell">
+        <span class="cost-figure">$0.00088</span>
+        <span class="cost-label">this preview, 4 models &times; 10 tasks</span>
+      </div>
+      <div class="cost-cell">
+        <span class="cost-figure">$0.03</span>
+        <span class="cost-label">cheapest model, full corpus at k=5</span>
+      </div>
+      <div class="cost-cell">
+        <span class="cost-figure">$5.46</span>
+        <span class="cost-label">most expensive frontier model, same</span>
+      </div>
+      <div class="cost-cell">
+        <span class="cost-figure">~$8</span>
+        <span class="cost-label">proposed 13-model sweep, within budget</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>regexbench 0.4.0 &middot; commit 05d7547b &middot; Python 3.11.15 &middot; Re(gEx|DoS)Eval 762 tasks</span>
+    <span>Raw responses committed under predictions/ &mdash; every score here is recomputable offline.</span>
+    <span>Scoring engine: github.com/foothills-labs/regexbench (Apache-2.0)</span>
+  </footer>
+
+</div>
