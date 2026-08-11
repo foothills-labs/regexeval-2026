@@ -6,6 +6,138 @@ before this plan was written. Section 1 is what checked out, what changed,
 and what is wrong; section 2 is the plan; section 3 is what is needed from
 a human before Phase 1 can run.
 
+**Update, 2026-08-11:** `OPENROUTER_KEY` is set and network access to
+`openrouter.ai` is confirmed working — §3 blockers 1 and 2 are resolved,
+details in §0. `regexbench` also moved to **0.4.0** the same week (not yet
+on PyPI — installed from GitHub `main`); §0 covers what changed and how it
+updates the rest of this plan. Section numbers below are otherwise
+unchanged from the original.
+
+---
+
+## 0. Update — access confirmed, regexbench 0.4.0
+
+### 0.1 Access (§3 blockers 1–2, resolved)
+
+- `openrouter.ai` is now reachable from this environment: `GET
+  /api/v1/models` → 200, 405 models listed.
+- `OPENROUTER_KEY` is set and valid: `GET /api/v1/auth/key` → 200,
+  `is_free_tier: false`, **`limit: 5`** (i.e. a **$5** hard cap on this
+  key), `expires_at: 2026-09-10`. Two things this changes in Phase 1: the
+  cost extrapolation in step 4 is now checked against a real $5 ceiling
+  before any sweep is approved, not just estimated in the abstract; and the
+  runner needs to treat a key-limit rejection the same as a 429 (back off,
+  log, do not silently drop the row) rather than assuming only rate limits
+  can fail a request. §3 blocker 3 ("confirm ≥$10 lifetime credit") is
+  answered too, in the opposite direction — this key is **capped at $5**,
+  which is a hard constraint on Phase 2's scale, not just a data point.
+
+### 0.2 `regexbench` 0.4.0 (2026-08-10)
+
+Not yet published to PyPI (still shows 0.3.0 as latest there) — installed
+from GitHub at commit `05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd`
+(`main`, 2026-08-11). **This exact commit, not a version string, is what
+must be pinned and recorded** until a PyPI release exists — `pip install
+regexbench==0.4.0` will silently resolve to nothing or a future differently
+-pinned commit; use `pip install
+"git+https://github.com/foothills-labs/regexbench.git@05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd"`
+verbatim in the runner's setup and in METHODOLOGY.md.
+
+What changed, verified against the live package:
+
+- **Lookaround is now decidable, not `UNSUPPORTED`.** `(?=…)`, `(?!…)`, and
+  fixed-width lookbehinds build into automata (constraint machines with
+  marker symbols) instead of refusing. Confirmed: `equivalent(r"(?=a)ab",
+  "ab").verdict` → `EQUIVALENT` (previously would have been
+  `UNSUPPORTED`). This directly changes the numbers from the handoff and
+  from 0.3.0: Re(gEx|DoS)Eval's README figure of "5.6% lookaround,
+  `UNSUPPORTED`" no longer applies at 0.4.0 — that slice is now decided,
+  which raises the *denominator* of `dfa-eq@k (decided)` and should move
+  its value. Backreferences remain the one genuinely `UNDECIDABLE`
+  construct; that part of the methodology is unchanged.
+- **14 wrong-verdict fixes** from stricter AST-walker validation (unhandled
+  node types now fail loudly instead of silently) and syntax-driven
+  differential fuzzing derived from a declared `_syntax.SYNTAX` list (56
+  constructs) rather than a hand-maintained one that previously missed
+  lookaround entirely.
+- **New: `crosscheck()`** — string-by-string differential verification
+  against Python's own `re`. Worth using as an extra control in Phase 0:
+  run it over the committed controls (and optionally a sample of scored
+  predictions) as a second, independent check that the equivalence engine
+  agrees with `re` on the same inputs, before trusting a sweep's numbers.
+- **New: `load_linguafranca()`** — loads the LinguaFranca FSE'19 corpus
+  (MIT-licensed, ~538k PyPI-sourced regexes, ~495k from Stack Overflow,
+  ~3.8k from RegExLib). **Not a candidate task set for this leaderboard**:
+  each entry is a bare pattern with no natural-language prompt and no
+  positive/negative examples, so there is nothing for a model to generate
+  from. It's a validation corpus for `regexbench` itself (the changelog
+  credits it with catching 6 engine bugs), not a benchmark corpus — noting
+  it here so it isn't mistaken for a fourth task-set option in §2.
+
+Re-validated the smoke test from §1.4 under 0.4.0 on the full 762-task
+corpus, not just 25/50 tasks:
+
+```
+control-good (all 762 references, --use-reference equivalent)
+  pass@1 99.9%  dfa-eq@1 100.0%  dfa-eq@1 (decided) 100.0%
+  exact@1 100.0%  usable@1 86.9%  vulnerable@1 13.1%
+
+control-bad ("z{5}" against all 762 references)
+  pass@1/dfa-eq@1/exact@1/usable@1 all 0.0%, vulnerable@1 0.0%
+  5 undecidable (backreference references — correctly excluded from "decided")
+
+control-vuln ("(a+)+b" against 20 references)
+  pass@1/dfa-eq@1/exact@1/usable@1 all 0.0%, vulnerable@1 100.0%
+```
+
+Matches the README's own published reference numbers (pass@1 ~99.9%,
+13.1% vs. the documented "12.7% of gold patterns are ReDoS-vulnerable" —
+close enough to be the 0.3.0→0.4.0 rescoring, not a bug) and the good/bad/
+vulnerable control triad from §1.4 all still behave exactly as designed:
+good passes everything, bad regular pattern fails everything including
+`dfa-eq (decided)` (rather than landing in `n/a`, which is exactly the
+failure mode §1.4 flagged and designed around), vulnerable-only fails
+correctness but correctly flags 100% vulnerable.
+
+### 0.3 What this changes in §1–3 below
+
+- §1.3 point 3 and §3 blocker 1 (network egress) — **resolved**, superseded
+  by §0.1.
+- §1.3 point 2 (`seed` unverified) — still open; Phase 1 still needs to run
+  the empirical probe.
+- §2 Phase 0 runner design — add: pin by commit SHA (not version string)
+  until `regexbench` 0.4.0 reaches PyPI; add a `crosscheck()` pass over
+  committed controls as a fourth control check alongside good/bad/vuln.
+- §2 Phase 1 step 4 (cost extrapolation) — now has a real number to check
+  against: **$5 total** on this key. A dozen-plus models × k=5 × 762
+  RegexEval tasks is very unlikely to fit in $5 even on cheap models; Phase
+  1's extrapolation will very likely force either a smaller task
+  sample, a smaller model roster, a smaller `k`, or a request for a
+  higher-limit key before Phase 2 can run at the scale §2 originally
+  sketched. Flagging this now rather than discovering it mid-Phase-1.
+- §2 Phase 3 methodology write-up — the "Known limitations" table needs to
+  drop lookaround from the `UNSUPPORTED` list and state the new decided
+  fraction once Phase 1/2 numbers exist; backreferences stay as the one
+  `UNDECIDABLE` construct.
+- §3 — blockers 1 and 2 done; blocker 3 answered (capped at $5, contrary to
+  the ≥$10-credits assumption the free-tier math in §1.3 point 1 depended
+  on — that free-tier rate-limit correction is now moot for this key
+  specifically, since $5 in credits already clears the unfunded tier
+  either way).
+
+**Rough affordability check** (pricing pulled from `/api/v1/models`, no
+completions run yet — Phase 1 itself hasn't started): cheap models
+(`meta-llama/llama-3.1-8b-instruct`, `qwen/qwen-2.5-7b-instruct`,
+`gpt-4o-mini`) run $0.05–0.60 per million tokens, so a single-model,
+ten-task Phase 1 dry run is a fraction of a cent regardless of which model
+it uses — no reason to wait on a budget decision to run Phase 1 itself.
+The real pressure point is Phase 2: even a mid-priced model at, say, $2/M
+completion tokens, 762 tasks × k=5 samples × ~150 completion tokens/sample
+≈ 570k tokens ≈ **$1.14 for one model** — meaning the $5 cap supports at
+most 3–4 mid-priced models at the original full-corpus, k=5 scale, not
+12–15. Phase 2 will need to trade off corpus size, `k`, or model count
+once real Phase 1 numbers replace this estimate.
+
 ---
 
 ## 1. Validation report
@@ -181,14 +313,18 @@ Task sets (open question 1 — recommendation):
 
 ## 3. Blockers — needed from a human before Phase 1
 
-1. **Allow `openrouter.ai` in this environment's network egress policy**
-   (Claude Code on the web → environment settings → network policy). All
-   HTTPS to it currently gets CONNECT 403 at the gateway. Nothing else on
-   the critical path is blocked: PyPI, raw.githubusercontent.com, and
-   git-clone of dataset repos all work.
-2. **`OPENROUTER_API_KEY`** as an environment variable (already promised).
-3. **Confirm the account has ≥$10 lifetime credits** (lifts platform limits)
-   and give a rough budget ceiling for the sweep so Phase 1's extrapolation
-   has something to be judged against.
+1. ~~Allow `openrouter.ai` in this environment's network egress policy.~~
+   **Resolved 2026-08-11** — see §0.1.
+2. ~~`OPENROUTER_API_KEY` as an environment variable.~~ **Resolved
+   2026-08-11** — set as `OPENROUTER_KEY`, valid, see §0.1.
+3. ~~Confirm the account has ≥$10 lifetime credits.~~ **Answered, not as
+   assumed** — this key is capped at **$5 total**, not open-ended with a
+   $10 floor. That is now the binding constraint on Phase 2's scale; see
+   §0.3. Still open: an explicit sign-off on whether $5 is the real budget
+   for this leaderboard or just what happens to be on the key today, before
+   Phase 1 commits to a task/model sample sized against it.
 4. Sign-off on the §2 recommendations for task sets, k, and model list —
-   defaults above will be used unless overridden.
+   defaults above will be used unless overridden. Given the $5 cap, this
+   now needs to happen *with* Phase 1's cost extrapolation in hand, not
+   before it — the original roster (12–15 models × k=5 × 762 tasks) is
+   almost certainly unaffordable on this key and will need to shrink.
