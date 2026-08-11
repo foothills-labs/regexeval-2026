@@ -1,0 +1,28 @@
+# Recompute every published score from the committed predictions.
+#
+# No API key, no network calls to any model provider, no cost. If this job
+# is green, the numbers in README.md are reproducible from the evidence in
+# this repo -- which is the claim the leaderboard makes, mechanized rather
+# than asserted.
+name: verify published scores
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pinned scorer and fetch the corpus
+        run: make setup
+
+      - name: Recompute scores and compare against what is committed
+        run: make check

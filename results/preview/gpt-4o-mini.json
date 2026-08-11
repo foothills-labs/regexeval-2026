@@ -1,80 +1,76 @@
 {
+  "completion_tokens_total": 363,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/161",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/360",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 3.756e-05,
+  "cost_usd_total": 0.0003756,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [],
+  "k": 1,
+  "max_tokens": 200,
+  "metrics": {
+    "dfa-eq@1": 0.1,
+    "dfa-eq@1 (decided)": 0.125,
+    "exact@1": 0.0,
+    "pass@1": 0.4,
+    "undecided": 2,
+    "usable@1": 0.1,
+    "vulnerable@1": 0.2
+  },
+  "metrics_as_sent": {
+    "dfa-eq@1": 0.1,
+    "dfa-eq@1 (decided)": 0.125,
+    "exact@1": 0.0,
+    "pass@1": 0.4,
+    "undecided": 2,
+    "usable@1": 0.1,
+    "vulnerable@1": 0.2
+  },
   "model": "gpt-4o-mini",
   "model_requested": "openai/gpt-4o-mini",
   "provider_requested": {
+    "allow_fallbacks": false,
     "order": [
       "OpenAI"
     ],
-    "allow_fallbacks": false,
     "require_parameters": true
   },
   "providers_resolved": [
     "OpenAI"
   ],
-  "models_resolved": [
-    "openai/gpt-4o-mini"
-  ],
-  "regexbench_version": "0.4.0",
-  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
   "python_version": "3.11.15",
-  "dataset": "Re(gEx|DoS)Eval",
-  "k": 1,
-  "temperature": 0.0,
-  "max_tokens": 200,
-  "tasks_attempted": 10,
-  "tasks_answered": 10,
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
   "response_failures": 0,
-  "failure_detail": [],
-  "wrapped_responses": 0,
+  "table": "gpt-4o-mini\n10 tasks, 10 answered\n  pass@1               40.0%\n  dfa-eq@1             10.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)   12.5%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1             10.0%\n  vulnerable@1         20.0%  (lower is better)\n  2 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "tasks_answered": 10,
+  "tasks_attempted": 10,
+  "temperature": 0.0,
   "wrapped_detail": {},
-  "cost_usd_total": 0.0003756,
-  "cost_usd_per_task": 3.756e-05,
-  "completion_tokens_total": 363,
-  "controls_all_as_expected": true,
-  "controls": {
-    "control/good": {
-      "pattern": "^\\d$",
-      "base_task": "regexeval/1",
-      "pass@1": 1.0,
-      "usable@1": 1.0,
-      "vulnerable@1": 0.0,
-      "as_expected": true
-    },
-    "control/bad": {
-      "pattern": "z{5}",
-      "base_task": "regexeval/161",
-      "pass@1": 0.0,
-      "usable@1": 0.0,
-      "vulnerable@1": 0.0,
-      "as_expected": true
-    },
-    "control/vulnerable": {
-      "pattern": "(a+)+b",
-      "base_task": "regexeval/360",
-      "pass@1": 0.0,
-      "usable@1": 0.0,
-      "vulnerable@1": 1.0,
-      "as_expected": true
-    }
-  },
-  "metrics_strict": {
-    "pass@1": 0.4,
-    "dfa-eq@1": 0.1,
-    "dfa-eq@1 (decided)": 0.125,
-    "exact@1": 0.0,
-    "usable@1": 0.1,
-    "vulnerable@1": 0.2,
-    "undecided": 2
-  },
-  "metrics_normalized": {
-    "pass@1": 0.4,
-    "dfa-eq@1": 0.1,
-    "dfa-eq@1 (decided)": 0.125,
-    "exact@1": 0.0,
-    "usable@1": 0.1,
-    "vulnerable@1": 0.2,
-    "undecided": 2
-  },
-  "table_strict": "gpt-4o-mini (strict)\n10 tasks, 10 answered\n  pass@1               40.0%\n  dfa-eq@1             10.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)   12.5%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1             10.0%\n  vulnerable@1         20.0%  (lower is better)\n  2 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
-  "table_normalized": "gpt-4o-mini (normalized)\n10 tasks, 10 answered\n  pass@1               40.0%\n  dfa-eq@1             10.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)   12.5%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1             10.0%\n  vulnerable@1         20.0%  (lower is better)\n  2 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)"
+  "wrapped_responses": 0
 }

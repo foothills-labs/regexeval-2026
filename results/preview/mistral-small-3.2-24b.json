@@ -1,114 +1,112 @@
 {
+  "completion_tokens_total": 0,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/161",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/360",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 0.0,
+  "cost_usd_total": 0.0,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/1"
+    },
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/161"
+    },
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/360"
+    },
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/656"
+    },
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/909"
+    },
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/1268"
+    },
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/1715"
+    },
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/1960"
+    },
+    {
+      "error": "response had no resolved 'provider' field",
+      "status": "no_provider",
+      "task": "regexeval/2339"
+    },
+    {
+      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration",
+      "status": "http_error",
+      "task": "regexeval/3228"
+    }
+  ],
+  "k": 1,
+  "max_tokens": 200,
+  "metrics": null,
+  "metrics_as_sent": null,
   "model": "mistral-small-3.2-24b",
   "model_requested": "mistralai/mistral-small-3.2-24b-instruct",
   "provider_requested": {
+    "allow_fallbacks": false,
     "order": [
       "DeepInfra"
     ],
-    "allow_fallbacks": false,
     "quantizations": [
       "fp8"
     ],
     "require_parameters": true
   },
   "providers_resolved": [],
-  "models_resolved": [],
-  "regexbench_version": "0.4.0",
-  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
   "python_version": "3.11.15",
-  "dataset": "Re(gEx|DoS)Eval",
-  "k": 1,
-  "temperature": 0.0,
-  "max_tokens": 200,
-  "tasks_attempted": 10,
-  "tasks_answered": 0,
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
   "response_failures": 10,
-  "failure_detail": [
-    {
-      "task": "regexeval/1",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    },
-    {
-      "task": "regexeval/161",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    },
-    {
-      "task": "regexeval/360",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    },
-    {
-      "task": "regexeval/656",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    },
-    {
-      "task": "regexeval/909",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    },
-    {
-      "task": "regexeval/1268",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    },
-    {
-      "task": "regexeval/1715",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    },
-    {
-      "task": "regexeval/1960",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    },
-    {
-      "task": "regexeval/2339",
-      "status": "no_provider",
-      "error": "response had no resolved 'provider' field"
-    },
-    {
-      "task": "regexeval/3228",
-      "status": "http_error",
-      "error": "exhausted retries: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"mistralai/mistral-small-3.2-24b-instruct is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integration"
-    }
-  ],
-  "wrapped_responses": 0,
+  "table": null,
+  "tasks_answered": 0,
+  "tasks_attempted": 10,
+  "temperature": 0.0,
   "wrapped_detail": {},
-  "cost_usd_total": 0.0,
-  "cost_usd_per_task": 0.0,
-  "completion_tokens_total": 0,
-  "controls_all_as_expected": true,
-  "controls": {
-    "control/good": {
-      "pattern": "^\\d$",
-      "base_task": "regexeval/1",
-      "pass@1": 1.0,
-      "usable@1": 1.0,
-      "vulnerable@1": 0.0,
-      "as_expected": true
-    },
-    "control/bad": {
-      "pattern": "z{5}",
-      "base_task": "regexeval/161",
-      "pass@1": 0.0,
-      "usable@1": 0.0,
-      "vulnerable@1": 0.0,
-      "as_expected": true
-    },
-    "control/vulnerable": {
-      "pattern": "(a+)+b",
-      "base_task": "regexeval/360",
-      "pass@1": 0.0,
-      "usable@1": 0.0,
-      "vulnerable@1": 1.0,
-      "as_expected": true
-    }
-  },
-  "metrics_strict": null,
-  "metrics_normalized": null,
-  "table_strict": null,
-  "table_normalized": null
+  "wrapped_responses": 0
 }
