@@ -1,81 +1,114 @@
 # Methodology
 
-How the numbers in `README.md` were produced, and every judgement call that
-could move them. Written against the **preview** run of 2026-08-11; the
-same document will carry the full sweep, with this section updated rather
-than replaced.
+Written as the questions a skeptical reader would ask, in the order they'd
+ask them. The harder metrics and the engine's limits are in
+[APPENDIX.md](APPENDIX.md).
 
-## Versions pinned
+Describes the **preview** run of 2026-08-11. The full run will update this
+document rather than replace it.
 
-| Component | Pin |
-| --- | --- |
-| `regexbench` | 0.4.0, commit `05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd` |
-| Python | 3.11.15 |
-| Dataset | Re(gEx|DoS)Eval, `RegexEval.json` from `s2e-lab/RegexEval@master` |
+---
 
-`regexbench` 0.4.0 is **not on PyPI** at time of writing (PyPI's latest is
-0.3.0), so the pin is a git commit, not a version string. `pip install
-regexbench==0.4.0` does not resolve. This matters more than usual because
-0.4.0 changed scoring behaviour relative to 0.3.0 — see "Engine limits".
+### What exactly does a model see?
 
-## Sampling
-
-- `k = 1`, temperature **0.0**, `max_tokens = 200` for the preview.
-- The full sweep will use `k = 5` — `pass@k` and `dfa-eq@k` are `@k`
-  metrics and a single sample makes the `@k` notation meaningless. `k=1` in
-  the preview is a cost decision for a pipeline test, not a methodology
-  choice, and the preview table is labelled `@1` accordingly.
-- `regexbench` uses the unbiased `pass@k` estimator from Chen et al.
-  (2021), so numbers line up with published work.
-
-## Prompt
-
-One system message fixing the output contract, one user message carrying
-the task's natural-language description verbatim from the corpus:
+One instruction and one task description. Nothing else — no examples, no
+"think step by step", no retry when the format is wrong.
 
 > **system:** You translate a natural-language description into a single
 > Python `re`-compatible regular expression. Reply with ONLY the pattern in
 > one fenced code block, no explanation.
 >
-> **user:** `{task.prompt}`\n\nReply with only the regular expression
-> pattern in a single fenced code block.
+> **user:** *{the task's description, verbatim from the corpus}*
+>
+> Reply with only the regular expression pattern in a single fenced code block.
 
-No few-shot examples, no chain-of-thought instruction, no retry-on-bad-format.
-Prompt engineering would improve every score and make them incomparable
-to other published work; the prompt is deliberately plain and identical
-across models.
+The prompt is deliberately plain. Tuning it would raise every score and
+make the numbers incomparable to other published work. It is identical for
+every model.
 
-## Extraction — and why two scores are reported
+### What are the tasks?
 
-Models were asked for a fenced code block. The **strict** rule is: take the
-last fenced block if any fence exists, else the whole trimmed reply.
+**Re(gEx|DoS)Eval** — 762 regex problems collected from real users, each
+with a description, strings that must match, strings that must not, and a
+human-written reference answer. It's the closest existing benchmark to this
+one, which makes our numbers comparable to prior work.
 
-Models do not reliably comply. In the preview, 6 of 30 successful responses
-wrapped the pattern in host-language quoting — Python raw strings
-(`r'\d+$'`), inline backticks, and JS-style `/pattern/flags`. Scored
-literally, `r'\d+$'` is a pattern matching an `r`, a quote, and so on: it
-fails, and it fails for a reason that has nothing to do with the model's
-regex ability.
+We don't redistribute it; `make setup` downloads it from
+[s2e-lab/RegexEval](https://github.com/s2e-lab/RegexEval).
 
-So every model is scored **twice from the same committed responses**:
+**The preview used 10 of those 762 tasks**, chosen by spreading evenly
+across the corpus (indices 0, 75, 150, … 700) rather than taking the first
+ten, which are all easy. Ten tasks is a pipeline test, not a measurement.
 
-- **strict** — the pattern exactly as emitted.
-- **normalized** — with one layer of host-language quoting stripped
-  (`r'…'`, `'…'`, `"…"`, `` `…` ``, `/…/flags`), up to 3 nested times.
+### How many samples per task?
 
-Both appear in `results/`, along with `wrapped_responses` (how many were
-normalized) and `wrapped_detail` (the before/after of each strip), so the
-normalized number is auditable line by line against the raw response.
+The preview used **one** (`k=1`), at temperature 0.0. The full run will use
+**five** (`k=5`).
 
-**Why not just pick one.** Strict alone reports a real capability
-difference (instruction-following) as though it were a regex difference,
-and it penalizes small models hardest — Llama-3.1-8b moves 0% → 20% on
-`pass@1` from this rule alone. Normalized alone hides a genuine failure to
-follow the output contract. Reporting one silently would be a choice with a
-20-point effect that no reader could see. The README leads with normalized
-and flags every value that differs.
+This matters because models are non-deterministic: ask twice, get two
+answers. A single sample measures luck as much as skill. `usable@5` asks
+"if the model got five attempts, would at least one be shippable?" — which
+is both a fairer question and the one a developer actually cares about.
 
-## Provider pinning
+The preview's `k=1` is a cost decision for a pipeline test. Every preview
+number is labelled `@1` so it can't be mistaken for the real thing.
+
+### How is the pattern pulled out of the reply?
+
+Take the last fenced code block if there is one; otherwise the whole
+trimmed reply. Then strip one layer of host-language quoting — see
+[the wrapper rule](APPENDIX.md#the-wrapper-rule), which changed one model's
+score by 20 points and is therefore documented in the open rather than
+buried in the code.
+
+### How do you stop a rate-limit error being scored as a wrong answer?
+
+By never letting a non-answer reach the scorer. Every response is
+classified before scoring:
+
+| Status | Meaning | Scored? |
+| --- | --- | --- |
+| `ok` | a real completion with a pattern in it | yes |
+| `http_error` | error response, including 429 after retries | no — counted as a failure |
+| `parse_failure` | a 200 with no usable content | no — counted as a failure |
+| `no_provider` | no provider reported as having served it | no — counted as a failure |
+
+429s and 5xx are retried with exponential backoff (2s, 4s, 8s, 16s, 32s).
+If retries run out, that's recorded as a **failure**, not as a zero — the
+distinction matters, because a zero looks like a wrong answer and a failure
+looks like what it is. `mistral-small-3.2` shows `—` in every metric column
+and `10/10` under failures for exactly this reason.
+
+### How do you know the scorer itself works?
+
+Three synthetic answers ride through the identical scoring path in every
+run:
+
+| Control | Submitted | Must produce |
+| --- | --- | --- |
+| `control/good` | the task's own reference | passes, usable |
+| `control/bad` | `z{5}` | fails everything |
+| `control/vulnerable` | `(a+)+b` | flagged vulnerable |
+
+If any control misbehaves the run is discarded, not published — `make
+score` exits non-zero. This catches the failure mode where a scorer
+silently returns zeros, which is indistinguishable from a model that failed
+unless you plant a known-good answer and check it comes back good.
+
+The known-bad control is deliberately a *simple* wrong pattern. An earlier
+version used `(?!x)x`, which lands in the undecidable bucket and so never
+exercised the scoring path it was meant to test.
+
+### Why pin the provider, and what does that actually do?
+
+By default, OpenRouter routes each request to whichever provider is
+cheapest at that moment, weighted by price. The same model can be served by
+different companies, on different hardware, **at different numerical
+precisions** — and lower precision can change the output.
+
+So an unpinned benchmark measures the router, not the model. Re-run it next
+week and the numbers move, with no code change and no way to tell why.
+([Background reading.](https://www.lesswrong.com/posts/KsyoSAyBRXtwzSugg/not-pinning-your-openrouter-provider-might-invalidate-your))
 
 Every request pins the provider and refuses substitution:
 
@@ -90,116 +123,69 @@ Every request pins the provider and refuses substitution:
 }
 ```
 
-By default OpenRouter load-balances across providers weighted by inverse
-square of price, and providers may serve the same weights at different
-quantizations on different engines. An unpinned benchmark measures the
-router, not the model, and can produce different numbers next week with no
-code change ([LessWrong: *Not Pinning Your OpenRouter Provider Might
-Invalidate Your Research*](https://www.lesswrong.com/posts/KsyoSAyBRXtwzSugg/not-pinning-your-openrouter-provider-might-invalidate-your)).
+- `allow_fallbacks: false` — if the pinned provider is down, **fail
+  visibly** rather than quietly serve from somewhere else. This fired in
+  the preview and cost us a model's worth of data. That is the correct
+  trade: a failure you can see beats a substitution you can't.
+- `require_parameters: true` — only route to providers that honour the
+  sampling settings instead of ignoring them.
+- **The pin is the instruction; the response is the evidence.** Which
+  provider actually served each request is recorded per response and
+  published in `results/*/providers_resolved`. A response that doesn't say
+  who served it is discarded.
 
-- `allow_fallbacks: false` means a pinned provider that is down produces a
-  **visible error**, not a silent reroute. This fired in the preview:
-  `mistral-small-3.2` failed all 10 requests with upstream 429
-  (`engine_overloaded`) from DeepInfra rather than being quietly served by
-  Parasail at bf16. That is the intended outcome.
-- `require_parameters: true` keeps routing to providers that honour the
-  sampling parameters, rather than silently ignoring `temperature`.
-- **The pin is the instruction; the response is the evidence.** The
-  provider OpenRouter reports as having actually served each request is
-  recorded per response and surfaced in `results/*.providers_resolved`. A
-  response with no resolved provider is treated as a failed request and is
-  never scored.
+We do **not** use the `seed` parameter. Its behaviour differs by provider
+and is not a reliable route to reproducibility, so runs are treated as
+non-deterministic and the honesty comes from `k` samples instead.
 
-`seed` is **not** used. Its per-provider behaviour is unverified and
-community reports say it does not guarantee reproducibility across
-backends; temperature 0.0 is used instead, and runs are treated as
-non-deterministic.
+### How is cost measured?
 
-## Failure handling
+OpenRouter returns the cost of each request in the response itself, so
+it's recorded per response and summed — not estimated from a price list.
+Measured: about 105 prompt and 36 completion tokens per task.
 
-Rule: **a failure is a finding, not missing data.**
+### What's pinned, so this can be re-run in a year?
 
-- Responses are classified `ok` / `http_error` / `parse_failure` /
-  `no_provider`. Only `ok` responses with a non-empty extracted pattern are
-  scored.
-- Everything else is counted in `response_failures` and itemized with its
-  error in `failure_detail`, and the model stays in the table with its
-  failure rate shown rather than being dropped.
-- 429 and 5xx are retried with exponential backoff (2s, 4s, 8s, 16s, 32s).
-  A 429 body is never treated as a prediction — this is the specific
-  failure mode where an error page gets scored as if it were an answer.
-- Exhausting retries is recorded as a failure for that task, not a zero
-  that looks like a wrong answer. `mistral-small` therefore shows `—` in
-  every metric column and `10/10` under response failures, not `0.0%`.
+| Component | Pin |
+| --- | --- |
+| Scorer | `regexbench` 0.4.0, commit `05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd` |
+| Python | 3.11 |
+| Corpus | `RegexEval.json` from `s2e-lab/RegexEval@master` |
+| Models | full slug, e.g. `openai/gpt-4o-mini` |
+| Sampling | temperature 0.0, max_tokens 200, `k=1` (preview) |
 
-## Controls
+`regexbench` 0.4.0 is **not on PyPI** — `pip install regexbench==0.4.0`
+does not resolve to it. The pin is a git commit for that reason, and it
+matters: 0.4.0 changed how some patterns are scored relative to 0.3.0.
 
-Three synthetic predictions ride through the identical scoring path in
-every model's run, because a scorer returning zeros looks exactly like a
-model that failed:
+### Can I check your numbers without trusting you?
 
-| Control | Pattern | Must produce |
-| --- | --- | --- |
-| `control/good` | the task's own reference | `pass@1 = 1.0`, `usable@1 = 1.0` |
-| `control/bad` | `z{5}` | `pass@1 = 0.0`, `usable@1 = 0.0` |
-| `control/vulnerable` | `(a+)+b` | `vulnerable@1 = 1.0` |
+Yes, and it costs nothing:
 
-`controls_all_as_expected` is asserted per model in `results/`. A sweep
-whose controls do not come back exactly this way is discarded, not
-published.
+```bash
+make setup && make score
+```
 
-The known-bad control is deliberately a **regular** wrong pattern. An
-earlier design used `(?!x)x`, which lands in the undecidable bucket and
-reports `dfa-eq (decided)` as `n/a` rather than `0%` — so it would not have
-exercised the decided-subset path at all.
+The scorer reads only `predictions/` — the committed raw responses. No API
+key, no model calls. `make check` additionally fails if the recomputed
+numbers differ from the published ones, and runs in CI on every push, so
+the README cannot drift away from its evidence.
 
-## Engine limits — what regexbench can and cannot decide
+If you disagree with a judgement call — the wrapper rule, say — change it
+and re-score. The raw responses are all there, which is the point of
+committing them.
 
-These are properties of the scorer and must be read with the numbers:
+### What's wrong with the preview, in our own words?
 
-- **Semantic equivalence is decidable only on the regular subset.**
-  Backreferences make a pattern non-regular and return `UNDECIDABLE`.
-  `dfa-eq@k` counts those as failures (a lower bound that cannot flatter);
-  `dfa-eq@k (decided)` drops them from the denominator (the model alone).
-  **Both are reported**, with the undecided count stated. In the preview,
-  2–4 of 10 tasks per model were undecidable — a large fraction, and one
-  reason the 10-task numbers should not be over-read.
-- **Lookaround is decidable as of 0.4.0.** It returned `UNSUPPORTED` in
-  0.3.0 and earlier. This raises the decided denominator relative to any
-  previously published `regexbench` figure, so preview numbers are **not**
-  comparable to 0.3.0 numbers.
-- **Shorthand classes are Unicode-aware.** `\d` is not `[0-9]` — it matches
-  every Unicode digit, because that is what Python's `re` does and
-  `regexbench` runs the real `re`. This is the single change most likely to
-  move a score relative to other published regex evals.
-- **ReDoS `SAFE` is a screening result, not a proof.** It means no known-bad
-  structural shape and no blow-up on the attack strings tried. The
-  structural pass models three of the five vulnerability families in the
-  ICPC 2024 study of LLM-generated regexes; the other two are caught only
-  if the empirical pass happens to trip them. `vulnerable@k` is therefore a
-  **lower bound** on real vulnerability.
-- **Match semantics.** Re(gEx|DoS)Eval is loaded with the semantics its own
-  loader sets (search). Its references pass 100% of their own tests under
-  search and 94.0% under fullmatch — choosing wrong would score 46 gold
-  patterns as failing tests they were written for. Verified in this
-  environment with `--use-reference`: 762/762 references score `pass@1`
-  99.9%, `dfa-eq@1` 100%.
-
-## Known gaps in the preview
-
-Stated because the preview is being published as a preview, not because
-they are acceptable in the full run:
-
-1. **10 tasks is not a ranking.** ±~30pp confidence interval on `pass@1`.
-   The model ordering in the preview table should not be cited.
-2. **`k=1`** — no `@k` signal at all.
-3. **One corpus.** No KB13, and no private contamination-check set. The
-   public corpora are old enough to be in training data, so a high score
-   may measure memorisation; the planned private set exists to size that
-   gap.
-4. **`mistral-small` has no numbers** — a provider outage, not a model
-   result. It should be re-run before any comparative claim.
-5. **No `crosscheck()` pass yet.** 0.4.0 ships string-by-string differential
-   verification against `re`; the full run should use it on controls as an
-   independent check that the equivalence engine agrees with the engine
-   that runs the correctness half.
+1. **Ten tasks is not a ranking.** Roughly ±30 points of uncertainty. The
+   ordering should not be cited.
+2. **`k=1`** means the `@k` metrics carry no information about consistency.
+3. **One corpus**, which is old enough to be in every model's training
+   data. A high score may partly measure memorisation. A small private task
+   set is planned to size that gap — the difference between public and
+   private scores is itself the finding.
+4. **`mistral-small` has no data** — a provider outage, not a result. It
+   needs re-running before any comparison involving it.
+5. **No `crosscheck()` pass yet.** `regexbench` 0.4.0 can verify its
+   equivalence engine string-by-string against Python's own `re`; the full
+   run should use it on the controls as an independent check.

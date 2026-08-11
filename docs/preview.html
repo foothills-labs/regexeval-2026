@@ -167,76 +167,74 @@
     margin: 0 0 0.35rem;
   }
 
-  /* ---------- the gap chart: the thesis ---------- */
-  .gap-list { display: flex; flex-direction: column; gap: 1.4rem; }
-  .gap-row {
-    display: grid;
-    grid-template-columns: 13rem 1fr;
-    gap: 0 1.25rem;
-    align-items: center;
+  /* ---------- worked examples: these carry the explanation ---------- */
+  .example {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
-  .gap-name {
-    font-family: var(--f-mono);
-    font-size: 0.8125rem;
-    color: var(--ink-2);
+  .example + .example { margin-top: 1.25rem; }
+  .example p { margin: 0; max-width: 66ch; }
+  .example-task {
+    font-size: var(--step-1);
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .example-answer code {
+    font-size: 1rem;
+    padding: 0.35em 0.6em;
+    display: inline-block;
     overflow-wrap: anywhere;
   }
-  .gap-track {
-    position: relative;
-    height: 2.5rem;
-    background: var(--surface-2);
-    border: 1px solid var(--rule);
-  }
-  .gap-pass, .gap-usable {
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-  }
-  .gap-pass {
-    background: repeating-linear-gradient(
-      -45deg, var(--warn-soft) 0 5px, transparent 5px 10px
-    );
-    border-right: 2px solid var(--warn);
-  }
-  .gap-usable { background: var(--accent); }
-  .gap-labels {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1.25rem;
-    padding: 0 0.75rem;
+  .example-verdict { color: var(--ink-2); }
+  .example-why { color: var(--muted); }
+  .witness {
     font-family: var(--f-mono);
-    font-size: 0.75rem;
-    font-variant-numeric: tabular-nums;
+    font-size: 1.25rem;
+    color: var(--warn);
+    background: var(--warn-soft);
+    padding: 0.6rem 0.9rem;
+    align-self: flex-start;
+    overflow-wrap: anywhere;
+  }
+  .witness.reason {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-style: normal;
+    align-self: stretch;
+  }
+  .takeaway {
+    margin: 1.5rem 0 0;
+    font-size: var(--step-1);
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .takeaway b { color: var(--accent); }
+  pre.repro {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+  pre.repro code {
+    background: none;
+    padding: 0;
+    font-size: 0.8125rem;
+    line-height: 1.7;
     color: var(--ink-2);
   }
-  .gap-dead {
-    display: flex;
-    align-items: center;
-    height: 2.5rem;
-    padding: 0 0.75rem;
-    font-family: var(--f-mono);
-    font-size: 0.75rem;
-    color: var(--dead);
+  .appendix-link {
+    margin: 1.5rem 0 0;
+    padding: 1rem 1.25rem;
     background: var(--surface-2);
-    border: 1px dashed var(--rule-strong);
-  }
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-    font-family: var(--f-mono);
-    font-size: 0.75rem;
     color: var(--muted);
-  }
-  .legend span { display: flex; align-items: center; gap: 0.5rem; }
-  .swatch { width: 1.5rem; height: 0.75rem; display: inline-block; }
-  .swatch.usable { background: var(--accent); }
-  .swatch.lost {
-    background: repeating-linear-gradient(-45deg, var(--warn-soft) 0 5px, transparent 5px 10px);
-    border: 1px solid var(--warn);
+    max-width: 66ch;
+    border-left: 2px solid var(--rule-strong);
   }
 
   /* ---------- table ---------- */
@@ -388,9 +386,9 @@
     <p class="eyebrow">Foothills Labs · preview run</p>
     <h1>regex<span class="slash">·</span>leaderboard</h1>
     <p class="standfirst">
-      Natural language to regex, scored on whether the pattern passes,
-      whether it means the same thing as the reference, and whether it can
-      hang your server.
+      How good are language models at writing regular expressions you could
+      actually ship? Most benchmarks ask only whether the pattern passes its
+      tests. This one asks whether you&rsquo;d dare deploy it.
     </p>
     <div class="runbar">
       <span><b>2026-08-11</b> run date</span>
@@ -418,120 +416,88 @@
   </div>
 
   <section>
-    <h2>The gap is the point</h2>
+    <h2>Two examples explain the whole thing</h2>
     <p class="section-note">
-      <code>usable@1</code> means correct <em>and</em> not ReDoS-vulnerable
-      <em>and</em> never proven different from the reference. Everything
-      between the two marks is a pattern that passes its tests and still
-      should not ship.
+      A model gets a plain-English description and writes a regex. Then we
+      check it three ways. Both answers below score <b>100% on
+      correctness</b> &mdash; and neither is shippable.
     </p>
 
-    <div class="gap-list">
-      <div class="gap-row">
-        <div class="gap-name">openai/gpt-4o-mini</div>
-        <div class="gap-track">
-          <div class="gap-pass" style="width: 40%"></div>
-          <div class="gap-usable" style="width: 10%"></div>
-          <div class="gap-labels">
-            <span>pass 40.0%</span><span>usable 10.0%</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="gap-row">
-        <div class="gap-name">meta-llama/llama-3.1-8b</div>
-        <div class="gap-track">
-          <div class="gap-pass" style="width: 20%"></div>
-          <div class="gap-usable" style="width: 0%"></div>
-          <div class="gap-labels">
-            <span>pass 20.0%</span><span>usable 0.0%</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="gap-row">
-        <div class="gap-name">qwen/qwen-2.5-7b</div>
-        <div class="gap-track">
-          <div class="gap-pass" style="width: 10%"></div>
-          <div class="gap-usable" style="width: 0%"></div>
-          <div class="gap-labels">
-            <span>pass 10.0%</span><span>usable 0.0%</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="gap-row">
-        <div class="gap-name">mistralai/mistral-small-3.2</div>
-        <div class="gap-dead">no data &mdash; pinned provider rate-limited, 10/10 requests failed</div>
-      </div>
+    <div class="example">
+      <p class="example-task">&ldquo;validate that an uploaded file&rsquo;s extension is jpg, gif or png&rdquo;</p>
+      <p class="example-answer"><code>\.(jpg|gif|png)$</code></p>
+      <p class="example-verdict">
+        Passed every test it was given. Still wrong &mdash; and here is the
+        string that proves it:
+      </p>
+      <p class="witness">.GIF</p>
+      <p class="example-why">
+        The human-written reference accepts uppercase extensions; this
+        answer doesn&rsquo;t. Every test string happened to be lowercase, so
+        <b>the tests could not have caught this</b>. Comparing against the
+        reference as a <em>language</em> does.
+      </p>
     </div>
 
-    <div class="legend">
-      <span><i class="swatch usable"></i> usable &mdash; correct and safe</span>
-      <span><i class="swatch lost"></i> passes tests, not usable</span>
+    <div class="example">
+      <p class="example-task">&ldquo;match a french phone number with or without the international dialling code&rdquo;</p>
+      <p class="example-answer"><code>(?:\+33|0)[1-9](?:[ .-]?[0-9]{2}){4}</code></p>
+      <p class="example-verdict">Passed every test. Also a denial-of-service bug:</p>
+      <p class="witness reason">a bounded quantifier wraps an unbounded one &mdash; the bound caps the repetitions but each one can still match many ways</p>
+      <p class="example-why">
+        Hostile input makes this take far longer than it should. Put it on a
+        public form and you have an outage waiting to happen.
+      </p>
     </div>
   </section>
 
   <section>
-    <h2>Full table</h2>
+    <h2>Results</h2>
     <p class="section-note">
-      Sorted by <code>usable@1</code>. Every value recomputable from the raw
-      responses committed in <code>predictions/</code>.
+      Three numbers. <code>pass@1</code> is what other benchmarks report.
+      <code>vulnerable@1</code> is how many answers can be made to hang.
+      <code>usable@1</code> is what survives both filters &mdash; correct,
+      safe, and never proven to mean something different from the reference.
     </p>
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
             <th>Model</th>
-            <th>Provider (pinned)</th>
             <th>usable@1</th>
             <th>pass@1</th>
-            <th>dfa-eq@1</th>
-            <th>dfa-eq@1 dec.</th>
-            <th>vuln@1</th>
-            <th>fails</th>
+            <th>vulnerable@1</th>
+            <th>failed reqs</th>
             <th>$/task</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="model">openai/gpt-4o-mini</td>
-            <td class="dim">OpenAI</td>
             <td class="headline">10.0%</td>
             <td>40.0%</td>
-            <td>10.0%</td>
-            <td>12.5%</td>
             <td>20.0%</td>
             <td class="dim">0/10</td>
             <td class="dim">$0.000038</td>
           </tr>
           <tr>
             <td class="model">qwen/qwen-2.5-7b-instruct</td>
-            <td class="dim">Together</td>
             <td class="headline">0.0%</td>
             <td>10.0%</td>
-            <td>0.0%</td>
-            <td>0.0%</td>
             <td>10.0%</td>
             <td class="dim">0/10</td>
             <td class="dim">$0.000047</td>
           </tr>
           <tr>
             <td class="model">meta-llama/llama-3.1-8b-instruct</td>
-            <td class="dim">DeepInfra&nbsp;fp8</td>
             <td class="headline">0.0%</td>
-            <td>20.0%<span class="star">*</span></td>
-            <td>0.0%</td>
-            <td>0.0%</td>
+            <td>20.0%</td>
             <td>0.0%</td>
             <td class="dim">0/10</td>
             <td class="dim">$0.000003</td>
           </tr>
           <tr class="failed">
             <td class="model">mistralai/mistral-small-3.2-24b</td>
-            <td class="dim">DeepInfra&nbsp;fp8</td>
-            <td>&mdash;</td>
-            <td>&mdash;</td>
             <td>&mdash;</td>
             <td>&mdash;</td>
             <td>&mdash;</td>
@@ -540,15 +506,14 @@
           </tr>
         </tbody>
       </table>
-      </div>
-      <p style="font-size:0.8125rem;color:var(--muted);margin:0.85rem 0 0;">
-        <span class="star">*</span> normalized score &mdash; strict
-        <code>pass@1</code> is 0.0%. See finding 3.
-      </p>
+    </div>
+    <p class="takeaway">
+      gpt-4o-mini passes 40% of tasks. <b>10% are shippable.</b>
+    </p>
   </section>
 
   <section>
-    <h2>What ten tasks already showed</h2>
+    <h2>What the pilot showed</h2>
     <div class="findings">
 
       <div class="finding">
@@ -586,47 +551,15 @@
         </div>
       </div>
 
-      <div class="finding">
-        <div class="finding-num">03</div>
-        <div>
-          <h3>The wrapper problem &mdash; our harness, not their ability</h3>
-          <p>
-            Llama-3.1-8b wrapped five of ten answers in Python raw-string
-            syntax &mdash; <code>r'\d+$'</code> where the pattern is
-            <code>\d+$</code>. Scored literally those match nothing, and the
-            model reads as a flat zero.
-          </p>
-          <div class="swing">
-            <span class="from">pass@1 0.0%</span>
-            <span>&rarr;</span>
-            <span class="to">pass@1 20.0%</span>
-            <span class="why">&mdash; from stripping one layer of quoting</span>
-          </div>
-          <p>
-            A 20-point swing produced entirely by an extraction rule in our
-            harness, and it penalizes small models hardest. Both scores are
-            published with the count of normalized responses and a
-            before/after record of every strip, because silently picking one
-            rule would bias the board in a direction no reader could detect.
-          </p>
-        </div>
-      </div>
 
-      <div class="finding">
-        <div class="finding-num">04</div>
-        <div>
-          <h3>Nobody reproduces the reference</h3>
-          <p>
-            <code>exact@1</code> is 0.0% for every model &mdash; not one
-            string-identical answer &mdash; and semantic equivalence tops out
-            at 12.5% even where <code>pass@1</code> reaches 40%. Passing the
-            examples is a far easier problem than reproducing the reference
-            language, which is the case for reporting both.
-          </p>
-        </div>
-      </div>
 
     </div>
+    <p class="appendix-link">
+      Two further findings &mdash; how output formatting swung one
+      model&rsquo;s score by 20 points, and why nobody reproduced the
+      reference exactly &mdash; are in the appendix, along with the metrics
+      that need more than a sentence to explain.
+    </p>
   </section>
 
   <section>
@@ -687,8 +620,25 @@
     </div>
   </section>
 
+  <section>
+    <h2>Check it yourself</h2>
+    <p class="section-note">
+      Every model response is committed. The scores come from those files and
+      nothing else &mdash; no API key, no cost, no need to trust us.
+    </p>
+    <pre class="repro"><code>git clone https://github.com/foothills-labs/regexleaderboard
+cd regexleaderboard
+make setup    # pinned scorer + corpus
+make score    # recomputes every number above</code></pre>
+    <p class="section-note" style="margin-top:1.25rem;">
+      <code>make check</code> does the same and <b>fails</b> if the numbers
+      drift from what&rsquo;s published. It runs in CI on every push, so this
+      page cannot quietly disagree with its own evidence.
+    </p>
+  </section>
+
   <footer>
-    <span>regexbench 0.4.0 &middot; commit 05d7547b &middot; Python 3.11.15 &middot; Re(gEx|DoS)Eval 762 tasks</span>
+    <span>regexbench 0.4.0 &middot; commit 05d7547b &middot; Python 3.11 &middot; Re(gEx|DoS)Eval</span>
     <span>Raw responses committed under predictions/ &mdash; every score here is recomputable offline.</span>
     <span>Scoring engine: github.com/foothills-labs/regexbench (Apache-2.0)</span>
   </footer>

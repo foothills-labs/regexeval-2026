@@ -1,11 +1,63 @@
 {
+  "completion_tokens_total": 229,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/161",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/360",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 3.1e-06,
+  "cost_usd_total": 3.1e-05,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [],
+  "k": 1,
+  "max_tokens": 200,
+  "metrics": {
+    "dfa-eq@1": 0.0,
+    "dfa-eq@1 (decided)": 0.0,
+    "exact@1": 0.0,
+    "pass@1": 0.2,
+    "undecided": 4,
+    "usable@1": 0.0,
+    "vulnerable@1": 0.0
+  },
+  "metrics_as_sent": {
+    "dfa-eq@1": 0.0,
+    "dfa-eq@1 (decided)": 0.0,
+    "exact@1": 0.0,
+    "pass@1": 0.0,
+    "undecided": 7,
+    "usable@1": 0.0,
+    "vulnerable@1": 0.0
+  },
   "model": "llama-3.1-8b-instruct",
   "model_requested": "meta-llama/llama-3.1-8b-instruct",
   "provider_requested": {
+    "allow_fallbacks": false,
     "order": [
       "DeepInfra"
     ],
-    "allow_fallbacks": false,
     "quantizations": [
       "fp8"
     ],
@@ -14,91 +66,35 @@
   "providers_resolved": [
     "DeepInfra"
   ],
-  "models_resolved": [
-    "meta-llama/llama-3.1-8b-instruct"
-  ],
-  "regexbench_version": "0.4.0",
-  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
   "python_version": "3.11.15",
-  "dataset": "Re(gEx|DoS)Eval",
-  "k": 1,
-  "temperature": 0.0,
-  "max_tokens": 200,
-  "tasks_attempted": 10,
-  "tasks_answered": 10,
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
   "response_failures": 0,
-  "failure_detail": [],
-  "wrapped_responses": 5,
+  "table": "llama-3.1-8b-instruct\n10 tasks, 10 answered\n  pass@1               20.0%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              0.0%\n  vulnerable@1          0.0%  (lower is better)\n  4 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "tasks_answered": 10,
+  "tasks_attempted": 10,
+  "temperature": 0.0,
   "wrapped_detail": {
-    "regexeval/656": {
-      "raw": "r'\\d+$'",
-      "normalized": "\\d+$"
-    },
-    "regexeval/909": {
-      "raw": "r'^\\d+(?:\\.\\d*)?$'",
-      "normalized": "^\\d+(?:\\.\\d*)?$"
-    },
     "regexeval/1268": {
-      "raw": "r'\\.(jpg|gif|png)$'",
-      "normalized": "\\.(jpg|gif|png)$"
+      "as_sent": "r'\\.(jpg|gif|png)$'",
+      "scored": "\\.(jpg|gif|png)$"
     },
     "regexeval/1715": {
-      "raw": "r'^[1234567][0-9]{2}(?:[0-9]{2}){4}$'",
-      "normalized": "^[1234567][0-9]{2}(?:[0-9]{2}){4}$"
+      "as_sent": "r'^[1234567][0-9]{2}(?:[0-9]{2}){4}$'",
+      "scored": "^[1234567][0-9]{2}(?:[0-9]{2}){4}$"
     },
     "regexeval/1960": {
-      "raw": "r'\\b(?:\\d{2}/\\d{2}/\\d{4}|\\d{1}/\\d{1}/\\d{4})\\b'",
-      "normalized": "\\b(?:\\d{2}/\\d{2}/\\d{4}|\\d{1}/\\d{1}/\\d{4})\\b"
+      "as_sent": "r'\\b(?:\\d{2}/\\d{2}/\\d{4}|\\d{1}/\\d{1}/\\d{4})\\b'",
+      "scored": "\\b(?:\\d{2}/\\d{2}/\\d{4}|\\d{1}/\\d{1}/\\d{4})\\b"
+    },
+    "regexeval/656": {
+      "as_sent": "r'\\d+$'",
+      "scored": "\\d+$"
+    },
+    "regexeval/909": {
+      "as_sent": "r'^\\d+(?:\\.\\d*)?$'",
+      "scored": "^\\d+(?:\\.\\d*)?$"
     }
   },
-  "cost_usd_total": 3.1e-05,
-  "cost_usd_per_task": 3.1e-06,
-  "completion_tokens_total": 229,
-  "controls_all_as_expected": true,
-  "controls": {
-    "control/good": {
-      "pattern": "^\\d$",
-      "base_task": "regexeval/1",
-      "pass@1": 1.0,
-      "usable@1": 1.0,
-      "vulnerable@1": 0.0,
-      "as_expected": true
-    },
-    "control/bad": {
-      "pattern": "z{5}",
-      "base_task": "regexeval/161",
-      "pass@1": 0.0,
-      "usable@1": 0.0,
-      "vulnerable@1": 0.0,
-      "as_expected": true
-    },
-    "control/vulnerable": {
-      "pattern": "(a+)+b",
-      "base_task": "regexeval/360",
-      "pass@1": 0.0,
-      "usable@1": 0.0,
-      "vulnerable@1": 1.0,
-      "as_expected": true
-    }
-  },
-  "metrics_strict": {
-    "pass@1": 0.0,
-    "dfa-eq@1": 0.0,
-    "dfa-eq@1 (decided)": 0.0,
-    "exact@1": 0.0,
-    "usable@1": 0.0,
-    "vulnerable@1": 0.0,
-    "undecided": 7
-  },
-  "metrics_normalized": {
-    "pass@1": 0.2,
-    "dfa-eq@1": 0.0,
-    "dfa-eq@1 (decided)": 0.0,
-    "exact@1": 0.0,
-    "usable@1": 0.0,
-    "vulnerable@1": 0.0,
-    "undecided": 4
-  },
-  "table_strict": "llama-3.1-8b-instruct (strict)\n10 tasks, 10 answered\n  pass@1                0.0%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              0.0%\n  vulnerable@1          0.0%  (lower is better)\n  7 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
-  "table_normalized": "llama-3.1-8b-instruct (normalized)\n10 tasks, 10 answered\n  pass@1               20.0%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              0.0%\n  vulnerable@1          0.0%  (lower is better)\n  4 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)"
+  "wrapped_responses": 5
 }

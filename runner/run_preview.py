@@ -12,17 +12,13 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+import config  # noqa: E402
 from openrouter_client import call, extract_pattern  # noqa: E402
 
-sys.path.insert(0, "/tmp/claude-0/-home-user-regexleaderboard/4f381924-048f-55c1-baa3-50487ddcdad5/scratchpad")
 from regexbench.datasets import load_regexeval  # noqa: E402
 
-REPO = Path(__file__).resolve().parents[1]
-DATASET = Path(
-    "/tmp/claude-0/-home-user-regexleaderboard/4f381924-048f-55c1-baa3-50487ddcdad5"
-    "/scratchpad/RegexEval.json"
-)
-PREVIEW_DIR = REPO / "predictions" / "preview"
+DATASET = config.require_dataset()
+PREVIEW_DIR = config.PREDICTIONS_DIR / "preview"
 
 TASK_INDICES = [0, 75, 150, 225, 300, 375, 450, 525, 600, 700]
 
@@ -118,8 +114,8 @@ def main():
                 model=m["slug"],
                 provider=m["provider"],
                 prompt=prompt,
-                temperature=0.0,
-                max_tokens=200,
+                temperature=config.TEMPERATURE,
+                max_tokens=config.MAX_TOKENS,
             )
             pattern = extract_pattern(res.content) if res.ok else None
             row = {
