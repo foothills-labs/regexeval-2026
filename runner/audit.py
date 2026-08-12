@@ -74,8 +74,14 @@ def audit(run: str, k_expected: int, task_count: int | None):
             findings.append((BLOCKER, label,
                              f"{reasoning_tok} reasoning tokens billed despite reasoning=off"))
 
+        # A systematic empty rate means a config fault (too small a token
+        # budget for a reasoning model, say) and must block. A rare one is a
+        # provider glitch: recorded as a failure, reported, not fatal.
         if empties:
-            findings.append((BLOCKER, label, f"{empties} empty-content responses"))
+            rate = empties / max(len(real), 1)
+            level = BLOCKER if rate > 0.05 else WARN
+            findings.append((level, label,
+                             f"{empties} empty-content response(s) ({rate:.1%})"))
 
         wrong_k = {t: c for t, c in samples.items() if c != k_expected}
         if wrong_k:

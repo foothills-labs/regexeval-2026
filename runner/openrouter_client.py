@@ -174,7 +174,12 @@ def _parse_success(model: str, provider: dict, raw: dict, latency: float) -> Cal
             latency_s=latency,
             generation_id=gen_id,
             raw_response=raw,
-            error="empty content (reasoning may have consumed the token budget)",
+            error=(
+                "empty content: completion_tokens="
+                f"{usage.get('completion_tokens')}, reasoning_tokens="
+                f"{(usage.get('completion_tokens_details') or {}).get('reasoning_tokens')}, "
+                f"finish_reason={(raw.get('choices') or [{}])[0].get('finish_reason')!r}"
+            ),
         )
 
     return CallResult(
