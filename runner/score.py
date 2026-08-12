@@ -30,16 +30,16 @@ CONTROL_EXPECTATIONS = {
 }
 
 
-def metrics_of(rep) -> dict:
+def metrics_of(rep, k: int = 1) -> dict:
     """Headline three first; the rest are kept for the appendix."""
     return {
-        "usable@1": rep.usable_at(1),
-        "pass@1": rep.pass_at(1),
-        "vulnerable@1": rep.vulnerable_at(1),
+        f"usable@{k}": rep.usable_at(k),
+        f"pass@{k}": rep.pass_at(k),
+        f"vulnerable@{k}": rep.vulnerable_at(k),
         # appendix metrics -- not shown on the leaderboard front page
-        "dfa-eq@1": rep.dfa_eq_at(1),
-        "dfa-eq@1 (decided)": rep.dfa_eq_decided_at(1),
-        "exact@1": rep.exact_at(1),
+        f"dfa-eq@{k}": rep.dfa_eq_at(k),
+        f"dfa-eq@{k} (decided)": rep.dfa_eq_decided_at(k),
+        f"exact@{k}": rep.exact_at(k),
         "undecided": rep.undecided,
     }
 
@@ -81,15 +81,21 @@ def score_run(run_name: str) -> list[dict]:
 
         answered = [r for r in task_rows if r["status"] == "ok" and r["pattern"]]
         failed = [r for r in task_rows if not (r["status"] == "ok" and r["pattern"])]
-        tasks = [by_name[r["task_name"]] for r in answered]
 
-        as_sent = {r["task_name"]: r["pattern"] for r in answered}
-        normalized, wrapped = {}, {}
-        for r in answered:
+        # Group the k samples per task into a list, in sample order. A task
+        # whose samples partly failed is scored on the ones that came back --
+        # the failures are still counted in response_failures.
+        as_sent, normalized, wrapped = {}, {}, {}
+        for r in sorted(answered, key=lambda r: (r["task_name"], r.get("sample", 0))):
+            name = r["task_name"]
+            as_sent.setdefault(name, []).append(r["pattern"])
             pat, notes = normalize_pattern(r["pattern"])
-            normalized[r["task_name"]] = pat
+            normalized.setdefault(name, []).append(pat)
             if notes:
-                wrapped[r["task_name"]] = {"as_sent": r["pattern"], "scored": pat}
+                wrapped.setdefault(name, []).append({"as_sent": r["pattern"], "scored": pat})
+
+        tasks = [by_name[n] for n in normalized]
+        k_actual = max((len(v) for v in normalized.values()), default=0)
 
         rep = run(tasks, normalized, name=label) if tasks else None
         rep_as_sent = run(tasks, as_sent, name=f"{label} (as sent)") if tasks else None
@@ -106,7 +112,7 @@ def score_run(run_name: str) -> list[dict]:
             "regexbench_commit": config.REGEXBENCH_COMMIT,
             "python_version": sys.version.split()[0],
             "dataset": "Re(gEx|DoS)Eval",
-            "k": 1,
+            "k": k_actual,
             "temperature": config.TEMPERATURE,
             "max_tokens": config.MAX_TOKENS,
             "tasks_attempted": len(task_rows),
@@ -116,7 +122,7 @@ def score_run(run_name: str) -> list[dict]:
                 {"task": r["task_name"], "status": r["status"], "error": (r.get("error") or "")[:300]}
                 for r in failed
             ],
-            "wrapped_responses": len(wrapped),
+            "wrapped_responses": sum(len(v) for v in wrapped.values()),
             "wrapped_detail": wrapped,
             "cost_usd_total": round(cost, 8),
             "cost_usd_per_task": round(cost / len(task_rows), 8) if task_rows else None,
@@ -125,14 +131,19 @@ def score_run(run_name: str) -> list[dict]:
             ),
             "controls_all_as_expected": controls_ok,
             "controls": control_report,
-            "metrics": metrics_of(rep) if rep else None,
-            "metrics_as_sent": metrics_of(rep_as_sent) if rep_as_sent else None,
-            "table": rep.table(ks=(1,)) if rep else None,
+            "metrics": metrics_of(rep, k_actual) if rep else None,
+            "metrics_as_sent": metrics_of(rep_as_sent, k_actual) if rep_as_sent else None,
+            "table": rep.table(ks=(k_actual,)) if rep else None,
         }
         (result_dir / f"{label}.json").write_text(json.dumps(entry, indent=2, sort_keys=True))
         summary.append(entry)
 
-    summary.sort(key=lambda e: (-(e["metrics"] or {}).get("usable@1", -1), e["model"]))
+    def headline(e, metric):
+        m = e.get("metrics") or {}
+        return next((v for kk, v in m.items() if kk.startswith(metric + "@")), None)
+
+    summary.sort(key=lambda e: (-(headline(e, "usable") if headline(e, "usable") is not None else -1),
+                                e["model"]))
     (result_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
     return summary
 
@@ -140,6 +151,9 @@ def score_run(run_name: str) -> list[dict]:
 def print_summary(summary: list[dict]) -> None:
     print(f"{'model':34s} {'usable@1':>9s} {'pass@1':>8s} {'vuln@1':>8s} {'fails':>7s} {'$/task':>10s}")
     print("-" * 82)
+    def pick(m, metric):
+        return next((v for kk, v in m.items() if kk.startswith(metric + "@")), None)
+
     for e in summary:
         m = e["metrics"]
         fails = f"{e['response_failures']}/{e['tasks_attempted']}"
@@ -147,8 +161,8 @@ def print_summary(summary: list[dict]) -> None:
             print(f"{e['model']:34s} {'--':>9s} {'--':>8s} {'--':>8s} {fails:>7s} {'--':>10s}")
             continue
         print(
-            f"{e['model']:34s} {m['usable@1']:8.1%} {m['pass@1']:7.1%} "
-            f"{m['vulnerable@1']:7.1%} {fails:>7s} {e['cost_usd_per_task']:10.6f}"
+            f"{e['model']:34s} {pick(m,'usable'):8.1%} {pick(m,'pass'):7.1%} "
+            f"{pick(m,'vulnerable'):7.1%} {fails:>7s} {e['cost_usd_per_task']:10.6f}"
         )
     bad = [e["model"] for e in summary if not e["controls_all_as_expected"]]
     print()

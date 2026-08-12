@@ -53,6 +53,53 @@ is both a fairer question and the one a developer actually cares about.
 The preview's `k=1` is a cost decision for a pipeline test. Every preview
 number is labelled `@1` so it can't be mistaken for the real thing.
 
+### Why is reasoning switched off?
+
+Because leaving it on would compare different things to each other.
+
+Of the eleven models on the board, **four do not reason at all** — Claude
+Opus 5 and Sonnet 5, GPT-5.6 Sol and Terra returned zero reasoning tokens.
+The other seven produce a hidden chain of thought before answering, billed
+as output. Scoring them side by side with reasoning enabled would measure
+"model plus thinking budget" against "model", and the leaderboard would
+mostly be ranking who was allowed to think.
+
+So every request sets `reasoning: {enabled: false}`, and this is recorded
+with every response.
+
+**It is also the difference between a $12 sweep and a $71 one.** Measured
+on the corpus's *easiest* task ("match exactly one digit"):
+
+| Model | reasoning tokens | cost per call |
+| --- | ---: | ---: |
+| `qwen3.6-max-preview` | 1,571 | $0.0098 |
+| `gemini-3.6-flash` | 427 | $0.0033 |
+| `glm-5.2` | 194 | $0.0006 |
+| `claude-opus-5` | 0 | $0.0015 |
+
+Qwen spent 1,571 tokens of hidden reasoning deciding how to match a single
+digit, then answered `^[0-9]$`. With reasoning disabled it answered
+`^[0-9]$` again, in 10 tokens, for **1/100th of the price**.
+
+Two things this turned up that are worth stating plainly:
+
+- **`reasoning: {effort: "low"}` is not a cheaper setting.** On
+  `qwen3.6-max-preview` it produced *2,375* reasoning tokens — more than
+  the default, at a higher price. Only `enabled: false` reliably reduces
+  it.
+- **A reasoning model with too small a token budget returns nothing at
+  all.** At `max_tokens: 200`, three models produced empty content: the
+  budget went entirely on hidden reasoning with nothing left to answer
+  with. An empty completion is treated as a failed request, never as an
+  empty pattern, because scoring it would look exactly like a model that
+  answered badly.
+
+Whether thinking actually helps at this task is a separate question, and a
+more interesting one, so it is measured rather than assumed: a **thinking
+slice** re-runs the reasoning-capable models on a subset with reasoning
+enabled. That comparison is reported on its own, never mixed into the main
+table.
+
 ### How is the pattern pulled out of the reply?
 
 Take the last fenced code block if there is one; otherwise the whole
