@@ -1,0 +1,129 @@
+{
+  "completion_tokens_total": 70402,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/2",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/2",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 0.00040618,
+  "cost_usd_total": 0.548349,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [],
+  "k": 3,
+  "max_tokens": 200,
+  "metrics": {
+    "dfa-eq@3": 0.10222222222222223,
+    "dfa-eq@3 (decided)": 0.13142857142857142,
+    "exact@3": 0.02,
+    "pass@3": 0.4222222222222222,
+    "undecided": 100,
+    "usable@3": 0.18666666666666668,
+    "vulnerable@3": 0.12
+  },
+  "metrics_as_sent": {
+    "dfa-eq@3": 0.10222222222222223,
+    "dfa-eq@3 (decided)": 0.13142857142857142,
+    "exact@3": 0.02,
+    "pass@3": 0.4222222222222222,
+    "undecided": 100,
+    "usable@3": 0.18666666666666668,
+    "vulnerable@3": 0.12
+  },
+  "model": "gpt-5.6-terra",
+  "model_requested": "openai/gpt-5.6-terra",
+  "provider_requested": {
+    "allow_fallbacks": false,
+    "order": [
+      "OpenAI"
+    ],
+    "require_parameters": true
+  },
+  "providers_resolved": [
+    "OpenAI"
+  ],
+  "python_version": "3.11.15",
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
+  "response_failures": 0,
+  "table": "gpt-5.6-terra\n450 tasks, 450 answered\n  pass@3               42.2%\n  dfa-eq@3             10.2%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   13.1%  (engine limits excluded \u2014 model only)\n  exact@3               2.0%\n  usable@3             18.7%\n  vulnerable@3         12.0%  (lower is better)\n  100 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "tasks_answered": 1350,
+  "tasks_attempted": 1350,
+  "temperature": 0.0,
+  "wrapped_detail": {
+    "regexeval/1587": [
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      }
+    ],
+    "regexeval/2333": [
+      {
+        "as_sent": "\"([^\"]*)\"",
+        "scored": "([^\"]*)"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      }
+    ],
+    "regexeval/936": [
+      {
+        "as_sent": "\"([^\"]*)\"",
+        "scored": "([^\"]*)"
+      },
+      {
+        "as_sent": "\"([^\"]*)\"",
+        "scored": "([^\"]*)"
+      }
+    ],
+    "regexeval/977": [
+      {
+        "as_sent": "/\\*[\\s\\S]*?\\*/",
+        "scored": "\\*[\\s\\S]*?\\*"
+      },
+      {
+        "as_sent": "/\\*[\\s\\S]*?\\*/",
+        "scored": "\\*[\\s\\S]*?\\*"
+      },
+      {
+        "as_sent": "/\\*[\\s\\S]*?\\*/",
+        "scored": "\\*[\\s\\S]*?\\*"
+      }
+    ]
+  },
+  "wrapped_responses": 11
+}
