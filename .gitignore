@@ -1,11 +1,3 @@
 __pycache__/
 *.pyc
 data/
-
-# In-flight collection. predictions/sweep/ is being appended to by one
-# process per model right now; committing it mid-run would put partial,
-# inconsistent evidence in history and make every commit a moving target.
-# This entry is TEMPORARY -- delete it once collection finishes, then
-# commit the complete run in one piece. Finished runs (preview, pilot,
-# pilot-thinking) are tracked normally.
-predictions/sweep/
