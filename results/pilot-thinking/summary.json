@@ -1,0 +1,421 @@
+[
+  {
+    "completion_tokens_total": 19888,
+    "controls": {
+      "control/bad": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "z{5}",
+        "usable@1": 0.0,
+        "vulnerable@1": 0.0
+      },
+      "control/good": {
+        "as_expected": true,
+        "base_task": "regexeval/1",
+        "pass@1": 1.0,
+        "pattern": "^\\d$",
+        "usable@1": 1.0,
+        "vulnerable@1": 0.0
+      },
+      "control/vulnerable": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "(a+)+b",
+        "usable@1": 0.0,
+        "vulnerable@1": 1.0
+      }
+    },
+    "controls_all_as_expected": true,
+    "cost_usd_per_task": 0.025242,
+    "cost_usd_total": 0.302904,
+    "dataset": "Re(gEx|DoS)Eval",
+    "failure_detail": [
+      {
+        "error": "empty content: completion_tokens=4000, reasoning_tokens=3497, finish_reason='length'",
+        "status": "parse_failure",
+        "task": "regexeval/2218"
+      },
+      {
+        "error": "empty content: completion_tokens=4000, reasoning_tokens=3713, finish_reason='length'",
+        "status": "parse_failure",
+        "task": "regexeval/2488"
+      },
+      {
+        "error": "empty content: completion_tokens=4000, reasoning_tokens=3861, finish_reason='length'",
+        "status": "parse_failure",
+        "task": "regexeval/3207"
+      }
+    ],
+    "k": 1,
+    "max_tokens": 200,
+    "metrics": {
+      "dfa-eq@1": 0.1111111111111111,
+      "dfa-eq@1 (decided)": 0.14285714285714285,
+      "exact@1": 0.0,
+      "pass@1": 0.4444444444444444,
+      "undecided": 2,
+      "usable@1": 0.2222222222222222,
+      "vulnerable@1": 0.0
+    },
+    "metrics_as_sent": {
+      "dfa-eq@1": 0.1111111111111111,
+      "dfa-eq@1 (decided)": 0.14285714285714285,
+      "exact@1": 0.0,
+      "pass@1": 0.4444444444444444,
+      "undecided": 2,
+      "usable@1": 0.2222222222222222,
+      "vulnerable@1": 0.0
+    },
+    "model": "kimi-k3",
+    "model_requested": "moonshotai/kimi-k3",
+    "provider_requested": {
+      "allow_fallbacks": false,
+      "order": [
+        "Fireworks"
+      ],
+      "require_parameters": true
+    },
+    "providers_resolved": [
+      "Fireworks"
+    ],
+    "python_version": "3.11.15",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_version": "0.4.0",
+    "response_failures": 3,
+    "table": "kimi-k3\n9 tasks, 9 answered\n  pass@1               44.4%\n  dfa-eq@1             11.1%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)   14.3%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1             22.2%\n  vulnerable@1          0.0%  (lower is better)\n  2 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "tasks_answered": 9,
+    "tasks_attempted": 12,
+    "temperature": 0.0,
+    "wrapped_detail": {},
+    "wrapped_responses": 0
+  },
+  {
+    "completion_tokens_total": 5714,
+    "controls": {
+      "control/bad": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "z{5}",
+        "usable@1": 0.0,
+        "vulnerable@1": 0.0
+      },
+      "control/good": {
+        "as_expected": true,
+        "base_task": "regexeval/1",
+        "pass@1": 1.0,
+        "pattern": "^\\d$",
+        "usable@1": 1.0,
+        "vulnerable@1": 0.0
+      },
+      "control/vulnerable": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "(a+)+b",
+        "usable@1": 0.0,
+        "vulnerable@1": 1.0
+      }
+    },
+    "controls_all_as_expected": true,
+    "cost_usd_per_task": 0.00029491,
+    "cost_usd_total": 0.0035389,
+    "dataset": "Re(gEx|DoS)Eval",
+    "failure_detail": [],
+    "k": 1,
+    "max_tokens": 200,
+    "metrics": {
+      "dfa-eq@1": 0.0,
+      "dfa-eq@1 (decided)": 0.0,
+      "exact@1": 0.0,
+      "pass@1": 0.3333333333333333,
+      "undecided": 5,
+      "usable@1": 0.16666666666666666,
+      "vulnerable@1": 0.0
+    },
+    "metrics_as_sent": {
+      "dfa-eq@1": 0.0,
+      "dfa-eq@1 (decided)": 0.0,
+      "exact@1": 0.0,
+      "pass@1": 0.3333333333333333,
+      "undecided": 5,
+      "usable@1": 0.16666666666666666,
+      "vulnerable@1": 0.0
+    },
+    "model": "gpt-5.6-luna",
+    "model_requested": "openai/gpt-5.6-luna",
+    "provider_requested": {
+      "allow_fallbacks": false,
+      "order": [
+        "OpenAI"
+      ],
+      "require_parameters": true
+    },
+    "providers_resolved": [
+      "OpenAI"
+    ],
+    "python_version": "3.11.15",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_version": "0.4.0",
+    "response_failures": 0,
+    "table": "gpt-5.6-luna\n12 tasks, 12 answered\n  pass@1               33.3%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1             16.7%\n  vulnerable@1          0.0%  (lower is better)\n  5 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "tasks_answered": 12,
+    "tasks_attempted": 12,
+    "temperature": 0.0,
+    "wrapped_detail": {},
+    "wrapped_responses": 0
+  },
+  {
+    "completion_tokens_total": 14756,
+    "controls": {
+      "control/bad": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "z{5}",
+        "usable@1": 0.0,
+        "vulnerable@1": 0.0
+      },
+      "control/good": {
+        "as_expected": true,
+        "base_task": "regexeval/1",
+        "pass@1": 1.0,
+        "pattern": "^\\d$",
+        "usable@1": 1.0,
+        "vulnerable@1": 0.0
+      },
+      "control/vulnerable": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "(a+)+b",
+        "usable@1": 0.0,
+        "vulnerable@1": 1.0
+      }
+    },
+    "controls_all_as_expected": true,
+    "cost_usd_per_task": 0.00035595,
+    "cost_usd_total": 0.00427143,
+    "dataset": "Re(gEx|DoS)Eval",
+    "failure_detail": [
+      {
+        "error": "empty content: completion_tokens=4000, reasoning_tokens=3281, finish_reason='length'",
+        "status": "parse_failure",
+        "task": "regexeval/2218"
+      }
+    ],
+    "k": 1,
+    "max_tokens": 200,
+    "metrics": {
+      "dfa-eq@1": 0.0,
+      "dfa-eq@1 (decided)": 0.0,
+      "exact@1": 0.0,
+      "pass@1": 0.18181818181818182,
+      "undecided": 4,
+      "usable@1": 0.09090909090909091,
+      "vulnerable@1": 0.0
+    },
+    "metrics_as_sent": {
+      "dfa-eq@1": 0.0,
+      "dfa-eq@1 (decided)": 0.0,
+      "exact@1": 0.0,
+      "pass@1": 0.18181818181818182,
+      "undecided": 4,
+      "usable@1": 0.09090909090909091,
+      "vulnerable@1": 0.0
+    },
+    "model": "deepseek-v4-flash-0731",
+    "model_requested": "deepseek/deepseek-v4-flash-0731",
+    "provider_requested": {
+      "allow_fallbacks": false,
+      "order": [
+        "CoreWeave"
+      ],
+      "quantizations": [
+        "fp8"
+      ],
+      "require_parameters": true
+    },
+    "providers_resolved": [
+      "CoreWeave"
+    ],
+    "python_version": "3.11.15",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_version": "0.4.0",
+    "response_failures": 1,
+    "table": "deepseek-v4-flash-0731\n11 tasks, 11 answered\n  pass@1               18.2%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              9.1%\n  vulnerable@1          0.0%  (lower is better)\n  4 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "tasks_answered": 11,
+    "tasks_attempted": 12,
+    "temperature": 0.0,
+    "wrapped_detail": {},
+    "wrapped_responses": 0
+  },
+  {
+    "completion_tokens_total": 40585,
+    "controls": {
+      "control/bad": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "z{5}",
+        "usable@1": 0.0,
+        "vulnerable@1": 0.0
+      },
+      "control/good": {
+        "as_expected": true,
+        "base_task": "regexeval/1",
+        "pass@1": 1.0,
+        "pattern": "^\\d$",
+        "usable@1": 1.0,
+        "vulnerable@1": 0.0
+      },
+      "control/vulnerable": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "(a+)+b",
+        "usable@1": 0.0,
+        "vulnerable@1": 1.0
+      }
+    },
+    "controls_all_as_expected": true,
+    "cost_usd_per_task": 0.02094327,
+    "cost_usd_total": 0.25131922,
+    "dataset": "Re(gEx|DoS)Eval",
+    "failure_detail": [],
+    "k": 1,
+    "max_tokens": 200,
+    "metrics": {
+      "dfa-eq@1": 0.08333333333333333,
+      "dfa-eq@1 (decided)": 0.125,
+      "exact@1": 0.0,
+      "pass@1": 0.16666666666666666,
+      "undecided": 4,
+      "usable@1": 0.08333333333333333,
+      "vulnerable@1": 0.0
+    },
+    "metrics_as_sent": {
+      "dfa-eq@1": 0.08333333333333333,
+      "dfa-eq@1 (decided)": 0.125,
+      "exact@1": 0.0,
+      "pass@1": 0.16666666666666666,
+      "undecided": 4,
+      "usable@1": 0.08333333333333333,
+      "vulnerable@1": 0.0
+    },
+    "model": "qwen3.6-max-preview",
+    "model_requested": "qwen/qwen3.6-max-preview",
+    "provider_requested": {
+      "allow_fallbacks": false,
+      "order": [
+        "Alibaba"
+      ],
+      "require_parameters": true
+    },
+    "providers_resolved": [
+      "Alibaba"
+    ],
+    "python_version": "3.11.15",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_version": "0.4.0",
+    "response_failures": 0,
+    "table": "qwen3.6-max-preview\n12 tasks, 12 answered\n  pass@1               16.7%\n  dfa-eq@1              8.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)   12.5%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              8.3%\n  vulnerable@1          0.0%  (lower is better)\n  4 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "tasks_answered": 12,
+    "tasks_attempted": 12,
+    "temperature": 0.0,
+    "wrapped_detail": {},
+    "wrapped_responses": 0
+  },
+  {
+    "completion_tokens_total": 26356,
+    "controls": {
+      "control/bad": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "z{5}",
+        "usable@1": 0.0,
+        "vulnerable@1": 0.0
+      },
+      "control/good": {
+        "as_expected": true,
+        "base_task": "regexeval/1",
+        "pass@1": 1.0,
+        "pattern": "^\\d$",
+        "usable@1": 1.0,
+        "vulnerable@1": 0.0
+      },
+      "control/vulnerable": {
+        "as_expected": true,
+        "base_task": "regexeval/133",
+        "pass@1": 0.0,
+        "pattern": "(a+)+b",
+        "usable@1": 0.0,
+        "vulnerable@1": 1.0
+      }
+    },
+    "controls_all_as_expected": true,
+    "cost_usd_per_task": 0.00390904,
+    "cost_usd_total": 0.04690851,
+    "dataset": "Re(gEx|DoS)Eval",
+    "failure_detail": [
+      {
+        "error": "empty content: completion_tokens=4000, reasoning_tokens=2674, finish_reason='length'",
+        "status": "parse_failure",
+        "task": "regexeval/1696"
+      },
+      {
+        "error": "empty content: completion_tokens=4000, reasoning_tokens=2455, finish_reason='length'",
+        "status": "parse_failure",
+        "task": "regexeval/2218"
+      }
+    ],
+    "k": 1,
+    "max_tokens": 200,
+    "metrics": {
+      "dfa-eq@1": 0.0,
+      "dfa-eq@1 (decided)": 0.0,
+      "exact@1": 0.0,
+      "pass@1": 0.1,
+      "undecided": 3,
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "metrics_as_sent": {
+      "dfa-eq@1": 0.0,
+      "dfa-eq@1 (decided)": 0.0,
+      "exact@1": 0.0,
+      "pass@1": 0.1,
+      "undecided": 3,
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "model": "glm-5.2",
+    "model_requested": "z-ai/glm-5.2",
+    "provider_requested": {
+      "allow_fallbacks": false,
+      "order": [
+        "Novita"
+      ],
+      "quantizations": [
+        "fp8"
+      ],
+      "require_parameters": true
+    },
+    "providers_resolved": [
+      "Novita"
+    ],
+    "python_version": "3.11.15",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_version": "0.4.0",
+    "response_failures": 2,
+    "table": "glm-5.2\n10 tasks, 10 answered\n  pass@1               10.0%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              0.0%\n  vulnerable@1          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "tasks_answered": 10,
+    "tasks_attempted": 12,
+    "temperature": 0.0,
+    "wrapped_detail": {},
+    "wrapped_responses": 0
+  }
+]
