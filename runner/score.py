@@ -27,7 +27,11 @@ from regexbench.datasets import load_regexeval  # noqa: E402
 # Scoring runs DFA equivalence and an empirical ReDoS pass per pattern, both
 # of which are CPU-bound and can block on a pathological pattern until the
 # match timeout. Parallel across tasks keeps a full sweep tractable.
-WORKERS = max(1, (os.cpu_count() or 4) - 1)
+# One scoring process per core, each single-threaded, beats many processes
+# with several worker threads each: the work is GIL-bound, so extra threads
+# buy context switching rather than throughput. Scoring all 11 models at
+# once with 3 workers apiece drove load to 20 on a 4-core box.
+WORKERS = int(os.environ.get("REGEXLB_WORKERS", max(1, (os.cpu_count() or 4) - 1)))
 
 CONTROL_EXPECTATIONS = {
     "control/good": lambda m: m["pass@1"] == 1.0 and m["usable@1"] == 1.0,
