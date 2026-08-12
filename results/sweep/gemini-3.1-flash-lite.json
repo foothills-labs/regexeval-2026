@@ -1,0 +1,159 @@
+{
+  "completion_tokens_total": 61097,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/2",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/2",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 9.023e-05,
+  "cost_usd_total": 0.121815,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [],
+  "k": 3,
+  "max_tokens": 200,
+  "metrics": {
+    "dfa-eq@3": 0.09333333333333334,
+    "dfa-eq@3 (decided)": 0.11830985915492957,
+    "exact@3": 0.03111111111111111,
+    "pass@3": 0.38666666666666666,
+    "undecided": 95,
+    "usable@3": 0.1711111111111111,
+    "vulnerable@3": 0.12
+  },
+  "metrics_as_sent": {
+    "dfa-eq@3": 0.09555555555555556,
+    "dfa-eq@3 (decided)": 0.12112676056338029,
+    "exact@3": 0.03111111111111111,
+    "pass@3": 0.3888888888888889,
+    "undecided": 95,
+    "usable@3": 0.17333333333333334,
+    "vulnerable@3": 0.12
+  },
+  "model": "gemini-3.1-flash-lite",
+  "model_requested": "google/gemini-3.1-flash-lite",
+  "provider_requested": {
+    "allow_fallbacks": false,
+    "order": [
+      "Google AI Studio"
+    ],
+    "require_parameters": true
+  },
+  "providers_resolved": [
+    "Google AI Studio"
+  ],
+  "python_version": "3.11.15",
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
+  "response_failures": 0,
+  "table": "gemini-3.1-flash-lite\n450 tasks, 450 answered\n  pass@3               38.7%\n  dfa-eq@3              9.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   11.8%  (engine limits excluded \u2014 model only)\n  exact@3               3.1%\n  usable@3             17.1%\n  vulnerable@3         12.0%  (lower is better)\n  95 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "tasks_answered": 1350,
+  "tasks_attempted": 1350,
+  "temperature": 0.0,
+  "wrapped_detail": {
+    "regexeval/1587": [
+      {
+        "as_sent": "\"(?:[^\"\\\\]|\\\\.)*\"",
+        "scored": "(?:[^\"\\\\]|\\\\.)*"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      }
+    ],
+    "regexeval/1884": [
+      {
+        "as_sent": "r\"\\.yourdomain\\.[a-z]{2,}(?=/|$)\"",
+        "scored": "\\.yourdomain\\.[a-z]{2,}(?=/|$)"
+      }
+    ],
+    "regexeval/1906": [
+      {
+        "as_sent": "r'(?:\"([^\"]*)\"|(\\S+))'",
+        "scored": "(?:\"([^\"]*)\"|(\\S+))"
+      }
+    ],
+    "regexeval/2265": [
+      {
+        "as_sent": "r'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/(?:3[0-2]|[12]?[0-9])$'",
+        "scored": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/(?:3[0-2]|[12]?[0-9])$"
+      }
+    ],
+    "regexeval/2333": [
+      {
+        "as_sent": "\"(?:\\\\.|[^\"\\\\])*\"",
+        "scored": "(?:\\\\.|[^\"\\\\])*"
+      },
+      {
+        "as_sent": "\"(?:[^\"\\\\]|\\\\.)*\"",
+        "scored": "(?:[^\"\\\\]|\\\\.)*"
+      },
+      {
+        "as_sent": "\"(.*?)\"",
+        "scored": "(.*?)"
+      }
+    ],
+    "regexeval/2488": [
+      {
+        "as_sent": "r'(?:213|310|323|424|442|562|619|626|657|661|714|747|760|805|818|858|909|925|949|951)-\\d{3}-\\d{4}'",
+        "scored": "(?:213|310|323|424|442|562|619|626|657|661|714|747|760|805|818|858|909|925|949|951)-\\d{3}-\\d{4}"
+      }
+    ],
+    "regexeval/742": [
+      {
+        "as_sent": "r\"(?i)\\b(UPDATE|INSERT)\\b\\s+(INTO\\s+)?([a-zA-Z0-9_]+)\"",
+        "scored": "(?i)\\b(UPDATE|INSERT)\\b\\s+(INTO\\s+)?([a-zA-Z0-9_]+)"
+      },
+      {
+        "as_sent": "r\"(?i)\\b(UPDATE|INSERT)\\b\\s+(INTO\\s+)?([a-zA-Z0-9_]+)\\s+\"",
+        "scored": "(?i)\\b(UPDATE|INSERT)\\b\\s+(INTO\\s+)?([a-zA-Z0-9_]+)\\s+"
+      }
+    ],
+    "regexeval/936": [
+      {
+        "as_sent": "\"(.*?)\"",
+        "scored": "(.*?)"
+      }
+    ],
+    "regexeval/977": [
+      {
+        "as_sent": "/\\*[\\s\\S]*?\\*/",
+        "scored": "\\*[\\s\\S]*?\\*"
+      },
+      {
+        "as_sent": "/\\*[\\s\\S]*?\\*/",
+        "scored": "\\*[\\s\\S]*?\\*"
+      },
+      {
+        "as_sent": "/\\*[\\s\\S]*?\\*/",
+        "scored": "\\*[\\s\\S]*?\\*"
+      }
+    ]
+  },
+  "wrapped_responses": 16
+}
