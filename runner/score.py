@@ -186,7 +186,13 @@ def score_run(run_name: str, only: set[str] | None = None) -> list[dict]:
 
     summary.sort(key=lambda e: (-(headline(e, "usable") if headline(e, "usable") is not None else -1),
                                 e["model"]))
-    (result_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
+    # A filtered run must not touch summary.json. It holds the whole run, and
+    # several single-model processes scoring in parallel would each overwrite
+    # it with just their own model -- last writer wins, and the file silently
+    # stops describing the run. Use --merge to rebuild it from the per-model
+    # files once they are all present.
+    if only is None:
+        (result_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
     return summary
 
 
