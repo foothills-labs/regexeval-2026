@@ -15,6 +15,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 import config  # noqa: E402
 from openrouter_client import normalize_pattern  # noqa: E402
 
+ROSTER = {m["label"]: m for m in
+          json.loads((Path(__file__).parent / "models.json").read_text())["models"]}
+
 BLOCKER, WARN, OK = "BLOCKER", "WARN", "OK"
 
 
@@ -57,6 +60,15 @@ def audit(run: str, k_expected: int, task_count: int | None):
         if len(providers) > 1:
             findings.append((BLOCKER, label,
                              f"served by MULTIPLE providers {dict(providers)} -- pin did not hold"))
+
+        # The pin is the instruction; the response is the evidence. Check they agree.
+        cfg = ROSTER.get(label)
+        if cfg and providers:
+            want = (cfg["provider"].get("order") or [None])[0]
+            got = next(iter(providers))
+            if want and not got.startswith(want):
+                findings.append((BLOCKER, label,
+                                 f"pinned to {want!r} but served by {got!r}"))
 
         if reasoning_tok > 0:
             findings.append((BLOCKER, label,
