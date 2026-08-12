@@ -4,8 +4,8 @@ Written as the questions a skeptical reader would ask, in the order they'd
 ask them. The harder metrics and the engine's limits are in
 [APPENDIX.md](APPENDIX.md).
 
-Describes the **preview** run of 2026-08-11. The full run will update this
-document rather than replace it.
+Describes the run of **2026-08-12**: 11 models, 450 tasks, 3 samples each,
+14,850 calls, $10.95.
 
 ---
 
@@ -36,14 +36,15 @@ one, which makes our numbers comparable to prior work.
 We don't redistribute it; `make setup` downloads it from
 [s2e-lab/RegexEval](https://github.com/s2e-lab/RegexEval).
 
-**The preview used 10 of those 762 tasks**, chosen by spreading evenly
-across the corpus (indices 0, 75, 150, … 700) rather than taking the first
-ten, which are all easy. Ten tasks is a pipeline test, not a measurement.
+**The run used 450 of those 762 tasks**, chosen by spreading evenly across
+the corpus rather than taking the first 450, so the sample is not weighted
+toward the easy end. 450 was set by budget: the full corpus at k=3 priced
+above the $12 available.
 
 ### How many samples per task?
 
-**Three** (`k=3`) in the main run. The earlier preview used one, and every
-preview number is labelled `@1` so it can't be mistaken for the real thing.
+**Three** (`k=3`). The earlier preview used one, and every preview number is
+labelled `@1` so it cannot be mistaken for the real run.
 
 This matters because models are non-deterministic: ask twice, get two
 answers. A single sample measures luck as much as skill. `usable@3` asks
@@ -122,18 +123,22 @@ Two things this turned up that are worth stating plainly:
   answered badly.
 
 Whether thinking actually helps at this task is a separate question, and a
-more interesting one, so it is measured rather than assumed: a **thinking
-slice** re-runs the reasoning-capable models on a subset with reasoning
-enabled. That comparison is reported on its own, never mixed into the main
-table.
+more interesting one, so it is measured rather than assumed. A **thinking
+slice** re-ran five reasoning-capable models on 12 tasks with reasoning
+enabled (`predictions/pilot-thinking/`). Compared at matched `k=1`, it is
+not a uniform win: `kimi-k3` went 8.3% to 22.2% usable, `qwen3.6-max` was
+unchanged, and `glm-5.2` went 8.3% to 0.0% — partly because two of its runs
+exhausted a 4,000-token budget and returned nothing. Twelve tasks is far too
+few to conclude from; it is reported separately and never mixed into the
+main table. Extending it needs budget this run did not leave.
 
 ### How is the pattern pulled out of the reply?
 
 Take the last fenced code block if there is one; otherwise the whole
 trimmed reply. Then strip one layer of host-language quoting — see
-[the wrapper rule](APPENDIX.md#the-wrapper-rule), which changed one model's
-score by 20 points and is therefore documented in the open rather than
-buried in the code.
+[the wrapper rule](APPENDIX.md#the-wrapper-rule), documented in the open
+rather than buried in the code because it is a judgement call. It affected
+7-18 of 1,350 responses per model here, too few to move a ranking.
 
 ### How do you stop a rate-limit error being scored as a wrong answer?
 
@@ -150,8 +155,8 @@ classified before scoring:
 429s and 5xx are retried with exponential backoff (2s, 4s, 8s, 16s, 32s).
 If retries run out, that's recorded as a **failure**, not as a zero — the
 distinction matters, because a zero looks like a wrong answer and a failure
-looks like what it is. `mistral-small-3.2` shows `—` in every metric column
-and `10/10` under failures for exactly this reason.
+looks like what it is. In this run 54 of 14,850 calls failed that way, 29 of
+them content-filter refusals on `claude-opus-5`.
 
 ### How do you know the scorer itself works?
 
@@ -250,17 +255,26 @@ If you disagree with a judgement call — the wrapper rule, say — change it
 and re-score. The raw responses are all there, which is the point of
 committing them.
 
-### What's wrong with the preview, in our own words?
+### What's wrong with this run, in our own words?
 
-1. **Ten tasks is not a ranking.** Roughly ±30 points of uncertainty. The
-   ordering should not be cited.
-2. **`k=1`** means the `@k` metrics carry no information about consistency.
-3. **One corpus**, which is old enough to be in every model's training
-   data. A high score may partly measure memorisation. A small private task
-   set is planned to size that gap — the difference between public and
-   private scores is itself the finding.
-4. **`mistral-small` has no data** — a provider outage, not a result. It
-   needs re-running before any comparison involving it.
-5. **No `crosscheck()` pass yet.** `regexbench` 0.4.0 can verify its
-   equivalence engine string-by-string against Python's own `re`; the full
-   run should use it on the controls as an independent check.
+1. **The reference answers contain errors.** At least two gold patterns are
+   wrong where the model was right — see
+   [APPENDIX](APPENDIX.md#the-reference-answers-contain-errors). We have not
+   audited how often. `dfa-eq` and `usable` are therefore lower bounds on
+   model correctness.
+2. **Coverage is not perfectly uniform.** Nine models cover all 450 tasks;
+   `kimi-k3` covers 447 because the budget ran out mid-collection, and
+   `claude-opus-5` covers 445 because of content-filter refusals. Under 1%,
+   and it moves no ranking, but the denominators differ.
+3. **450 of 762 tasks**, chosen by budget rather than by principle. The
+   sample is spread evenly, but it is a sample.
+4. **One corpus**, old enough to be in every model's training data. Scores
+   may partly measure memorisation. A private task set to size that gap is
+   not yet built — the difference between public and private scores would
+   itself be the finding.
+5. **No `crosscheck()` pass.** `regexbench` 0.4.0 can verify its equivalence
+   engine string-by-string against Python's own `re`. Running it on the
+   controls would be an independent check on the scorer and has not been
+   done.
+6. **`k=3` is small.** Enough to expose that content-filter refusals are
+   non-deterministic, not enough to characterise them.

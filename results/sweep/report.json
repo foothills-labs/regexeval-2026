@@ -1,0 +1,324 @@
+{
+  "run": "sweep",
+  "models": 11,
+  "k": 3,
+  "total_cost": 10.9541,
+  "total_calls": 14850,
+  "total_failures": 54,
+  "all_controls_ok": true,
+  "table": [
+    {
+      "model": "kimi-k3",
+      "slug": "moonshotai/kimi-k3",
+      "provider": "Fireworks",
+      "usable": 0.2483221476510067,
+      "pass": 0.4720357941834452,
+      "vulnerable": 0.14093959731543623,
+      "dfa_eq": 0.15212527964205816,
+      "failures": 16,
+      "attempted": 1350,
+      "cost_per_task": 0.00132812,
+      "cost_total": 1.7929641,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "claude-opus-5",
+      "slug": "anthropic/claude-opus-5",
+      "provider": "Anthropic",
+      "usable": 0.22972972972972974,
+      "pass": 0.4752252252252252,
+      "vulnerable": 0.1554054054054054,
+      "dfa_eq": 0.13963963963963963,
+      "failures": 36,
+      "attempted": 1350,
+      "cost_per_task": 0.00251421,
+      "cost_total": 3.394185,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "qwen3.6-max-preview",
+      "slug": "qwen/qwen3.6-max-preview",
+      "provider": "Alibaba",
+      "usable": 0.21555555555555556,
+      "pass": 0.42444444444444446,
+      "vulnerable": 0.09111111111111111,
+      "dfa_eq": 0.13777777777777778,
+      "failures": 0,
+      "attempted": 1350,
+      "cost_per_task": 0.00038789,
+      "cost_total": 0.523656,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "slug": "openai/gpt-5.6-sol",
+      "provider": "OpenAI",
+      "usable": 0.2111111111111111,
+      "pass": 0.4222222222222222,
+      "vulnerable": 0.10222222222222223,
+      "dfa_eq": 0.09555555555555556,
+      "failures": 1,
+      "attempted": 1350,
+      "cost_per_task": 0.00210764,
+      "cost_total": 2.845315,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "deepseek-v4-flash-0731",
+      "slug": "deepseek/deepseek-v4-flash-0731",
+      "provider": "CoreWeave",
+      "usable": 0.19777777777777777,
+      "pass": 0.38,
+      "vulnerable": 0.12,
+      "dfa_eq": 0.11333333333333333,
+      "failures": 0,
+      "attempted": 1350,
+      "cost_per_task": 2.564e-05,
+      "cost_total": 0.03460872,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "qwen3.6-plus",
+      "slug": "qwen/qwen3.6-plus",
+      "provider": "Alibaba",
+      "usable": 0.19777777777777777,
+      "pass": 0.3977777777777778,
+      "vulnerable": 0.09777777777777778,
+      "dfa_eq": 0.11555555555555555,
+      "failures": 0,
+      "attempted": 1350,
+      "cost_per_task": 0.0001206,
+      "cost_total": 0.16281038,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "glm-5.2",
+      "slug": "z-ai/glm-5.2",
+      "provider": "Novita",
+      "usable": 0.18666666666666668,
+      "pass": 0.42444444444444446,
+      "vulnerable": 0.14222222222222222,
+      "dfa_eq": 0.10444444444444445,
+      "failures": 0,
+      "attempted": 1350,
+      "cost_per_task": 0.00015824,
+      "cost_total": 0.21362333,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "slug": "openai/gpt-5.6-luna",
+      "provider": "OpenAI",
+      "usable": 0.18666666666666668,
+      "pass": 0.3933333333333333,
+      "vulnerable": 0.11777777777777777,
+      "dfa_eq": 0.09333333333333334,
+      "failures": 1,
+      "attempted": 1350,
+      "cost_per_task": 4.294e-05,
+      "cost_total": 0.0579663,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "slug": "openai/gpt-5.6-terra",
+      "provider": "OpenAI",
+      "usable": 0.18666666666666668,
+      "pass": 0.4222222222222222,
+      "vulnerable": 0.12,
+      "dfa_eq": 0.10222222222222223,
+      "failures": 0,
+      "attempted": 1350,
+      "cost_per_task": 0.00040618,
+      "cost_total": 0.548349,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "claude-sonnet-5",
+      "slug": "anthropic/claude-sonnet-5",
+      "provider": "Anthropic",
+      "usable": 0.18,
+      "pass": 0.4066666666666667,
+      "vulnerable": 0.10888888888888888,
+      "dfa_eq": 0.10444444444444445,
+      "failures": 0,
+      "attempted": 1350,
+      "cost_per_task": 0.00093244,
+      "cost_total": 1.258794,
+      "k": 3,
+      "controls_ok": true
+    },
+    {
+      "model": "gemini-3.1-flash-lite",
+      "slug": "google/gemini-3.1-flash-lite",
+      "provider": "Google AI Studio",
+      "usable": 0.1711111111111111,
+      "pass": 0.38666666666666666,
+      "vulnerable": 0.12,
+      "dfa_eq": 0.09333333333333334,
+      "failures": 0,
+      "attempted": 1350,
+      "cost_per_task": 9.023e-05,
+      "cost_total": 0.121815,
+      "k": 3,
+      "controls_ok": true
+    }
+  ],
+  "best_usable": 0.2483221476510067,
+  "best_pass": 0.4752252252252252,
+  "biggest_gap": [
+    0.24549549549549546,
+    "claude-opus-5"
+  ],
+  "example_wrong_but_passing": [
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/2",
+      "prompt": "Matches 5 numeric digits, such as a zip code.",
+      "pattern": "\\b\\d{5}\\b",
+      "reference": "^\\d{5}$",
+      "witness": "\n00000",
+      "unicode_shorthand_artifact": false
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/9",
+      "prompt": "Positive integer value.",
+      "pattern": "^[1-9][0-9]*$",
+      "reference": "^\\d+$",
+      "witness": "0",
+      "unicode_shorthand_artifact": false
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/12",
+      "prompt": "Simple email expression. Doesn't allow numbers in the domain name and doesn't allow for top level domains that are less than 2 or more than 3 letters (which is fine until they allow more). Doesn't handle multiple &quot;.&quot; in the domain (joe@abc.co.uk).",
+      "pattern": "^[a-zA-Z0-9._%-]+@[a-zA-Z-]+\\.[a-zA-Z]{2,3}$",
+      "reference": "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$",
+      "witness": "%@-.AA",
+      "unicode_shorthand_artifact": false
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/34",
+      "prompt": "Much simpler email expression. This one forces a length of 2 or 3, which fits current specs, but you may need to alter the end as this one allows all numerals on the .COM section.",
+      "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9]{2,3}$",
+      "reference": "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$",
+      "witness": "%@-.00",
+      "unicode_shorthand_artifact": false
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/48",
+      "prompt": "Matches any unsigned floating point number/numeric string. Also matches empty strings.",
+      "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)?$",
+      "reference": "^\\d*\\.?\\d*$",
+      "witness": ".",
+      "unicode_shorthand_artifact": false
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/73",
+      "prompt": "A very simple ISBN validation expression - it just checks for a 10 digit number where the last digit could also be a capital 'X'. Complete specs for ISBN available here:\nhttp://www.isbn.org/standards/home/isbn/international/html/usm4.htm. An enhancement would be to allow exactly 3 or 0 hyphens or 3 or 0 spaces, since these are also valid formats.",
+      "pattern": "^\\d{9}[\\dX]$",
+      "reference": "^\\d{9}[\\d|X]$",
+      "witness": "000000000|",
+      "unicode_shorthand_artifact": false
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/96",
+      "prompt": "This expression matches dates formatted as MM/DD/YYYY where months and days must be 2 digits each, zero padded. It is not perfect - it allows DD to be from 01 to 31 regardless of the month.",
+      "pattern": "^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/\\d{4}$",
+      "reference": "^(|(0[1-9])|(1[0-2]))\\/((0[1-9])|(1\\d)|(2\\d)|(3[0-1]))\\/((\\d{4}))$",
+      "witness": "/01/0000",
+      "unicode_shorthand_artifact": false
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/99",
+      "prompt": "Fully functional date validator in format dd.MM.yyyy\nWorks only within range of years 2000-2099 !\nIt allows leading zeros but does not require them. The last year pattern (enumeration) is not very clever but I will improve it, if needed.",
+      "pattern": "^(?:(?:0?[1-9]|[12][0-9]|3[01])\\.(?:0?[13578]|1[02])|(?:0?[1-9]|[12][0-9]|30)\\.(?:0?[469]|11)|(?:0?[1-9]|1[0-9]|2[0-8])\\.0?2|29\\.0?2(?=\\.(?:20(?:0[048]|[2468][048]|[13579][26])))(?=.*))\\.(20[0-9]{2})$",
+      "reference": "^((0?[1-9]|[12][1-9]|3[01])\\.(0?[13578]|1[02])\\.20[0-9]{2}|(0?[1-9]|[12][1-9]|30)\\.(0?[13456789]|1[012])\\.20[0-9]{2}|(0?[1-9]|1[1-9]|2[0-8])\\.(0?[123456789]|1[012])\\.20[0-9]{2}|(0?[1-9]|[12][1-9])\\.(0?[123456789]|1[012])\\.20(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96))$",
+      "witness": "10.1.2000",
+      "unicode_shorthand_artifact": false
+    }
+  ],
+  "wrong_substantive_count": 540,
+  "wrong_unicode_only_count": 266,
+  "example_unsafe_but_passing": [
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/20",
+      "prompt": "Domain names:\nThis regular expression tests the validity of a domain or hostname. It will match any valid domain name that does not contain characters which are invalid in URLs, and which ends in .com, .org, .net, .mil, or .edu. You can add additional valid TLDs by appending the | (pipe) character and the desired TLD to the list in the parens.",
+      "pattern": "^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+(com|org|net|mil|edu)$",
+      "risk": "EXPONENTIAL",
+      "reason": "a quantifier wraps a quantified group, e.g. (a+)+ \u2014 exponential backtracking on a failing suffix"
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/41",
+      "prompt": "This pattern allows standard e-mail addresses (e.g. user@domain.com), sub domains (e.g. user@foo.domain.com), the new two- and four-letter domains (e.g. user@domain.tv and user@domain.name) and country codes (e.g. user@foo.com.us). Also, this patter follows the Network Solutions standard length of 67 characters for top-level domains. The reason I allow numbers to be entered in the domain suffix is for future planning. If you do not want numbers to be able to be added as a domain suffix (e.g. user@domain.123), simply delete the last two occurrences of &quot;\\d&quot;.",
+      "pattern": "^[\\w\\.\\-]+@([\\w\\-]+\\.)+[a-zA-Z\\d]{2,67}(\\.[a-zA-Z\\d]{2,67})?$",
+      "risk": "EXPONENTIAL",
+      "reason": "a quantifier wraps a quantified group, e.g. (a+)+ \u2014 exponential backtracking on a failing suffix"
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/57",
+      "prompt": "Any Expression Upper/Lower Case, with commas and space between the text, with any amount of space before or after",
+      "pattern": "^\\s*[A-Za-z]+(?:,?\\s+[A-Za-z]+)*\\s*$",
+      "risk": "EXPONENTIAL",
+      "reason": "a quantifier wraps a quantified group, e.g. (a+)+ \u2014 exponential backtracking on a failing suffix"
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/69",
+      "prompt": "Regular expression to evaluate dutch-style phone numbers. Possible example prefixes: +31, +31(0), (+31)(0), 0, 0031\nfollowed by 9 numbers (which can contain a space or -).",
+      "pattern": "^(?:(?:\\((?:\\+|00)31\\)|(?:\\+|00)31)(?:\\s*\\(0\\)|\\s*0)?|0)(?:[\\s-]?\\d){9}$",
+      "risk": "POLYNOMIAL",
+      "reason": "a bounded quantifier wraps an unbounded one, e.g. (a+){10} \u2014 the bound caps the nesting, but the engine still tries every split"
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/125",
+      "prompt": "This RE validates a path/file of type txt (text file)\nThis RE can be used as a filter on certain file types, while insuring the entire string is a fully qualified path and file. The filter value can be changed or added to as you need",
+      "pattern": "^(?:[a-zA-Z]:\\\\|\\\\\\\\[^\\\\/:*?\"<>|\\r\\n]+\\\\[^\\\\/:*?\"<>|\\r\\n]+\\\\)(?:[^\\\\/:*?\"<>|\\r\\n]+\\\\)*[^\\\\/:*?\"<>|\\r\\n]+\\.(?:txt|TXT)$",
+      "risk": "EXPONENTIAL",
+      "reason": "a quantifier wraps a quantified group, e.g. (a+)+ \u2014 exponential backtracking on a failing suffix"
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/287",
+      "prompt": "Email address validator. Should cover most of RFC 822, including unusual (but still valid) addresses. Does not restrict the top level domain size, but you're better off doing an nslookup or similar if you absolutely must have a valid domain. Accepts IP Addresses instead of the domain, with or without brackets. Believe it or not, this one is valid: !#$%^&amp;amp;amp;amp;*-+~/'`|{}@xyz.com\nSorry looks like this site is mangling the quote and ampersand characters - you'll have to fix that yourself.",
+      "pattern": "^(?:[A-Za-z0-9!#$%&'*+\\-/=?^_`{|}~]+(?:\\.[A-Za-z0-9!#$%&'*+\\-/=?^_`{|}~]+)*|\"(?:[^\"\\\\\\r\\n]|\\\\.)*\")@(?:\\[?(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\]?|(?:[A-Za-z0-9](?:[A-Za-z0-9\\-]*[A-Za-z0-9])?\\.)+[A-Za-z]{2,})$",
+      "risk": "EXPONENTIAL",
+      "reason": "a quantifier wraps a quantified group, e.g. (a+)+ \u2014 exponential backtracking on a failing suffix"
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/300",
+      "prompt": "This allows a sequence of real numbers to be added, separated by a comma (required) and a space (optional). Based pretty heavily on an expression by Steven Smith on this site.",
+      "pattern": "^[+-]?\\d*\\.?\\d+(?:,\\s?[+-]?\\d*\\.?\\d+)*$",
+      "risk": "EXPONENTIAL",
+      "reason": "a quantifier wraps a quantified group, e.g. (a+)+ \u2014 exponential backtracking on a failing suffix"
+    },
+    {
+      "model": "claude-opus-5",
+      "task": "regexeval/519",
+      "prompt": "Validate a comma delimited string of integer between 1 and 99999999 (change {0,7} to whatever you need). No zero leading.",
+      "pattern": "^[1-9][0-9]{0,7}(?:,[1-9][0-9]{0,7})*$",
+      "risk": "EXPONENTIAL",
+      "reason": "a quantifier wraps a quantified group, e.g. (a+)+ \u2014 exponential backtracking on a failing suffix"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 The README reports three numbers because three numbers tell the story.
 These are the rest. They are not hidden — they are computed in every run
-and stored in `results/*/`— they just aren't what you need to read the
+and stored in `results/sweep/` — they just aren't what you need to read the
 leaderboard.
 
 ## The full metric set
@@ -13,90 +13,103 @@ leaderboard.
 | `vulnerable@k` | Can the pattern be made to hang on hostile input? |
 | `usable@k` | Correct, not vulnerable, and never *proven* to differ from the reference. |
 | `dfa-eq@k` | Is it the same language as the reference? Counting "we couldn't tell" as a miss. |
-| `dfa-eq@k (decided)` | The same, but only over the tasks where the question could be answered at all. |
+| `dfa-eq@k (decided)` | The same, but only over tasks where the question could be answered. |
 | `exact@k` | Is it the identical string to the reference? |
+
+## Full results — 450 tasks, k=3, 2026-08-12
+
+| Model | dfa-eq@3 | dfa-eq@3 (decided) | exact@3 | undecidable | wrapped |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `kimi-k3` | 15.2% | 17.5% | 6.3% | 82 | 18 |
+| `claude-opus-5` | 14.0% | 17.0% | 5.4% | 109 | 9 |
+| `qwen3.6-max-preview` | 13.8% | 17.4% | 3.8% | 94 | 11 |
+| `qwen3.6-plus` | 11.6% | 14.8% | 3.8% | 99 | 9 |
+| `deepseek-v4-flash-0731` | 11.3% | 14.3% | 3.3% | 93 | 16 |
+| `glm-5.2` | 10.4% | 12.9% | 3.8% | 86 | 18 |
+| `claude-sonnet-5` | 10.4% | 13.3% | 3.3% | 97 | 9 |
+| `gpt-5.6-terra` | 10.2% | 13.1% | 2.0% | 100 | 11 |
+| `gpt-5.6-sol` | 9.6% | 13.6% | 2.0% | 133 | 7 |
+| `gpt-5.6-luna` | 9.3% | 12.2% | 2.0% | 113 | 9 |
+| `gemini-3.1-flash-lite` | 9.3% | 11.8% | 3.1% | 95 | 16 |
+
+Semantic equivalence tops out at **17.5%** where `pass@3` reaches 47%.
+Reproducing the reference *language* is a far harder problem than passing
+its examples — which is the case for measuring both.
 
 ### Why `dfa-eq` is reported twice
 
-Comparing two regexes as *languages* is a solved problem for most patterns:
-compile both to automata, compare the machines. But for patterns using
-**backreferences** — things like `(a)\1`, "match a thing, then the same
-thing again" — it isn't just hard, it's **formally undecidable**. No
-algorithm can answer it, ever. Not a limitation of this tool; a theorem.
+Comparing two regexes as *languages* is solved for most patterns: compile
+both to automata, compare the machines. But for patterns using
+**backreferences** — `(a)\1`, "match a thing then the same thing again" —
+it isn't merely hard, it is **formally undecidable**. No algorithm can
+answer it, ever. Not a limitation of this tool; a theorem.
 
-That leaves an honest reporting problem, and one number can't solve it:
+That leaves an honest reporting problem one number cannot solve:
 
-- **`dfa-eq@k`** counts undecidable comparisons as failures. It answers
-  *"how much of the corpus did we positively verify as correct?"* It's a
-  lower bound, and it cannot flatter a model.
-- **`dfa-eq@k (decided)`** drops those tasks from the denominator entirely.
-  It answers *"of the questions that could be answered, how many did the
-  model get right?"* That's the model's ability, separated from the tool's
-  reach.
+- **`dfa-eq@k`** counts undecidable comparisons as failures. *How much of
+  the corpus did we positively verify?* A lower bound that cannot flatter.
+- **`dfa-eq@k (decided)`** drops those tasks from the denominator. *Of the
+  questions answerable at all, how many did the model get right?*
 
-Publishing only the second one would be quiet inflation — a score over the
-easy subset, presented as the whole. Publishing only the first blames the
-model for a theorem. So both are published, always, with the count of
-undecidable tasks stated alongside.
+Publishing only the second is quiet inflation. Publishing only the first
+blames the model for a theorem. Both are published, always, with the
+undecidable count beside them — **82 to 133 of 450 tasks per model**.
 
-**In the preview**, 2–4 of 10 tasks per model were undecidable. That's a
-large fraction of a small sample, and one more reason not to read the
-preview as a ranking.
+### Why `exact@k` exists
 
-### Why `exact@k` exists at all
+It runs 2.0%–6.3%. That's the point: `[0-9]+` and `[0-9][0-9]*` are the
+same language written two ways, and a benchmark scoring by string
+comparison would call one wrong. `exact@k` is published to show how badly
+that approach misranks everyone, not because it measures anything useful.
 
-It was 0.0% for every model in the preview — not a single string-identical
-answer. That's the point. `[0-9]+` and `[0-9][0-9]*` are the same language
-written two ways, and a benchmark that scored by string comparison would
-call one of them wrong. `exact@k` is published to show how badly that
-approach would misrank everyone, not because it measures anything useful.
+## The reference answers contain errors
 
-## Preview values
+This is the most important limitation on this page.
 
-| Model | dfa-eq@1 | dfa-eq@1 (decided) | exact@1 | undecidable |
-| --- | ---: | ---: | ---: | ---: |
-| `openai/gpt-4o-mini` | 10.0% | 12.5% | 0.0% | 2/10 |
-| `qwen/qwen-2.5-7b-instruct` | 0.0% | 0.0% | 0.0% | 3/10 |
-| `meta-llama/llama-3.1-8b-instruct` | 0.0% | 0.0% | 0.0% | 4/10 |
+`dfa-eq` compares the model against a human-written gold pattern, and some
+gold patterns are wrong. Two found by inspection, not by search:
 
-Semantic equivalence tops out at 12.5% where `pass@1` reaches 40%.
-Reproducing the reference *language* is a much harder problem than passing
-the examples — which is the case for measuring both.
+**A literal pipe in a character class.** For *"a very simple ISBN
+validation expression"* the reference is `^\d{9}[\d|X]$`. That class
+contains digit, **pipe**, and X — someone wrote `|` meaning "or" inside
+`[...]`, where it is just a character. `claude-opus-5` wrote `^\d{9}[\dX]$`,
+which is what the prompt describes. It is scored as different, and the
+witness is `000000000|`.
+
+**A definition disagreement.** For *"Positive integer value."* the
+reference `^\d+$` accepts `0`; the model's `^[1-9][0-9]*$` does not. Zero
+is not a positive integer.
+
+We have **not** audited how often this occurs. The consequence is
+directional and worth stating plainly: **`dfa-eq` is a lower bound on model
+correctness.** Some fraction of the gap between `pass@3` and `dfa-eq@3` is
+gold-standard error rather than model error.
+
+`usable@k` inherits this, since it counts a proven difference against the
+model. `pass@k` and `vulnerable@k` do not — they run the real `re` engine
+against real strings and never consult the reference.
 
 ## The wrapper rule
 
-Models were asked for a bare pattern in a code block. Some return the
-pattern wrapped in their host language's string syntax instead:
+Models were asked for a bare pattern in a code block. Some return it
+wrapped in host-language string syntax:
 
 ```
 r'\d+$'      ← what the model said
 \d+$         ← what it meant
 ```
 
-Scored literally, `r'\d+$'` is a pattern matching the letter `r`, a quote,
-and so on. It fails — for a reason that has nothing to do with regex
-ability.
+Scored literally, `r'\d+$'` matches the letter `r`, a quote, and so on. It
+fails for a reason unrelated to regex ability.
 
-**The rule: we strip one layer of host-language quoting before scoring**
-(`r'…'`, `'…'`, `"…"`, `` `…` ``, `/…/flags`), because the benchmark is
-measuring regex generation, not output formatting.
+**The rule: one layer of host-language quoting is stripped before scoring**
+(`r'…'`, `'…'`, `"…"`, `` `…` ``, `/…/flags`).
 
-This is a judgement call with real consequences, so it's made in the open:
-
-- Llama-3.1-8b wrapped 5 of 10 answers. Scored literally it gets `pass@1`
-  0.0%; with the rule applied, **20.0%**.
-- Every strip is recorded in `results/*/<model>.json` under
-  `wrapped_detail`, with the before and after.
-- The unnormalized score is also stored, as `metrics_as_sent`, so anyone
-  who thinks the rule is wrong can use the other number without re-running
-  anything.
-- `wrapped_responses` is published per model, because a model that can't
-  follow the output format is telling you something real — it just isn't
-  a regex score.
-
-This rule penalizes nobody at random, but it does help small models more
-than large ones, since they're the ones that wrap. That's exactly why it's
-stated here instead of buried in the code.
+It affected **7 to 18 responses per model** out of 1,350 — under 1.4%
+everywhere, too small to move any ranking. Every strip is recorded in
+`results/sweep/<model>.json` under `wrapped_detail` with before and after,
+and the unnormalized score is kept as `metrics_as_sent` so anyone who
+disagrees can use the other number without re-running anything.
 
 ## Engine limitations
 
@@ -106,16 +119,17 @@ equally:
 - **`\d` is not `[0-9]`.** It matches every Unicode digit, because that is
   what Python's `re` does and the scorer runs the real `re`. This is the
   single thing most likely to make our numbers differ from another
-  published regex eval.
+  published regex eval. It also inflates apparent errors: of 806 answers
+  that passed their tests but differed from the reference, **266 differed
+  only on Unicode digits** — the model wrote `[0-9]` where the gold wrote
+  `\d`, or the reverse.
 - **ReDoS screening covers three of five known vulnerability families**
-  structurally; the other two are caught only if the empirical pass happens
-  to trip them. So `vulnerable@k` is a **lower bound** — the true rate is
-  at least this high.
+  structurally; the other two are caught only if the empirical pass trips
+  them. `vulnerable@k` is therefore a **lower bound**.
 - **Lookaround became decidable in `regexbench` 0.4.0.** Earlier versions
-  refused it. Our numbers are therefore not comparable to figures produced
-  with 0.3.0 or earlier.
-- **Match semantics matter and are set per corpus.** Re(gEx|DoS)Eval's
-  references pass 100% of their own tests under "search" semantics and only
-  94% under "full match" — pick wrong and you score 46 human-written gold
-  answers as failures. We verified the corpus loads correctly by scoring
-  every reference against itself: 762/762, `pass@1` 99.9%.
+  refused it, so these numbers are not comparable to figures produced with
+  0.3.0 or earlier.
+- **Match semantics are set per corpus.** Re(gEx|DoS)Eval's references pass
+  100% of their own tests under "search" semantics and 94% under "full
+  match" — picking wrong scores 46 gold answers as failures. Verified by
+  scoring every reference against itself before the run.
