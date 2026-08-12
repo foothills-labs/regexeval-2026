@@ -72,10 +72,12 @@
   "tasks_attempted": 10,
   "temperature": 0.0,
   "wrapped_detail": {
-    "regexeval/2339": {
-      "as_sent": "`^[0]?\\d{7,8}$`",
-      "scored": "^[0]?\\d{7,8}$"
-    }
+    "regexeval/2339": [
+      {
+        "as_sent": "`^[0]?\\d{7,8}$`",
+        "scored": "^[0]?\\d{7,8}$"
+      }
+    ]
   },
   "wrapped_responses": 1
 }

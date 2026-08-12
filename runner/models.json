@@ -1,0 +1,167 @@
+{
+  "_comment": [
+    "The sweep roster. Every entry pins a provider and refuses fallback, so a",
+    "request is either served by the endpoint named here or it fails visibly.",
+    "",
+    "Open-weights models are where pinning matters most: the same weights are",
+    "served at fp4 by some providers and fp8/bf16 by others, and precision",
+    "changes output. Where a quantization is known it is pinned too.",
+    "",
+    "reasoning.enabled=false everywhere. Four of these models do not reason at",
+    "all, so leaving it on would compare 'model + thinking budget' against",
+    "'model'. See METHODOLOGY.md, 'Why reasoning is switched off'.",
+    "Roster changed 2026-08-12 after the pilot: temperature dropped (rejected by 6/11 models under require_parameters), and gemini-3.6-flash swapped for gemini-3.1-flash-lite (reasoning cannot be disabled on 3.6)."
+  ],
+  "defaults": {
+    "temperature": null,
+    "max_tokens": 400,
+    "k": 3,
+    "reasoning": {
+      "enabled": false
+    },
+    "_temperature_note": "temperature is NOT sent. Six of these models reject it, and under require_parameters=true that is a hard 404. Each model uses its own default sampling; diversity across k was verified empirically (opus-5 3/3, kimi-k3 3/3, sol 3/3, glm-5.2 2/3 distinct)."
+  },
+  "models": [
+    {
+      "label": "gpt-5.6-sol",
+      "slug": "openai/gpt-5.6-sol",
+      "tier": "frontier",
+      "provider": {
+        "order": [
+          "OpenAI"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      }
+    },
+    {
+      "label": "gpt-5.6-terra",
+      "slug": "openai/gpt-5.6-terra",
+      "tier": "frontier",
+      "provider": {
+        "order": [
+          "OpenAI"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      }
+    },
+    {
+      "label": "gpt-5.6-luna",
+      "slug": "openai/gpt-5.6-luna",
+      "tier": "small",
+      "provider": {
+        "order": [
+          "OpenAI"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      }
+    },
+    {
+      "label": "claude-opus-5",
+      "slug": "anthropic/claude-opus-5",
+      "tier": "frontier",
+      "provider": {
+        "order": [
+          "Anthropic"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      }
+    },
+    {
+      "label": "claude-sonnet-5",
+      "slug": "anthropic/claude-sonnet-5",
+      "tier": "frontier",
+      "provider": {
+        "order": [
+          "Anthropic"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      }
+    },
+    {
+      "label": "gemini-3.1-flash-lite",
+      "slug": "google/gemini-3.1-flash-lite",
+      "tier": "frontier",
+      "provider": {
+        "order": [
+          "Google AI Studio"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      },
+      "note": "gemini-3.6-flash and 3.5-flash cannot disable reasoning ('Reasoning is mandatory for this endpoint'), so they cannot appear in a reasoning-off table. 3.1-flash-lite can. gemini-3.6-flash is measured in the thinking slice instead."
+    },
+    {
+      "label": "kimi-k3",
+      "slug": "moonshotai/kimi-k3",
+      "tier": "open",
+      "provider": {
+        "order": [
+          "Fireworks"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      },
+      "note": "DeepInfra (bf16) and BaseTen (fp8) both return upstream 429 at the time of this run, so the pin is Fireworks, whose quantization OpenRouter reports as unknown. Recorded as undisclosed rather than assumed -- this row's precision is not verified."
+    },
+    {
+      "label": "qwen3.6-max-preview",
+      "slug": "qwen/qwen3.6-max-preview",
+      "tier": "open",
+      "provider": {
+        "order": [
+          "Alibaba"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      }
+    },
+    {
+      "label": "qwen3.6-plus",
+      "slug": "qwen/qwen3.6-plus",
+      "tier": "open",
+      "provider": {
+        "order": [
+          "Alibaba"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      }
+    },
+    {
+      "label": "glm-5.2",
+      "slug": "z-ai/glm-5.2",
+      "tier": "open",
+      "provider": {
+        "order": [
+          "Novita"
+        ],
+        "allow_fallbacks": false,
+        "quantizations": [
+          "fp8"
+        ],
+        "require_parameters": true
+      }
+    },
+    {
+      "label": "deepseek-v4-flash-0731",
+      "slug": "deepseek/deepseek-v4-flash-0731",
+      "tier": "open",
+      "provider": {
+        "order": [
+          "CoreWeave"
+        ],
+        "allow_fallbacks": false,
+        "quantizations": [
+          "fp8"
+        ],
+        "require_parameters": true
+      },
+      "note": "Pinned to CoreWeave fp8. This model is served at fp4 by several providers; fp8 is pinned deliberately. An earlier pin to OpenInference went stale within an hour -- endpoint lists change, so pins are re-verified before each run."
+    }
+  ]
+}

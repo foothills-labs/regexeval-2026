@@ -82,7 +82,7 @@
       "task": "regexeval/3228"
     }
   ],
-  "k": 1,
+  "k": 0,
   "max_tokens": 200,
   "metrics": null,
   "metrics_as_sent": null,

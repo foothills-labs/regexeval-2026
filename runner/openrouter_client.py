@@ -42,15 +42,15 @@ def call(
     *,
     temperature: float = 0.7,
     max_tokens: int = 300,
+    reasoning: dict | None = None,
     api_key: str | None = None,
     max_retries: int = 5,
-    timeout: float = 60.0,
+    timeout: float = 120.0,
 ) -> CallResult:
     api_key = api_key or os.environ["OPENROUTER_KEY"]
     body = {
         "model": model,
         "provider": provider,
-        "temperature": temperature,
         "max_tokens": max_tokens,
         "messages": [
             {
@@ -64,6 +64,14 @@ def call(
             {"role": "user", "content": prompt},
         ],
     }
+    # Omitted rather than sent as null when unset. Several current models
+    # reject `temperature` outright, and under require_parameters=true that
+    # is a hard 404 -- so the sweep does not send it at all and takes each
+    # model's default sampling. Diversity across k was verified empirically.
+    if temperature is not None:
+        body["temperature"] = temperature
+    if reasoning is not None:
+        body["reasoning"] = reasoning
     data = json.dumps(body).encode()
     req = urllib.request.Request(
         API_URL,
@@ -148,6 +156,11 @@ def _parse_success(model: str, provider: dict, raw: dict, latency: float) -> Cal
     try:
         content = raw["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError):
+        content = None
+    # A 200 with no text is not an answer. This is how a reasoning model
+    # that spent its whole budget thinking presents itself, and scoring it
+    # as an empty pattern would look like a model that answered badly.
+    if content is None or not content.strip():
         return CallResult(
             ok=False,
             status="parse_failure",
@@ -161,7 +174,7 @@ def _parse_success(model: str, provider: dict, raw: dict, latency: float) -> Cal
             latency_s=latency,
             generation_id=gen_id,
             raw_response=raw,
-            error="no choices[0].message.content in response",
+            error="empty content (reasoning may have consumed the token budget)",
         )
 
     return CallResult(
