@@ -7,6 +7,7 @@ is a failed request, not a prediction.
 """
 from __future__ import annotations
 
+import http.client
 import json
 import re
 import os
@@ -111,8 +112,14 @@ def call(
                 latency_s=latency,
                 error=f"HTTP {e.code}: {body_text[:500]}",
             )
-        except urllib.error.URLError as e:
-            last_err = str(e)
+        except (http.client.HTTPException, OSError, json.JSONDecodeError) as e:
+            # Everything transport-level, not just urllib's own wrappers.
+            # http.client.IncompleteRead -- a response body that stops early --
+            # is an HTTPException and not a URLError, so it escaped an earlier
+            # version of this handler and killed three collection processes
+            # several hours into a sweep. urllib.error.URLError is an OSError
+            # subclass, so it is still covered here.
+            last_err = f"{type(e).__name__}: {e}"
             time.sleep(delay)
             delay *= 2
             continue
