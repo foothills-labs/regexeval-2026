@@ -50,7 +50,32 @@ def metrics_of(rep, k: int = 1) -> dict:
     }
 
 
-def score_run(run_name: str) -> list[dict]:
+def rebuild_summary(run_name: str) -> list[dict]:
+    """Reassemble summary.json from the per-model result files.
+
+    Scoring is CPU-bound and one process per model is far faster than one
+    process for all of them, so models can be scored separately and merged
+    here. The summary is derived from the per-model files either way, so a
+    merged run and a single run produce the same summary.
+    """
+    result_dir = config.RESULTS_DIR / run_name
+    entries = [
+        json.loads(f.read_text())
+        for f in sorted(result_dir.glob("*.json"))
+        if f.name != "summary.json"
+    ]
+    entries.sort(key=lambda e: (-(headline(e, "usable")
+                                 if headline(e, "usable") is not None else -1), e["model"]))
+    (result_dir / "summary.json").write_text(json.dumps(entries, indent=2, sort_keys=True))
+    return entries
+
+
+def headline(e, metric):
+    m = e.get("metrics") or {}
+    return next((v for kk, v in m.items() if kk.startswith(metric + "@")), None)
+
+
+def score_run(run_name: str, only: set[str] | None = None) -> list[dict]:
     dataset = config.require_dataset()
     pred_dir = config.PREDICTIONS_DIR / run_name
     result_dir = config.RESULTS_DIR / run_name
@@ -63,6 +88,8 @@ def score_run(run_name: str) -> list[dict]:
 
     for pred_file in sorted(pred_dir.glob("*.jsonl")):
         label = pred_file.stem
+        if only and label not in only:
+            continue
         rows = [json.loads(x) for x in pred_file.read_text().splitlines() if x.strip()]
         controls = [r for r in rows if r["task_name"].startswith("control/")]
         task_rows = [r for r in rows if not r["task_name"].startswith("control/")]
@@ -153,10 +180,6 @@ def score_run(run_name: str) -> list[dict]:
         (result_dir / f"{label}.json").write_text(json.dumps(entry, indent=2, sort_keys=True))
         summary.append(entry)
 
-    def headline(e, metric):
-        m = e.get("metrics") or {}
-        return next((v for kk, v in m.items() if kk.startswith(metric + "@")), None)
-
     summary.sort(key=lambda e: (-(headline(e, "usable") if headline(e, "usable") is not None else -1),
                                 e["model"]))
     (result_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
@@ -190,6 +213,10 @@ def print_summary(summary: list[dict]) -> None:
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--run", default="preview", help="subdirectory of predictions/ to score")
+    ap.add_argument("--models", default=None,
+                    help="comma-separated labels; score only these (for parallel scoring)")
+    ap.add_argument("--merge", action="store_true",
+                    help="rebuild summary.json from existing per-model result files and exit")
     ap.add_argument(
         "--check",
         action="store_true",
@@ -197,10 +224,23 @@ def main():
     )
     args = ap.parse_args()
 
+    if args.merge:
+        summary = rebuild_summary(args.run)
+        print_summary(summary)
+        if any(not e["controls_all_as_expected"] for e in summary):
+            raise SystemExit("FAIL: a control did not behave as expected")
+        return
+
     committed_path = config.RESULTS_DIR / args.run / "summary.json"
     committed = json.loads(committed_path.read_text()) if committed_path.exists() else None
 
-    summary = score_run(args.run)
+    only = {m.strip() for m in args.models.split(",")} if args.models else None
+    summary = score_run(args.run, only)
+    if only:
+        # A partial run must not overwrite the whole-run summary.
+        print_summary(summary)
+        print(f"\nscored {len(summary)} model(s); run --merge to rebuild summary.json")
+        return
     print_summary(summary)
 
     if args.check:
