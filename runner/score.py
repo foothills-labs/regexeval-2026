@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -22,6 +23,11 @@ from openrouter_client import normalize_pattern  # noqa: E402
 
 from regexbench import run  # noqa: E402
 from regexbench.datasets import load_regexeval  # noqa: E402
+
+# Scoring runs DFA equivalence and an empirical ReDoS pass per pattern, both
+# of which are CPU-bound and can block on a pathological pattern until the
+# match timeout. Parallel across tasks keeps a full sweep tractable.
+WORKERS = max(1, (os.cpu_count() or 4) - 1)
 
 CONTROL_EXPECTATIONS = {
     "control/good": lambda m: m["pass@1"] == 1.0 and m["usable@1"] == 1.0,
@@ -97,8 +103,14 @@ def score_run(run_name: str) -> list[dict]:
         tasks = [by_name[n] for n in normalized]
         k_actual = max((len(v) for v in normalized.values()), default=0)
 
-        rep = run(tasks, normalized, name=label) if tasks else None
-        rep_as_sent = run(tasks, as_sent, name=f"{label} (as sent)") if tasks else None
+        rep = run(tasks, normalized, name=label, workers=WORKERS) if tasks else None
+        # Only worth scoring the unnormalized set when normalization actually
+        # changed something. When no response was wrapped the two are the same
+        # inputs, and scoring them twice doubles a CPU-bound run for nothing.
+        rep_as_sent = (
+            run(tasks, as_sent, name=f"{label} (as sent)", workers=WORKERS)
+            if tasks and wrapped else None
+        )
 
         cost = sum(r.get("cost_usd") or 0.0 for r in task_rows)
         entry = {
@@ -132,7 +144,10 @@ def score_run(run_name: str) -> list[dict]:
             "controls_all_as_expected": controls_ok,
             "controls": control_report,
             "metrics": metrics_of(rep, k_actual) if rep else None,
-            "metrics_as_sent": metrics_of(rep_as_sent, k_actual) if rep_as_sent else None,
+            "metrics_as_sent": (
+                metrics_of(rep_as_sent, k_actual) if rep_as_sent
+                else (metrics_of(rep, k_actual) if rep else None)
+            ),
             "table": rep.table(ks=(k_actual,)) if rep else None,
         }
         (result_dir / f"{label}.json").write_text(json.dumps(entry, indent=2, sort_keys=True))
@@ -149,7 +164,10 @@ def score_run(run_name: str) -> list[dict]:
 
 
 def print_summary(summary: list[dict]) -> None:
-    print(f"{'model':34s} {'usable@1':>9s} {'pass@1':>8s} {'vuln@1':>8s} {'fails':>7s} {'$/task':>10s}")
+    ks = {e["k"] for e in summary if e.get("k")}
+    kl = str(next(iter(ks))) if len(ks) == 1 else "k"
+    print(f"{'model':34s} {'usable@'+kl:>9s} {'pass@'+kl:>8s} {'vuln@'+kl:>8s} "
+          f"{'fails':>7s} {'$/task':>10s}")
     print("-" * 82)
     def pick(m, metric):
         return next((v for kk, v in m.items() if kk.startswith(metric + "@")), None)

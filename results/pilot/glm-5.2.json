@@ -1,0 +1,79 @@
+{
+  "completion_tokens_total": 1563,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/133",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/133",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 0.00010662,
+  "cost_usd_total": 0.00383844,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [],
+  "k": 3,
+  "max_tokens": 200,
+  "metrics": {
+    "dfa-eq@3": 0.16666666666666666,
+    "dfa-eq@3 (decided)": 0.2222222222222222,
+    "exact@3": 0.08333333333333333,
+    "pass@3": 0.3333333333333333,
+    "undecided": 3,
+    "usable@3": 0.16666666666666666,
+    "vulnerable@3": 0.0
+  },
+  "metrics_as_sent": {
+    "dfa-eq@3": 0.16666666666666666,
+    "dfa-eq@3 (decided)": 0.2222222222222222,
+    "exact@3": 0.08333333333333333,
+    "pass@3": 0.3333333333333333,
+    "undecided": 3,
+    "usable@3": 0.16666666666666666,
+    "vulnerable@3": 0.0
+  },
+  "model": "glm-5.2",
+  "model_requested": "z-ai/glm-5.2",
+  "provider_requested": {
+    "allow_fallbacks": false,
+    "order": [
+      "Novita"
+    ],
+    "quantizations": [
+      "fp8"
+    ],
+    "require_parameters": true
+  },
+  "providers_resolved": [
+    "Novita"
+  ],
+  "python_version": "3.11.15",
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
+  "response_failures": 0,
+  "table": "glm-5.2\n12 tasks, 12 answered\n  pass@3               33.3%\n  dfa-eq@3             16.7%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   22.2%  (engine limits excluded \u2014 model only)\n  exact@3               8.3%\n  usable@3             16.7%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "tasks_answered": 36,
+  "tasks_attempted": 36,
+  "temperature": 0.0,
+  "wrapped_detail": {},
+  "wrapped_responses": 0
+}

@@ -1,0 +1,82 @@
+{
+  "completion_tokens_total": 1905,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/133",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/133",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 0.00197653,
+  "cost_usd_total": 0.071155,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [
+    {
+      "error": "empty content (reasoning may have consumed the token budget)",
+      "status": "parse_failure",
+      "task": "regexeval/1914"
+    }
+  ],
+  "k": 3,
+  "max_tokens": 200,
+  "metrics": {
+    "dfa-eq@3": 0.16666666666666666,
+    "dfa-eq@3 (decided)": 0.2222222222222222,
+    "exact@3": 0.16666666666666666,
+    "pass@3": 0.5,
+    "undecided": 3,
+    "usable@3": 0.25,
+    "vulnerable@3": 0.08333333333333333
+  },
+  "metrics_as_sent": {
+    "dfa-eq@3": 0.16666666666666666,
+    "dfa-eq@3 (decided)": 0.2222222222222222,
+    "exact@3": 0.16666666666666666,
+    "pass@3": 0.5,
+    "undecided": 3,
+    "usable@3": 0.25,
+    "vulnerable@3": 0.08333333333333333
+  },
+  "model": "claude-opus-5",
+  "model_requested": "anthropic/claude-opus-5",
+  "provider_requested": {
+    "allow_fallbacks": false,
+    "order": [
+      "Anthropic"
+    ],
+    "require_parameters": true
+  },
+  "providers_resolved": [
+    "Anthropic"
+  ],
+  "python_version": "3.11.15",
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
+  "response_failures": 1,
+  "table": "claude-opus-5\n12 tasks, 12 answered\n  pass@3               50.0%\n  dfa-eq@3             16.7%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   22.2%  (engine limits excluded \u2014 model only)\n  exact@3              16.7%\n  usable@3             25.0%\n  vulnerable@3          8.3%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "tasks_answered": 35,
+  "tasks_attempted": 36,
+  "temperature": 0.0,
+  "wrapped_detail": {},
+  "wrapped_responses": 0
+}
