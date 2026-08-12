@@ -42,16 +42,43 @@ ten, which are all easy. Ten tasks is a pipeline test, not a measurement.
 
 ### How many samples per task?
 
-The preview used **one** (`k=1`), at temperature 0.0. The full run will use
-**five** (`k=5`).
+**Three** (`k=3`) in the main run. The earlier preview used one, and every
+preview number is labelled `@1` so it can't be mistaken for the real thing.
 
 This matters because models are non-deterministic: ask twice, get two
-answers. A single sample measures luck as much as skill. `usable@5` asks
-"if the model got five attempts, would at least one be shippable?" — which
-is both a fairer question and the one a developer actually cares about.
+answers. A single sample measures luck as much as skill. `usable@3` asks
+"if the model got three attempts, would at least one be shippable?" — a
+fairer question, and closer to the one a developer actually cares about.
 
-The preview's `k=1` is a cost decision for a pipeline test. Every preview
-number is labelled `@1` so it can't be mistaken for the real thing.
+### Why isn't temperature set?
+
+Because setting it makes most of these models unroutable.
+
+Sampling diversity normally comes from raising temperature. But six of the
+eleven models on this board **reject the `temperature` parameter outright**,
+and combined with `require_parameters: true` — which exists precisely so a
+provider cannot silently ignore a parameter — that is a hard 404. The
+choice is not "temperature or not", it is "temperature and lose half the
+board", or "no temperature and keep `require_parameters` honest".
+
+So `temperature` is **not sent at all**. Each model samples with its own
+default.
+
+That is only acceptable if the defaults actually produce variation,
+otherwise `k=3` would be three copies of one answer at three times the
+price. So it was checked rather than assumed — three samples of the same
+task, counting distinct patterns:
+
+| Model | distinct answers out of 3 |
+| --- | --- |
+| `claude-opus-5` | 3 |
+| `gpt-5.6-sol` | 3 |
+| `kimi-k3` | 3 |
+| `glm-5.2` | 2 |
+
+The audit re-checks this on every run: if more than 90% of a model's tasks
+come back with `k` identical samples, it warns, because at that point `k`
+is buying nothing and should be spent elsewhere.
 
 ### Why is reasoning switched off?
 
@@ -199,7 +226,8 @@ Measured: about 105 prompt and 36 completion tokens per task.
 | Python | 3.11 |
 | Corpus | `RegexEval.json` from `s2e-lab/RegexEval@master` |
 | Models | full slug, e.g. `openai/gpt-4o-mini` |
-| Sampling | temperature 0.0, max_tokens 200, `k=1` (preview) |
+| Sampling | `k=3`, max_tokens 400, `reasoning:{enabled:false}`, temperature not sent |
+| Provider | pinned per model in `runner/models.json`, `allow_fallbacks:false` |
 
 `regexbench` 0.4.0 is **not on PyPI** — `pip install regexbench==0.4.0`
 does not resolve to it. The pin is a git commit for that reason, and it
