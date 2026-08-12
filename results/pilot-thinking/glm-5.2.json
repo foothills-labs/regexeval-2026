@@ -1,0 +1,90 @@
+{
+  "completion_tokens_total": 26356,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/133",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/133",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 0.00390904,
+  "cost_usd_total": 0.04690851,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [
+    {
+      "error": "empty content: completion_tokens=4000, reasoning_tokens=2674, finish_reason='length'",
+      "status": "parse_failure",
+      "task": "regexeval/1696"
+    },
+    {
+      "error": "empty content: completion_tokens=4000, reasoning_tokens=2455, finish_reason='length'",
+      "status": "parse_failure",
+      "task": "regexeval/2218"
+    }
+  ],
+  "k": 1,
+  "max_tokens": 200,
+  "metrics": {
+    "dfa-eq@1": 0.0,
+    "dfa-eq@1 (decided)": 0.0,
+    "exact@1": 0.0,
+    "pass@1": 0.1,
+    "undecided": 3,
+    "usable@1": 0.0,
+    "vulnerable@1": 0.0
+  },
+  "metrics_as_sent": {
+    "dfa-eq@1": 0.0,
+    "dfa-eq@1 (decided)": 0.0,
+    "exact@1": 0.0,
+    "pass@1": 0.1,
+    "undecided": 3,
+    "usable@1": 0.0,
+    "vulnerable@1": 0.0
+  },
+  "model": "glm-5.2",
+  "model_requested": "z-ai/glm-5.2",
+  "provider_requested": {
+    "allow_fallbacks": false,
+    "order": [
+      "Novita"
+    ],
+    "quantizations": [
+      "fp8"
+    ],
+    "require_parameters": true
+  },
+  "providers_resolved": [
+    "Novita"
+  ],
+  "python_version": "3.11.15",
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
+  "response_failures": 2,
+  "table": "glm-5.2\n10 tasks, 10 answered\n  pass@1               10.0%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              0.0%\n  vulnerable@1          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "tasks_answered": 10,
+  "tasks_attempted": 12,
+  "temperature": 0.0,
+  "wrapped_detail": {},
+  "wrapped_responses": 0
+}
