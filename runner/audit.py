@@ -42,12 +42,19 @@ def audit(run: str, k_expected: int, task_count: int | None):
         samples = Counter(r["task_name"] for r in real)
         wrapped = sum(1 for r in ok if normalize_pattern(r["pattern"])[1])
         empties = sum(1 for r in real if r["status"] == "parse_failure")
+        # An empty response has three quite different causes and they are not
+        # interchangeable in a write-up: the model was refused by a safety
+        # filter, it ran out of token budget mid-thought, or the provider
+        # glitched. Classified from what the API reported, not guessed.
+        refusals = sum(1 for r in real if "content_filter" in (r.get("error") or ""))
+        truncated = sum(1 for r in real if "finish_reason='length'" in (r.get("error") or ""))
 
         per_model[label] = {
             "attempted": len(real), "ok": len(ok), "failed": len(bad),
             "tasks": len(tasks), "providers": dict(providers), "statuses": dict(statuses),
             "cost": cost, "reasoning_tokens": reasoning_tok, "wrapped": wrapped,
-            "empty_content": empties, "controls": len(ctrl),
+            "empty_content": empties, "refusals": refusals, "truncated": truncated,
+            "controls": len(ctrl),
             "cost_per_call": cost / len(ok) if ok else None,
         }
 
@@ -80,8 +87,17 @@ def audit(run: str, k_expected: int, task_count: int | None):
         if empties:
             rate = empties / max(len(real), 1)
             level = BLOCKER if rate > 0.05 else WARN
+            detail = []
+            if refusals:
+                detail.append(f"{refusals} refused by a content filter")
+            if truncated:
+                detail.append(f"{truncated} truncated at the token budget")
+            other = empties - refusals - truncated
+            if other > 0:
+                detail.append(f"{other} unexplained")
             findings.append((level, label,
-                             f"{empties} empty-content response(s) ({rate:.1%})"))
+                             f"{empties} empty-content response(s) ({rate:.1%}): "
+                             + ", ".join(detail)))
 
         wrong_k = {t: c for t, c in samples.items() if c != k_expected}
         if wrong_k:
