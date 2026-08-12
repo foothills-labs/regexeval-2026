@@ -1,0 +1,2684 @@
+{
+"regexeval/1": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1001": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1008": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1009": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1011": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/103": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1062": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/108": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/11": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1103": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1104": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1107": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1121": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1124": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/113": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1135": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1145": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1146": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1164": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/117": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1177": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/118": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1189": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/12": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/120": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1209": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1213": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1224": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1230": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1242": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1246": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/125": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1251": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1257": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/126": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1267": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1268": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1284": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1314": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/132": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1326": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1333": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1356": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1362": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1372": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1389": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/139": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1411": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1414": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/142": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1428": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/143": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1449": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": true
+},
+"regexeval/1457": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/146": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1466": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1484": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1489": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/149": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1492": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/15": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1512": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1520": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/153": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1539": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1566": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1570": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1579": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/158": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1587": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1592": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1599": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1606": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1618": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/162": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1625": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1636": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1642": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1644": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1653": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1656": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1658": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1660": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1663": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1668": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1683": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/169": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1693": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1697": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1704": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1706": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1715": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/172": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1723": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1726": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1739": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/174": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1742": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1744": {
+"pass": false,
+"samples": 2,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1756": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/176": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1763": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1776": {
+"pass": false,
+"samples": 2,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1780": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1786": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1799": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/18": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1800": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1808": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1811": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1813": {
+"pass": false,
+"samples": 2,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1819": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1827": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1830": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1835": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/184": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1848": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1850": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1855": {
+"pass": false,
+"samples": 2,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1866": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/187": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1873": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1877": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1884": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1894": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1896": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1898": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1900": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1901": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1906": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1912": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1914": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1915": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/192": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1921": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1925": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1927": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1933": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1943": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/1944": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1952": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1956": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1958": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1962": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/197": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1972": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/1977": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/1978": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/20": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2008": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2013": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2014": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2025": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/204": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2040": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2041": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2069": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2086": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2087": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2095": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/211": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2116": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2118": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/212": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2123": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2136": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2145": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2149": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2153": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2157": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2160": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2190": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2203": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2206": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2215": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/222": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2222": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2224": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2241": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2259": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/226": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2264": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2265": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2278": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/228": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2281": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2282": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2294": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2296": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2297": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2301": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2317": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2322": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2333": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2335": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/234": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2340": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2341": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2348": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2353": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2355": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/236": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2370": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2377": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2379": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2384": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2398": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2405": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2406": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2439": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/244": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2444": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2445": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2447": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2467": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2470": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2482": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2486": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2488": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2492": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2502": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/251": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2512": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2519": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2536": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2542": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2547": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2549": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2553": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2567": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2572": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2588": {
+"pass": false,
+"samples": 2,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2593": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/26": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2603": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2618": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/262": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2631": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2634": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2648": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2654": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2655": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2663": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2665": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2667": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2674": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2699": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/271": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2710": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/273": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/2735": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2742": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2754": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2755": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2762": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2797": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2799": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2809": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/2816": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/282": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/2827": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/287": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/288": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/294": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/299": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/300": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/312": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3169": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/317": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/320": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/321": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3219": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/323": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3234": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3264": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/327": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3278": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/332": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/3347": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3349": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/338": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3380": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3383": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3384": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3387": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/34": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3417": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3420": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3427": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/343": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3454": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/3459": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/346": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3460": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3473": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/348": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3481": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3483": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/350": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/351": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/354": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3546": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3556": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/356": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/3561": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/359": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/360": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/362": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/364": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/366": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/369": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/371": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3712": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/374": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3753": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3772": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3803": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/382": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3909": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3912": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/3915": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/392": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3936": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/395": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3981": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/3983": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/4": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/402": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/4029": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/4043": {
+"pass": false,
+"samples": 1,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/407": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/41": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/42": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/421": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/429": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/433": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/440": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/444": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/458": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/46": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/465": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/473": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/48": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/490": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/495": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/496": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/500": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/507": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/519": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/523": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/526": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/529": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/53": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/531": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/538": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/550": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/57": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/571": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/583": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/6": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/607": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/610": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/623": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/627": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/635": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/637": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/640": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/645": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/647": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/654": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/656": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/660": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/676": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/684": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/688": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/69": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": true
+},
+"regexeval/693": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/7": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/703": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/708": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/709": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/727": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/73": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": true
+},
+"regexeval/730": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/731": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/738": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/742": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/743": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/749": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/75": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/754": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/766": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/772": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/778": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/783": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/787": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/799": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/803": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/804": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/814": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/817": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/822": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/827": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/833": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/837": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/838": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/84": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/848": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/859": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/86": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/861": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/865": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/870": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/876": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/879": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/881": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/882": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/89": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/890": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/894": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/898": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/9": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/901": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/911": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/914": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/915": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/918": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/923": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/926": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/936": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/94": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/940": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/946": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/949": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/954": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/96": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/965": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/97": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/971": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/977": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/985": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/986": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/988": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": true
+},
+"regexeval/99": {
+"pass": true,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+},
+"regexeval/996": {
+"pass": true,
+"samples": 3,
+"usable": true,
+"vulnerable": false
+},
+"regexeval/998": {
+"pass": false,
+"samples": 3,
+"usable": false,
+"vulnerable": false
+}
+}
