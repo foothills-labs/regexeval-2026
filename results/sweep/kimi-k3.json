@@ -1,0 +1,254 @@
+{
+  "completion_tokens_total": 78415,
+  "controls": {
+    "control/bad": {
+      "as_expected": true,
+      "base_task": "regexeval/2",
+      "pass@1": 0.0,
+      "pattern": "z{5}",
+      "usable@1": 0.0,
+      "vulnerable@1": 0.0
+    },
+    "control/good": {
+      "as_expected": true,
+      "base_task": "regexeval/1",
+      "pass@1": 1.0,
+      "pattern": "^\\d$",
+      "usable@1": 1.0,
+      "vulnerable@1": 0.0
+    },
+    "control/vulnerable": {
+      "as_expected": true,
+      "base_task": "regexeval/2",
+      "pass@1": 0.0,
+      "pattern": "(a+)+b",
+      "usable@1": 0.0,
+      "vulnerable@1": 1.0
+    }
+  },
+  "controls_all_as_expected": true,
+  "cost_usd_per_task": 0.00132812,
+  "cost_usd_total": 1.7929641,
+  "dataset": "Re(gEx|DoS)Eval",
+  "failure_detail": [
+    {
+      "error": "response had no resolved 'provider' field",
+      "status": "no_provider",
+      "task": "regexeval/1744"
+    },
+    {
+      "error": "response had no resolved 'provider' field",
+      "status": "no_provider",
+      "task": "regexeval/1776"
+    },
+    {
+      "error": "",
+      "status": "ok",
+      "task": "regexeval/1813"
+    },
+    {
+      "error": "response had no resolved 'provider' field",
+      "status": "no_provider",
+      "task": "regexeval/1855"
+    },
+    {
+      "error": "",
+      "status": "ok",
+      "task": "regexeval/2588"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4043"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4043"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4044"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4044"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4044"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4067"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4067"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4067"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4086"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4086"
+    },
+    {
+      "error": "HTTP 403: {\"error\":{\"message\":\"Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/7d03fc9384f85a0b41cae97d8a9e547151797d58e9e1a44b8f0bbf88f1ba67de\",\"code\":403}}",
+      "status": "http_error",
+      "task": "regexeval/4086"
+    }
+  ],
+  "k": 3,
+  "max_tokens": 200,
+  "metrics": {
+    "dfa-eq@3": 0.15212527964205816,
+    "dfa-eq@3 (decided)": 0.17534246575342466,
+    "exact@3": 0.06263982102908278,
+    "pass@3": 0.4720357941834452,
+    "undecided": 82,
+    "usable@3": 0.2483221476510067,
+    "vulnerable@3": 0.14093959731543623
+  },
+  "metrics_as_sent": {
+    "dfa-eq@3": 0.15436241610738255,
+    "dfa-eq@3 (decided)": 0.1780821917808219,
+    "exact@3": 0.06263982102908278,
+    "pass@3": 0.4742729306487696,
+    "undecided": 82,
+    "usable@3": 0.2505592841163311,
+    "vulnerable@3": 0.14093959731543623
+  },
+  "model": "kimi-k3",
+  "model_requested": "moonshotai/kimi-k3",
+  "provider_requested": {
+    "allow_fallbacks": false,
+    "order": [
+      "Fireworks"
+    ],
+    "require_parameters": true
+  },
+  "providers_resolved": [
+    "Fireworks"
+  ],
+  "python_version": "3.11.15",
+  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_version": "0.4.0",
+  "response_failures": 16,
+  "table": "kimi-k3\n447 tasks, 447 answered\n  pass@3               47.2%\n  dfa-eq@3             15.2%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.5%  (engine limits excluded \u2014 model only)\n  exact@3               6.3%\n  usable@3             24.8%\n  vulnerable@3         14.1%  (lower is better)\n  82 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "tasks_answered": 1334,
+  "tasks_attempted": 1350,
+  "temperature": 0.0,
+  "wrapped_detail": {
+    "regexeval/1587": [
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      }
+    ],
+    "regexeval/1776": [
+      {
+        "as_sent": "`(?:(?:0[1-9]|[12][0-9]|3[01])(?:[-/. ])(?:0[13578]|1[02])\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|[12][0-9]|30)(?:[-/. ])(?:0[469]|11)\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|1[0-9]|2[0-8])(?:[-/. ])02\\2(?:19\\d{2}|[2-9]\\d{3})|29(?:[-/. ])02\\2(?:(?:19|[2-9]\\d)(?:0[48]|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00))`",
+        "scored": "(?:(?:0[1-9]|[12][0-9]|3[01])(?:[-/. ])(?:0[13578]|1[02])\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|[12][0-9]|30)(?:[-/. ])(?:0[469]|11)\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|1[0-9]|2[0-8])(?:[-/. ])02\\2(?:19\\d{2}|[2-9]\\d{3})|29(?:[-/. ])02\\2(?:(?:19|[2-9]\\d)(?:0[48]|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00))"
+      }
+    ],
+    "regexeval/184": [
+      {
+        "as_sent": "`(?:(?:0?[1-9])|(?:[12][0-9])|(?:3[01]))`",
+        "scored": "(?:(?:0?[1-9])|(?:[12][0-9])|(?:3[01]))"
+      }
+    ],
+    "regexeval/2333": [
+      {
+        "as_sent": "\"([^\"\\\\]|\\\\.)*\"",
+        "scored": "([^\"\\\\]|\\\\.)*"
+      },
+      {
+        "as_sent": "\"[^\"]*\"",
+        "scored": "[^\"]*"
+      },
+      {
+        "as_sent": "\"([^\"\\\\]|\\\\.)*\"",
+        "scored": "([^\"\\\\]|\\\\.)*"
+      }
+    ],
+    "regexeval/2572": [
+      {
+        "as_sent": "`^[^a-zA-Z]*[a-zA-Z][^a-zA-Z]*$`",
+        "scored": "^[^a-zA-Z]*[a-zA-Z][^a-zA-Z]*$"
+      }
+    ],
+    "regexeval/262": [
+      {
+        "as_sent": "/^[A-Z][a-z]+ [A-Z][a-z]+$/",
+        "scored": "^[A-Z][a-z]+ [A-Z][a-z]+$"
+      }
+    ],
+    "regexeval/312": [
+      {
+        "as_sent": "`.*`",
+        "scored": ".*"
+      }
+    ],
+    "regexeval/730": [
+      {
+        "as_sent": "/^([A-Z\u00d1&]{3,4}) ?(?:- ?)?(\\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])) ?(?:- ?)?([A-Z\\d]{2})([A\\d])$/",
+        "scored": "^([A-Z\u00d1&]{3,4}) ?(?:- ?)?(\\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])) ?(?:- ?)?([A-Z\\d]{2})([A\\d])$"
+      }
+    ],
+    "regexeval/731": [
+      {
+        "as_sent": "`r\n^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$\n`",
+        "scored": "r\n^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$"
+      }
+    ],
+    "regexeval/901": [
+      {
+        "as_sent": "`^(?:(?:31/(?:0[13578]|1[02]))|(?:30/(?:0[469]|11))|(?:29/02/(?:(?:19|[2-9][0-9])(?:04|08|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00))|(?:2[0-8]/02)|(?:1[0-9]|0[1-9])/(?:0[1-9]|1[0-2]))/(?:19|[2-9][0-9])[0-9]{2}$`",
+        "scored": "^(?:(?:31/(?:0[13578]|1[02]))|(?:30/(?:0[469]|11))|(?:29/02/(?:(?:19|[2-9][0-9])(?:04|08|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00))|(?:2[0-8]/02)|(?:1[0-9]|0[1-9])/(?:0[1-9]|1[0-2]))/(?:19|[2-9][0-9])[0-9]{2}$"
+      }
+    ],
+    "regexeval/936": [
+      {
+        "as_sent": "\"([^\"]*)\"",
+        "scored": "([^\"]*)"
+      },
+      {
+        "as_sent": "\"([^\"]*)\"",
+        "scored": "([^\"]*)"
+      }
+    ],
+    "regexeval/977": [
+      {
+        "as_sent": "/\\*[\\s\\S]*?\\*/",
+        "scored": "\\*[\\s\\S]*?\\*"
+      },
+      {
+        "as_sent": "/\\*[\\s\\S]*?\\*/",
+        "scored": "\\*[\\s\\S]*?\\*"
+      }
+    ]
+  },
+  "wrapped_responses": 18
+}
