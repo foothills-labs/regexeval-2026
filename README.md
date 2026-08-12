@@ -1,198 +1,196 @@
 # regexleaderboard
 
-**How good are language models at writing regular expressions that you
-could actually ship?**
+**How good are language models at writing regular expressions you could
+actually ship?**
 
 Most regex benchmarks ask one question: does the pattern pass the tests?
 This one asks whether you could put the answer in production — because a
 pattern can pass every test it was given and still be wrong, or still hang
 your server.
 
----
-
-## The benchmark in two examples
-
-Every task gives the model a plain-English description. The model writes a
-regex. Then we check it three ways.
-
-### Example 1 — it passes every test and it's still wrong
-
-> **Task:** "validate that an uploaded file's extension is jpg, gif or png"
-
-gpt-4o-mini answered `\.(jpg|gif|png)$`. It matched every example it was
-given and rejected every counterexample: **100% correct**.
-
-It is still wrong, and here is the proof:
-
-```
-.GIF
-```
-
-The human-written reference accepts uppercase extensions. This answer
-doesn't. The task's test strings happened to be all lowercase, so **the
-tests could not possibly have caught this.** We catch it by comparing the
-model's pattern against the reference as *languages* — not as text — and
-when they differ, the benchmark hands you the shortest string that tells
-them apart.
-
-### Example 2 — it passes every test and it can hang your server
-
-> **Task:** "match a french phone number with or without the international
-> dialling code"
-
-gpt-4o-mini answered:
-
-```
-(?:\+33|0)[1-9](?:[ .-]?[0-9]{2}){4}
-```
-
-Also **100% correct**. Also dangerous:
-
-> *a bounded quantifier wraps an unbounded one — the bound caps the
-> repetitions but each one can still match many ways*
-
-That's a ReDoS vulnerability: a hostile input makes it take far longer
-than it should. Ship it on a public form and you have a denial-of-service
-bug.
-
-**Neither of these two answers is usable. Both score 100% on correctness.**
-That gap is the entire reason this leaderboard exists.
+**11 models · 450 tasks · 3 samples each · 14,850 calls · run 2026-08-12**
 
 ---
 
-## Results
+## The result
 
-> ### ⚠️ Preview — not a ranking
->
-> This is a **10-task, 4-model pilot** run on 2026-08-11 to prove the
-> pipeline works and to price the real run. Ten tasks means roughly ±30
-> points of uncertainty. **Do not cite this ordering.** The full run is 762
-> tasks across ~13 models.
+Every model passes roughly **40%** of tasks. Every model produces something
+shippable on roughly **20%**. That gap is the finding.
 
-| Model | usable@1 | pass@1 | vulnerable@1 | failed requests | $/task |
+| Model | usable@3 | pass@3 | vulnerable@3 | failed | $/task |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `openai/gpt-4o-mini` | **10.0%** | 40.0% | 20.0% | 0/10 | $0.000038 |
-| `qwen/qwen-2.5-7b-instruct` | 0.0% | 10.0% | 10.0% | 0/10 | $0.000047 |
-| `meta-llama/llama-3.1-8b-instruct` | 0.0% | 20.0% | 0.0% | 0/10 | $0.000003 |
-| `mistralai/mistral-small-3.2-24b` | — | — | — | **10/10** | — |
+| `moonshotai/kimi-k3` | **24.8%** | 47.2% | 14.1% | 16/1350 | $0.001328 |
+| `anthropic/claude-opus-5` | **23.0%** | 47.5% | 15.5% | 36/1350 | $0.002514 |
+| `qwen/qwen3.6-max-preview` | **21.6%** | 42.4% | 9.1% | 0/1350 | $0.000388 |
+| `openai/gpt-5.6-sol` | **21.1%** | 42.2% | 10.2% | 1/1350 | $0.002108 |
+| `deepseek/deepseek-v4-flash-0731` | **19.8%** | 38.0% | 12.0% | 0/1350 | $0.000026 |
+| `qwen/qwen3.6-plus` | **19.8%** | 39.8% | 9.8% | 0/1350 | $0.000121 |
+| `z-ai/glm-5.2` | **18.7%** | 42.4% | 14.2% | 0/1350 | $0.000158 |
+| `openai/gpt-5.6-luna` | **18.7%** | 39.3% | 11.8% | 1/1350 | $0.000043 |
+| `openai/gpt-5.6-terra` | **18.7%** | 42.2% | 12.0% | 0/1350 | $0.000406 |
+| `anthropic/claude-sonnet-5` | **18.0%** | 40.7% | 10.9% | 0/1350 | $0.000932 |
+| `google/gemini-3.1-flash-lite` | **17.1%** | 38.7% | 12.0% | 0/1350 | $0.000090 |
 
-**Three numbers, and they tell one story.** `pass@1` is what other
-benchmarks report — did it pass the tests. `vulnerable@1` is how many
-answers can be made to hang. `usable@1` is what's left once you remove
-both the vulnerable patterns and the ones proven to mean something
-different from the reference.
+**Three numbers, one story.** `pass@3` is what other benchmarks report —
+did it satisfy the examples. `vulnerable@3` is how many answers can be
+made to hang. `usable@3` is what survives once you remove the vulnerable
+patterns *and* the ones provably describing a different language than the
+reference.
 
-gpt-4o-mini passes 40% of tasks. **10% are shippable.**
+Two things worth noticing more than the ranking:
 
-`mistral-small` has no numbers because its provider was rate-limited and
-we refuse to silently substitute a different one — see
-[why a failure is reported, not dropped](#failures-are-results-too).
+- **The spread is narrow — 17.1% to 24.8%.** Eleven models across a 100×
+  price range land within eight points of each other.
+- **`deepseek-v4-flash-0731` costs $0.000026 per task and scores 19.8%.
+  `claude-opus-5` costs $0.002514 — 97× more — and scores 23.0%.** Three
+  points for two orders of magnitude.
 
 *More metrics — semantic equivalence, exact match, the decidable subset —
-are in [APPENDIX.md](APPENDIX.md). They're real and they're published;
-they're just not what you need to read the table.*
+are in [APPENDIX.md](APPENDIX.md).*
+
+---
+
+## Why "passes the tests" isn't enough
+
+### It passed every test and it can hang your server
+
+> **Task:** *"tests the validity of a domain or hostname"*
+
+`claude-opus-5` answered:
+
+```
+^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+(com|org|net|mil|edu)$
+```
+
+That is **100% correct** on every example it was given. It is also
+**exponentially** vulnerable:
+
+> *a quantifier wraps a quantified group — exponential backtracking on a
+> failing suffix*
+
+This is a realistic, production-looking pattern. Put it on a signup form
+and you have a denial-of-service bug. **135 such patterns** appeared across
+the run: correct, and unsafe.
+
+### It passed every test and it's still wrong
+
+> **Task:** *"Matches 5 numeric digits, such as a zip code."*
+
+`claude-opus-5` answered `\b\d{5}\b` where the reference is `^\d{5}$`.
+Both pass the tests. They are not the same pattern, and here is the string
+that proves it:
+
+```
+"\n00000"
+```
+
+The model's version matches a zip code sitting on the second line of a
+multi-line string; the reference doesn't. Whether that matters depends on
+your input — which is exactly why the benchmark reports it rather than
+silently calling one of them correct. **806 answers** passed their tests
+while describing a different language than the reference.
+
+---
+
+## The most interesting failure is ours
+
+Some of what we score as "wrong" is the model being **right** and the
+human-written reference being wrong.
+
+> **Task:** *"A very simple ISBN validation expression — it just checks for
+> a 10 digit number"*
+
+| | |
+| --- | --- |
+| `claude-opus-5` wrote | `^\d{9}[\dX]$` |
+| The reference says | `^\d{9}[\d\|X]$` |
+| They differ on | `000000000\|` |
+
+The reference's character class contains a literal **pipe** — someone wrote
+`[\d|X]` meaning "a digit or X" and accidentally allowed `|` too. The model
+is correct. The gold answer has a typo. We score the model down for it.
+
+Another: for *"Positive integer value."* the model wrote `^[1-9][0-9]*$`
+and the reference `^\d+$`, differing on `0`. Zero is not a positive
+integer. The model is arguably right there too.
+
+We have not audited how often this happens, so **treat `dfa-eq` as a lower
+bound on model correctness, not a verdict on it.** Publishing this is
+cheaper than having someone else find it.
 
 ---
 
 ## Verify it yourself
 
-Every model response is committed in `predictions/`. The scores are
-computed from those files and nothing else, so you can recheck our
-arithmetic without an API key, without spending anything, and without
-trusting us:
+Every model response is committed in `predictions/`. Scores are computed
+from those files and nothing else, so you can recheck the arithmetic
+without an API key, without spending anything, and without trusting us:
 
 ```bash
 git clone https://github.com/foothills-labs/regexleaderboard
 cd regexleaderboard
 make setup    # installs the pinned scorer, downloads the corpus
-make score    # recomputes every number in the table above
+make score RUN=sweep
 ```
 
-Two commands, from a clean clone. `make check` does the same and **fails**
-if the recomputed numbers differ from the ones published here — it runs in
-CI on every push, so the table above cannot silently drift from the
-evidence behind it.
-
-To collect fresh predictions (this one costs money — about $0.001 for the
-preview):
-
-```bash
-export OPENROUTER_KEY=sk-or-...
-make collect
-```
+`make check` does the same and **fails** if the recomputed numbers differ
+from the published ones. It runs in CI on every push against the fast
+preview run, so the scoring path cannot silently drift.
 
 ---
 
 ## Failures are results too
 
-`mistral-small-3.2` answered **none** of its ten tasks. Its provider
-returned rate-limit errors, and our requests are pinned to a specific
-provider with `allow_fallbacks: false` — so rather than quietly rerouting
-to a different company running the same model at a different precision,
-the request failed and we recorded it.
+**54 of 14,850 calls failed (0.36%).** They are in the table, not dropped.
 
-This matters more than it sounds. By default, OpenRouter spreads requests
-across whichever provider is cheapest right now, and different providers
-serve the same model at different quantizations. An unpinned benchmark
-measures the router, not the model, and its numbers can change next week
-with no code change and no way to notice. So we pin the provider, and we
-record which provider *actually* served each request — the pin is the
-instruction, the response is the evidence.
+**`claude-opus-5` was refused by a content filter on 29 calls** — and the
+prompts are benign:
 
-A model that errors, refuses, or returns prose instead of a pattern stays
-in the table with its failure rate visible. Dropping it would turn a
-finding into missing data.
+| Task | Prompt |
+| --- | --- |
+| regexeval/146 | strings that do not contain a single quotation mark |
+| regexeval/251 | a six character "password" of numbers and letters |
+| regexeval/660 | a series of hex codes separated by spaces |
+| regexeval/693 | **"Matches a file extention."** |
 
----
+No other model refused anything. And it isn't consistent: several of these
+were refused on one sample and answered on the next two — same prompt,
+same model, same settings. `k=3` sampling surfaced that; `k=1` would have
+recorded it as a flat failure.
 
-## How we know the scorer isn't lying
+The remaining failures: 11 calls hit the account's spending limit (see
+below) and 4 came back without a resolved provider, which we reject rather
+than score, because a row without provenance is not reproducible.
 
-A scorer that silently returns zeros looks exactly like a model that
-failed. So three fake answers ride through the identical scoring path in
-every single run:
+## Known gaps in this run
 
-| Control | What we submit | Must come back as |
-| --- | --- | --- |
-| known-good | the task's own reference answer | passes, usable |
-| known-bad | `z{5}` | fails everything |
-| known-vulnerable | `(a+)+b` | flagged vulnerable |
-
-If any control misbehaves, the run is thrown away rather than published.
-All four models' controls passed — **including `mistral-small`**, which is
-how we know its zeros are a collection failure and not a scoring bug.
-
----
+- **Coverage is not perfectly uniform.** Nine models cover all 450 tasks.
+  `kimi-k3` covers 447 — the budget ran out mid-collection. `claude-opus-5`
+  covers 445, from the content-filter refusals. Under 1%, no ranking
+  changes, but the denominators differ.
+- **The reference answers contain errors** (see above), so `dfa-eq`
+  understates model correctness by an unmeasured amount.
+- **"Not vulnerable" is a screening result, not a proof** — no known-bad
+  shape and no blow-up on the attack strings tried.
+- **The corpus is old enough to be in training data**, so scores may partly
+  measure memorisation. A private task set to measure that gap is not yet
+  built.
 
 ## What's here
 
 ```
-predictions/   every raw model response, committed — the evidence
-results/       the scores, recomputed from predictions/ by CI
-runner/        the OpenRouter client and the scorer
-METHODOLOGY.md how it was run, and every judgement call we made
+predictions/   every raw model response — the evidence
+results/       scores, recomputed from predictions/ by CI
+runner/        the OpenRouter client, scorer, auditor
+METHODOLOGY.md how it was run and every judgement call
 APPENDIX.md    the harder metrics and the honest limitations
-PLAN.md        validation of the founding brief, and the plan
 ```
 
-Scoring is done by [`regexbench`](https://github.com/foothills-labs/regexbench)
-(Apache-2.0), pinned to commit `05d7547b`. This repo does not vendor it and
-does not reimplement it.
-
-## Limits, stated plainly
-
-- **"Not vulnerable" is a screening result, not a proof.** It means we found
-  no known-dangerous shape and it didn't blow up on the attack strings we
-  tried.
-- **Some comparisons are impossible, not just hard.** For patterns using
-  backreferences, asking "are these two the same language" has no
-  algorithmic answer. Those tasks are counted honestly rather than quietly
-  dropped — see APPENDIX.md.
-- **The corpus is old enough to be in training data**, so a high score may
-  partly measure memorisation. A small private task set is planned to
-  measure that gap.
+Scoring by [`regexbench`](https://github.com/foothills-labs/regexbench)
+(Apache-2.0), pinned to commit `05d7547b`. Corpus:
+[Re(gEx|DoS)Eval](https://github.com/s2e-lab/RegexEval), not redistributed
+here — `make setup` fetches it.
 
 ## License
 
-Code Apache-2.0. The Re(gEx|DoS)Eval corpus is not redistributed here;
-`make setup` downloads it from
-[s2e-lab/RegexEval](https://github.com/s2e-lab/RegexEval).
+Code Apache-2.0.
