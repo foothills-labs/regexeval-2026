@@ -46,16 +46,41 @@ def select_tasks(all_tasks, limit: int | None):
     return [all_tasks[int(i * step)] for i in range(limit)]
 
 
-def load_done(path: Path) -> set[tuple[str, int]]:
+def config_fingerprint(model: dict, d: dict, reasoning: dict | None) -> str:
+    """Identifies the settings a row was produced under.
+
+    Resume matches on (task, sample). Without this, changing max_tokens or
+    the provider pin mid-run and resuming would silently interleave rows
+    produced under different configurations into one file, and nothing
+    downstream could tell them apart. Observed for real: an aborted run at
+    max_tokens=400 left three truncated rows that a resumed run at 4000
+    then treated as finished work.
+    """
+    return json.dumps({
+        "slug": model["slug"],
+        "provider": model["provider"],
+        "max_tokens": d["max_tokens"],
+        "temperature": d.get("temperature"),
+        "reasoning": reasoning,
+    }, sort_keys=True)
+
+
+def load_done(path: Path, fingerprint: str) -> tuple[set[tuple[str, int]], int]:
+    """Returns rows completed under *this* config, and a count of foreign rows."""
     if not path.exists():
-        return set()
-    done = set()
+        return set(), 0
+    done, foreign = set(), 0
     for line in path.read_text().splitlines():
         if not line.strip():
             continue
         r = json.loads(line)
+        if r.get("config") not in (fingerprint, None) or (
+            r.get("config") is None and not r["task_name"].startswith("control/")
+        ):
+            foreign += 1
+            continue
         done.add((r["task_name"], r.get("sample", 0)))
-    return done
+    return done, foreign
 
 
 def main():
@@ -65,12 +90,21 @@ def main():
     ap.add_argument("--k", type=int, default=None, help="samples per task")
     ap.add_argument("--models", default=None, help="comma-separated labels; default all")
     ap.add_argument("--reasoning", choices=["off", "on"], default="off")
+    ap.add_argument("--max-tokens", type=int, default=None,
+                    help="override max_tokens (reasoning=on needs far more headroom)")
     ap.add_argument("--dry-run", action="store_true", help="print the plan and exit")
     args = ap.parse_args()
 
-    d = ROSTER["defaults"]
+    d = dict(ROSTER["defaults"])
     k = args.k or d["k"]
     reasoning = {"enabled": False} if args.reasoning == "off" else None
+    if args.max_tokens:
+        d["max_tokens"] = args.max_tokens
+    elif args.reasoning == "on":
+        # Hidden reasoning is spent from max_tokens. At the sweep's 400 a model
+        # can burn the entire budget thinking and return finish_reason
+        # 'length' with no content at all -- observed on gpt-5.6-luna.
+        d["max_tokens"] = 4000
 
     models = ROSTER["models"]
     if args.models:
@@ -97,7 +131,15 @@ def main():
     grand_cost = 0.0
     for m in models:
         out_path = out_dir / f"{m['label']}.jsonl"
-        done = load_done(out_path)
+        fp = config_fingerprint(m, d, reasoning)
+        done, foreign = load_done(out_path, fp)
+        if foreign:
+            raise SystemExit(
+                f"\n{m['label']}: {out_path} holds {foreign} row(s) produced under a "
+                f"different configuration.\nResuming would mix them with this run's "
+                f"settings and nothing downstream could tell them apart.\n"
+                f"Delete the file (or use a new --run name) and collect it again."
+            )
         wrote = 0
         model_cost = 0.0
         print(f"\n=== {m['label']} ({m['slug']}) ===", flush=True)
@@ -110,7 +152,7 @@ def main():
                 base = tasks[0] if cname == "control/good" else tasks[min(1, len(tasks) - 1)]
                 pattern = base.reference if cpattern is None else cpattern
                 fh.write(json.dumps({
-                    "task_name": cname, "base_task": base.name, "sample": 0,
+                    "task_name": cname, "base_task": base.name, "sample": 0, "config": fp,
                     "model_requested": m["slug"], "provider_requested": m["provider"],
                     "status": "ok", "provider_resolved": "n/a (synthetic control)",
                     "model_resolved": "n/a", "content": pattern, "pattern": pattern,
@@ -129,7 +171,7 @@ def main():
                     usage = res.usage or {}
                     ctd = usage.get("completion_tokens_details") or {}
                     fh.write(json.dumps({
-                        "task_name": task.name, "sample": sample,
+                        "task_name": task.name, "sample": sample, "config": fp,
                         "model_requested": res.model_requested,
                         "provider_requested": res.provider_requested,
                         "status": res.status,
