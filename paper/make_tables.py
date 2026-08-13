@@ -60,3 +60,45 @@ lines += [r"\midrule",
           f"\\textit{{All models pooled}} & {tn} & {(te+tp)/tn*100:.1f} & {te/tn*100:.1f} & {tp/tn*100:.1f} \\\\"]
 write("tab_vuln.tex", "lrrrr",
       r"Source & $n$ & vulnerable (\%) & exponential (\%) & polynomial (\%) \\", lines)
+
+
+# --- @1 estimates from per-sample success counts -----------------------------
+# pass@3 at n=3 degenerates to any-of-3 and cannot separate a task solved once
+# from one solved three times. @1 is the per-sample success rate and is the
+# quantity most comparable to single-sample protocols elsewhere. Tasks with
+# fewer than k samples (from refusals or budget exhaustion) are excluded from
+# the @k estimate for that k, which is why @3 here can differ marginally from
+# the scorer's figure over all answered tasks.
+from math import comb
+import glob as _glob
+
+def _at(d, metric, k):
+    tot, n = 0.0, 0
+    for v in d.values():
+        if v["n"] < k:
+            continue
+        tot += 1 - comb(v["n"] - v[metric], k) / comb(v["n"], k)
+        n += 1
+    return (tot / n if n else float("nan")), n
+
+ps = {}
+for f in sorted(_glob.glob(str(REPO / "results/sweep/per_sample/*.json"))):
+    ps[pathlib.Path(f).stem] = json.loads(open(f).read())
+
+if ps:
+    body = []
+    for r in rows:
+        d = ps.get(r["model"])
+        if not d:
+            continue
+        p1, n1 = _at(d, "pass", 1)
+        p3, _ = _at(d, "pass", 3)
+        u1, _ = _at(d, "usable", 1)
+        u3, _ = _at(d, "usable", 3)
+        v1, _ = _at(d, "vulnerable", 1)
+        short = sum(1 for v in d.values() if v["n"] < 3)
+        body.append(f"\\texttt{{{esc(r['model'])}}} & {p1*100:.1f} & {p3*100:.1f} & "
+                    f"{u1*100:.1f} & {u3*100:.1f} & {v1*100:.1f} & {short} \\\\")
+    write("tab_at1.tex", "lrrrrrr",
+          r"Model & \pass{}@1 & \pass{}@3 & \usable{}@1 & \usable{}@3 & \vuln{}@1 & $n{<}3$ \\",
+          body)

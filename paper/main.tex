@@ -370,6 +370,36 @@ $\exact{}@3$---string identity with the reference---ranges from 2.0\% to
 6.3\%, confirming that string-comparison scoring would misrank essentially
 all systems and justifying the automata-theoretic treatment.
 
+\subsection{Sample budget and the fragility of ordering}
+\label{sec:atk}
+
+Because $n=k=3$ renders the $\pass{}@k$ estimator degenerate
+(\cref{sec:metrics}), we additionally report $@1$, which is the per-sample
+success rate and the quantity most directly comparable to single-sample
+protocols. \cref{tab:at1} gives both.
+
+\begin{table}[htbp]
+\centering
+\small
+\input{tab_at1}
+\caption{Per-sample ($@1$) against any-of-three ($@3$) estimates, computed
+from per-sample success counts. The final column gives the number of tasks
+with fewer than three usable samples, which are excluded from that model's
+$@3$ estimate; this is why $@3$ here differs marginally from \cref{tab:main},
+which is computed over all answered tasks.}
+\label{tab:at1}
+\end{table}
+
+The comparison is instructive beyond bookkeeping. At $@3$,
+\texttt{kimi-k3} attains the highest \usable{} (23.8\%); at $@1$ it is
+\texttt{claude-opus-5} (17.3\%), with \texttt{kimi-k3} in joint third.
+\emph{The induced ordering depends on the sample budget.} Systems differ not
+only in per-attempt quality but in how much they benefit from additional
+attempts, and a leaderboard that fixes $k$ silently fixes a weighting between
+those two properties. This is a further reason to prefer banded reporting
+(\cref{sec:power}), and a reason to state $k$ prominently whenever an @$k$
+metric is ranked.
+
 \subsection{ReDoS and the human baseline}
 \label{sec:humanbaseline}
 
