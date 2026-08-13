@@ -1,0 +1,757 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise]{cleveref}
+\usepackage{natbib}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  framesep=4pt,
+  xleftmargin=6pt,
+  literate={~}{{\textasciitilde}}1
+}
+
+\newcommand{\pass}{\textsc{pass}}
+\newcommand{\usable}{\textsc{usable}}
+\newcommand{\vuln}{\textsc{vulnerable}}
+\newcommand{\dfaeq}{\textsc{dfa-eq}}
+\newcommand{\exact}{\textsc{exact}}
+
+\title{\textbf{Passing Is Not Shipping}\\[0.4em]
+\large Correctness, Semantic Equivalence and ReDoS Safety in\\
+LLM-Generated Regular Expressions, and the Limits of Measuring Them}
+
+\author{Foothills Labs\\\texttt{info@foothills-labs.com}}
+
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We evaluate eleven contemporary language models on natural-language-to-regex
+generation over 450 tasks with three samples each ($14{,}850$ requests,
+\$10.95), scoring every answer on three axes: whether it satisfies the task's
+tests, whether it denotes the same language as a human reference, and whether
+it is vulnerable to regular-expression denial of service (ReDoS).
+
+Two empirical results are robust. First, \emph{passing is roughly twice as
+easy as shipping}: models pass 38.0--47.5\% of tasks but produce a correct,
+safe, semantically-verified pattern on only 17.1--24.8\%, a gap that holds
+uniformly across a $98\times$ range in price. Second, and contrary to the
+expected framing, \emph{models are safer than the humans whose answers define
+the benchmark}: 13.6\% of the corpus's human-written reference patterns are
+ReDoS-vulnerable against 9.0\% for models pooled, and every individual model
+is safer than the reference set.
+
+We then audit our own instrument, and report a negative result about
+benchmark methodology that we believe generalises. Metrics that compare
+generated output against a human answer key inherit that key's error rate. In
+a random sample of disagreements where a model passed every test yet was
+scored as semantically different, the model was clearly at fault in
+approximately 15\% of cases; the remainder divided between demonstrably
+incorrect reference patterns (including a reference character class
+containing a literal \texttt{|}) and prompts that never specified the
+property in dispute. We further show that independent binomial intervals---the
+default in this literature---are the wrong inferential tool when all systems
+answer identical items, and that a paired bootstrap resolves nine times as
+many pairwise comparisons on the same data.
+
+We therefore decline to publish a ranking. We release all raw generations,
+scoring code and adjudications, and recommend that evaluations separate
+reference-dependent from reference-independent metrics and assign them
+different evidentiary weight.
+\end{abstract}
+
+\vspace{0.5em}
+\noindent\textbf{Artifacts.} All model outputs, scoring code, per-case
+adjudications and analysis scripts are available at
+\url{https://github.com/foothills-labs/regexleaderboard}. Every number in
+this paper recomputes offline from committed data with no API access.
+
+\section{Introduction}
+
+Regular expressions are an unusually good probe for language-model
+evaluation. The task is compact, the output is executable, correctness is
+partly decidable, and---uniquely among common code-generation tasks---a
+syntactically valid, test-passing answer can still be a security defect. That
+last property is the reason for this study.
+
+The dominant evaluation protocol for natural-language-to-regex generation
+scores a candidate pattern against a reference using DFA
+equivalence~\citep{locascio2016neural,kushman2013semantic}, optionally
+supplemented by test-based correctness. Neither criterion detects
+catastrophic backtracking. A pattern that satisfies every provided example
+and denotes exactly the reference language may still admit inputs on which
+matching takes time exponential in input length---the ReDoS
+vulnerability class~\citep{davis2018redos}. In deployed systems this is a
+denial-of-service vector, and it is common enough in human-written code to
+have motivated ecosystem-scale study.
+
+\subsection{Contributions}
+
+\begin{enumerate}
+  \item \textbf{A three-axis evaluation of eleven current models}
+  (\cref{sec:results}), reporting test correctness, semantic equivalence and
+  ReDoS safety jointly rather than separately, together with a composite
+  (\usable{}) requiring all three. To our knowledge safety has not previously
+  been reported as a first-class axis alongside correctness in this task.
+
+  \item \textbf{A human baseline for ReDoS} (\cref{sec:humanbaseline}). We
+  apply the identical safety screen to the corpus's own reference patterns.
+  Models are uniformly safer than the reference set, which relocates the
+  finding from a claim about model deficiency to a claim about the
+  distribution models were trained on.
+
+  \item \textbf{A quantified audit of reference-standard error}
+  (\cref{sec:goldstandard}). We sample disagreements and adjudicate them,
+  finding that the majority of apparent semantic errors are not model errors.
+  We are not aware of prior work in this task family that measures this.
+
+  \item \textbf{A methodological correction} (\cref{sec:paired}). We show
+  that independent intervals substantially understate resolvable differences
+  when all systems answer identical items, and give the paired alternative.
+
+  \item \textbf{Full artifact release} including raw generations, which
+  permits any of our scoring decisions to be overturned without re-running
+  inference.
+\end{enumerate}
+
+\subsection{What this paper does not claim}
+
+We do not publish a ranking of the eleven models. \cref{sec:power} shows
+that 62\% of tasks yield identical outcomes across all eleven systems, and
+that only nine of fifty-five pairwise comparisons resolve at 95\% confidence
+even under the correct paired test. Reporting an ordinal leaderboard from
+this data would be unsupported by it.
+
+We also do not claim novelty for DFA-equivalence checking, which is standard
+in this literature~\citep{locascio2016neural}, nor for the scoring engine,
+which is prior work by the present authors released
+separately~\citep{regexbench} and used here as a pinned dependency.
+
+\section{Background and Related Work}
+
+\paragraph{NL-to-regex generation.}
+The task was established by \citet{kushman2013semantic} (KB13) and extended
+by \citet{locascio2016neural} (NL-RX), both of which adopt DFA equivalence
+against a reference as the correctness criterion. This is the right choice
+in principle---$\texttt{[0-9]+}$ and $\texttt{[0-9][0-9]*}$ denote the same
+language and differ as strings---but it inherits any defect in the reference
+set, a dependency this paper quantifies.
+
+\paragraph{ReDoS.}
+Catastrophic backtracking arises when a backtracking matcher can decompose a
+prefix in exponentially many ways, canonically via a quantifier applied to a
+quantified group, as in \texttt{(a+)+}. \citet{davis2018redos} document its
+prevalence at ecosystem scale; \citet{davis2019linguafranca} study regex
+portability and re-use across languages. \citet{icpc2024llmredos} examine
+ReDoS specifically in LLM-generated patterns and report a skew toward
+polynomial rather than exponential vulnerability; we compare against that
+finding in \cref{sec:humanbaseline}.
+
+\paragraph{Sampling-based metrics.}
+We use the unbiased $\pass{}@k$ estimator of \citet{chen2021codex}, with the
+degeneracy noted in \cref{sec:metrics}.
+
+\paragraph{Serving-layer variance.}
+Hosted inference routers may serve the same model slug from multiple
+providers at differing numerical precision. \citet{openrouterpinning} report
+that 31 of 32 surveyed AI-safety codebases using such a router did not pin
+the serving provider, making their results a measurement of the router's
+routing policy in addition to the model. \cref{sec:serving} describes the
+discipline we adopt in response.
+
+\section{Method}
+
+\subsection{Task and prompt}
+
+Each task supplies a natural-language description; the model returns one
+regular expression. The prompt is fixed across all models and all tasks:
+
+\begin{quote}\small
+\textbf{system:} You translate a natural-language description into a single
+Python \texttt{re}-compatible regular expression. Reply with ONLY the pattern
+in one fenced code block, no explanation.\\[0.3em]
+\textbf{user:} \textit{\{task description, verbatim\}}\\[0.3em]
+Reply with only the regular expression pattern in a single fenced code block.
+\end{quote}
+
+We do not tune this prompt. Prompt optimisation would raise all scores and
+destroy comparability with prior work on the same corpus. \cref{sec:threats}
+notes the corresponding threat.
+
+\paragraph{Extraction.} We take the final fenced code block, else the whole
+trimmed reply, then strip at most one layer of host-language quoting
+(\texttt{r'\ldots'}, \texttt{'\ldots'}, \texttt{"\ldots"}, backticks,
+\texttt{/\ldots/flags}). Scored literally, \texttt{r'\textbackslash d+\$'} is
+a pattern matching the letter \texttt{r}, and would fail for reasons
+unrelated to regex competence. This affected 7--18 of 1{,}350 responses per
+model ($<1.4\%$ throughout) and changes no conclusion; both normalised and
+unnormalised scores are released.
+
+\subsection{Corpus}
+
+We use Re(gEx$|$DoS)Eval~\citep{regexeval}, 762 tasks drawn from real user
+requests, each with a description, positive and negative test strings, and a
+human-written reference pattern. We evaluate 450 tasks, selected at uniform
+stride across the corpus rather than as a prefix (the corpus is
+difficulty-ordered at its head). The subset size was budget-determined.
+
+Match semantics are set per corpus. Re(gEx$|$DoS)Eval references satisfy
+their own tests at 100\% under search semantics and 94\% under full-match;
+choosing incorrectly would score 46 gold patterns as failures. We verified
+the loaded configuration by scoring every reference against its own tests
+before the run (\cref{sec:goldstandard}).
+
+\subsection{Models and serving discipline}
+\label{sec:serving}
+
+Eleven models spanning frontier and open-weights systems across a $98\times$
+price range. Every request pins a single named provider with fallback
+disabled, so a request is either served by the named endpoint or fails
+visibly. Substitution failures did occur and are reported as failures rather
+than silently re-routed (\cref{app:failures}).
+
+For open-weights models the pin includes quantisation where the router
+discloses it: GLM-5.2 and DeepSeek-V4-Flash are served at 4-bit by some
+providers and 8-bit by others, and we pin 8-bit. One pin went stale within an
+hour of being set (the provider ceased serving that model), so pins are
+re-verified immediately before each run.
+
+Crucially, the pin is a request, not a guarantee. We record the provider that
+\emph{actually served} each response and verify agreement post hoc. All
+eleven models were served entirely by their pinned endpoint, with no
+substitutions.
+
+\subsection{Metrics}
+\label{sec:metrics}
+
+Let $T=(d, P, N, r)$ be a task with description $d$, positive examples $P$,
+negative examples $N$ and reference pattern $r$. Let $p$ be a candidate.
+
+\paragraph{Correctness.}
+\[
+\mathrm{correct}(p,T) \;=\; \big[\forall x \in P:\ \mathrm{match}(p,x)\big]
+\;\wedge\;
+\big[\forall y \in N:\ \neg\,\mathrm{match}(p,y)\big]
+\]
+evaluated with CPython's \texttt{re} under the corpus's declared semantics.
+This is \emph{reference-independent}.
+
+\paragraph{Semantic equivalence.}
+Both $p$ and $r$ are compiled to finite automata and compared, yielding a
+verdict in $\{\textsc{eq}, \textsc{diff}, \textsc{undec}, \textsc{unsup}\}$.
+When the verdict is \textsc{diff} the engine returns a \emph{witness}: a
+shortest string in the symmetric difference, which renders the judgment
+falsifiable by inspection.
+
+Equivalence is decidable only on the regular subset. Backreferences render
+the language non-regular and equivalence formally undecidable, yielding
+\textsc{undec}; between 82 and 133 of 450 tasks per model fall in this class.
+We therefore report two figures:
+\[
+\dfaeq{} = \Pr[\textsc{eq}], \qquad
+\dfaeq{}_{\text{dec}} = \Pr[\textsc{eq} \mid \text{verdict} \neq \textsc{undec}].
+\]
+The first counts undecidable comparisons as failures and is a lower bound
+that cannot flatter; the second isolates the model from the engine's reach.
+Reporting only the latter inflates; reporting only the former charges the
+model for a theorem. This metric is \emph{reference-dependent}, which
+\cref{sec:goldstandard} shows to be decisive.
+
+\paragraph{ReDoS safety.}
+$\mathrm{vuln}(p) = [\mathrm{screen}(p) \neq \textsc{safe}]$, where
+$\mathrm{screen}$ performs structural analysis for known-vulnerable shapes
+followed by an empirical pass against attack strings under timeout. The
+structural pass covers three of the five families catalogued
+by~\citet{icpc2024llmredos}; consequently \vuln{} is a \emph{lower bound},
+and \textsc{safe} denotes a screening outcome, not a proof. This metric is
+\emph{reference-independent}.
+
+\paragraph{Composite.}
+\[
+\mathrm{usable}(p,T) = \mathrm{correct}(p,T)
+  \;\wedge\; \neg\,\mathrm{vuln}(p)
+  \;\wedge\; \big[\text{verdict}(p,r) \neq \textsc{diff}\big]
+\]
+Note the third conjunct excludes only \emph{proven} difference; undecidable
+and unsupported verdicts do not disqualify. \usable{} is
+reference-dependent through that conjunct, and inherits the error
+characterised in \cref{sec:goldstandard}.
+
+\paragraph{Sampling.}
+With $n$ samples per task of which $c$ satisfy a predicate, we use the
+unbiased estimator of~\citet{chen2021codex}:
+\[
+\widehat{\mathrm{metric}}@k \;=\;
+\mathbb{E}_{T}\left[\,1 - \frac{\binom{n-c}{k}}{\binom{n}{k}}\right].
+\]
+We draw $n=3$ and report $k=3$. We note explicitly that at $n=k$ this
+estimator degenerates to $\mathbf{1}[c \geq 1]$ and provides no variance
+reduction over the naive any-of-$n$ statistic; it is reported as $@3$ for
+comparability, not because the estimator is doing work at this setting.
+$n>k$ would be required for the estimator's variance properties to apply,
+and is left to future work with a larger budget.
+
+\subsection{Sampling configuration}
+
+\paragraph{Reasoning disabled.} Four of eleven models emit no hidden
+reasoning tokens; seven do. Evaluating them together with reasoning enabled
+would confound model identity with inference-time compute budget. All
+requests therefore disable reasoning, and reasoning-token counts are recorded
+per response to verify compliance (observed: zero throughout).
+
+\paragraph{Temperature unset.} We set
+\texttt{require\_parameters=true}, which restricts routing to providers that
+honour submitted sampling parameters rather than silently discarding them.
+Six of eleven models reject \texttt{temperature} outright; in combination the
+request is unroutable. We therefore omit \texttt{temperature} entirely and
+each model samples at its provider default. This preserves the
+non-silent-discard guarantee at the cost of controlled sampling---a trade we
+consider correct but note as a limitation.
+
+Since $k>1$ is only informative under output diversity, we verified diversity
+directly: repeated queries on a fixed task yielded 3, 3, 3 and 2 distinct
+patterns for \texttt{claude-opus-5}, \texttt{gpt-5.6-sol}, \texttt{kimi-k3}
+and \texttt{glm-5.2} respectively. The analysis pipeline additionally warns
+if $>90\%$ of a model's tasks return identical samples.
+
+\subsection{Controls}
+
+Three synthetic responses traverse the identical scoring path on every run:
+the task's own reference (must score correct and usable), the pattern
+\texttt{z\{5\}} (must fail all correctness), and \texttt{(a+)+b} (must be
+flagged vulnerable). A run in which any control deviates is discarded rather
+than reported. This detects the failure mode in which a scorer silently
+returns null results, which is otherwise indistinguishable from uniformly
+poor model performance. All controls behaved as specified for all eleven
+models.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Main results}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\input{tab_main}
+\caption{Primary results, 450 tasks, $n=k=3$. All figures percentages except
+\emph{undec.} (count of tasks with undecidable equivalence, of 450) and
+\emph{fail} (count of failed requests, of 1{,}350). Ordering is by
+\usable{}@3 and should be read as a banding, not a ranking
+(\cref{sec:power}).}
+\label{tab:main}
+\end{table}
+
+The central quantitative observation in \cref{tab:main} is the gap between
+$\pass{}@3$ (38.0--47.5\%) and $\usable{}@3$ (17.1--24.8\%). Approximately
+half of all test-passing generations fail at least one of the remaining two
+criteria, and the ratio is stable across the entire price range. We count 135
+model-task pairs in which a pattern satisfied every test and was
+simultaneously screened as ReDoS-vulnerable.
+
+$\exact{}@3$---string identity with the reference---ranges from 2.0\% to
+6.3\%, confirming that string-comparison scoring would misrank essentially
+all systems and justifying the automata-theoretic treatment.
+
+\subsection{ReDoS and the human baseline}
+\label{sec:humanbaseline}
+
+\cref{tab:vuln} applies the identical safety screen to the corpus's 450
+human-written reference patterns. For comparability with the human set (one
+pattern per task) we score one sample per task per model rather than the
+any-of-three statistic of \cref{tab:main}.
+
+\begin{table}[htbp]
+\centering
+\small
+\input{tab_vuln}
+\caption{ReDoS screening of model outputs against the corpus's own
+human-written reference patterns, one pattern per task in all cases.}
+\label{tab:vuln}
+\end{table}
+
+Every model is safer than the reference set. This inverts the expected
+framing. The result is not that generation introduces ReDoS vulnerability
+relative to human practice; it is that ReDoS vulnerability is endemic to
+human-written regular expressions at a rate exceeding what these models
+reproduce.
+
+We regard this as the paper's most consequential empirical finding, because
+it changes the implied remedy. A model-deficiency framing implies waiting for
+better models. A distributional framing implies that safety screening must be
+applied at the point of use, since neither the generator nor the human corpus
+it was trained on performs that check.
+
+\paragraph{Relation to prior work.} \citet{icpc2024llmredos} report that
+LLM-generated regexes skew toward polynomial ReDoS. We do not reproduce this
+cleanly: pooled across models we observe 5.3\% exponential against 3.8\%
+polynomial, the opposite direction, while the human references skew
+polynomial (6.4\% vs.\ 7.1\%). Subcategory counts are small and we do not
+advance a strong claim; we note the discrepancy as warranting replication.
+
+\subsection{Cost}
+
+\begin{table}[htbp]
+\centering
+\small
+\input{tab_cost}
+\caption{Cost per task at $n=3$, measured from per-request billing returned
+by the serving layer rather than estimated from list prices.}
+\label{tab:cost}
+\end{table}
+
+The extremes differ by a factor of $98$ in price and approximately three
+percentage points in \usable{}@3---a difference at the boundary of
+resolvability (\cref{sec:paired}). We restrict this observation to this task;
+it is not a general claim about model capability.
+
+\subsection{Refusals}
+
+\texttt{claude-opus-5} was blocked by a content filter on 29 requests (2.1\%
+of its calls) across five tasks. The prompts concern: strings excluding a
+single quotation mark; a six-character alphanumeric password; hex byte
+sequences; SQL update/insert statements; and---without evident
+security relevance---\emph{``Matches a file extention.''} No other model
+refused any request.
+
+Refusals were \emph{not deterministic}: several tasks were refused on one
+sample and answered on the other two under identical settings. This is
+detectable only at $k>1$; a single-sample protocol would record a
+deterministic failure. We report refusals as a distinct failure category
+rather than as incorrect answers (\cref{app:failures}).
+
+\subsection{Inference-time compute}
+
+On the corpus's simplest task (\emph{``Matches exactly 1 numeric digit
+(0-9).''}), \texttt{qwen3.6-max-preview} emitted 1{,}571 hidden reasoning
+tokens before answering \texttt{\^{}[0-9]\$}, at a cost of \$0.0098. With
+reasoning disabled it produced the identical answer in 10 tokens at
+$1/100$th the cost. We further observe that requesting \emph{low} reasoning
+effort produced \emph{2{,}375} reasoning tokens on that model---more than the
+default---indicating that effort controls are not reliably monotone.
+
+A reasoning-enabled comparison on 12 tasks across five models yielded
+per-request costs $15.7\times$ higher and no interpretable accuracy signal at
+that sample size ($\pm14$ percentage points per cell). We report the cost
+result and explicitly decline to report an accuracy conclusion.
+
+\section{Measurement Validity}
+\label{sec:validity}
+
+\subsection{The reference standard contains errors}
+\label{sec:goldstandard}
+
+We first rule out a loading fault: 449 of 450 reference patterns satisfy
+their own tests, confirming that corpus semantics and dialect are correctly
+configured. The defect is subtler---a reference may satisfy its own tests and
+still not denote what its description states, when the tests do not exercise
+the discrepancy.
+
+We drew a seeded random sample of 60 cases in which a model \emph{passed
+every test} yet received a \textsc{diff} verdict, and adjudicated 14 in
+detail.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+Adjudicated cause & count & share \\
+\midrule
+Reference pattern is incorrect & 5 & 36\% \\
+Description underspecifies the disputed property & 6 & 43\% \\
+Model output is incorrect & 3 & 21\% \\
+\bottomrule
+\end{tabular}
+\caption{Adjudication of 14 sampled \textsc{diff} verdicts on test-passing
+outputs. Per-case reasoning is released.}
+\label{tab:adjudication}
+\end{table}
+
+Independently, 19 of the 60 sampled disagreements (32\%) differ only on
+non-ASCII input, arising from Python's Unicode-aware \texttt{\textbackslash
+d} versus an explicit \texttt{[0-9]}; these are formally distinct languages
+and practically identical. Combining both effects, we estimate the model is
+clearly at fault in approximately \textbf{15\%} of \textsc{diff} verdicts.
+
+Representative cases:
+
+\begin{itemize}
+\item \textbf{Description:} \emph{``It just accepts only positive numbers.''}
+The reference \lstinline!^\d+([.,]?\d+)?$! admits \texttt{0}. The model
+excluded zero and was scored incorrect.
+
+\item \textbf{Description:} \emph{``A very simple ISBN validation
+expression---it just checks for a 10 digit number.''} The reference is
+\lstinline!^\d{9}[\d|X]$!. The character class contains digit, \emph{pipe}
+and \texttt{X}: an alternation operator written inside a class, where it
+denotes a literal. The reference therefore accepts \texttt{000000000|}, which
+is the witness separating it from the model's \lstinline!^\d{9}[\dX]$!.
+
+\item \textbf{Description:} \emph{``\ldots make sure commas are in the rite
+place (if present).''} The reference
+\begin{lstlisting}
+^\$?\d{1,3}(,?\d{3})*(\.\d{1,2})?$
+\end{lstlisting}
+makes the comma optional, admitting \texttt{0,000000} and negating the stated
+purpose. The model enforced comma placement and was scored incorrect.
+
+\item \textbf{Underspecification:} \emph{``Matches any single upper- or
+lower-case letter.''} The reference \lstinline!^[a-zA-Z]$! requires a
+whole-string match; a candidate \lstinline![A-Za-z]! requires only occurrence. The
+description does not distinguish these. We tested whether anchoring alone
+explains failures generally: it accounts for approximately 6\%, so the effect
+is diffuse rather than a single correctable convention.
+\end{itemize}
+
+\paragraph{Consequence.} \dfaeq{} and \usable{} are lower bounds on model
+correctness by an unmodelled margin. \pass{} and \vuln{} are unaffected,
+since neither consults the reference.
+
+\paragraph{Limitation of this analysis.} The adjudication comprises 14 cases
+judged by the present authors on their own benchmark. We release per-case
+reasoning with unadjudicated cases retaining an empty verdict field, and
+recommend that the 15\% figure be re-derived from a larger sample by
+independent annotators before being cited quantitatively. We report it
+because its \emph{direction} is unambiguous and materially affects how the
+composite metric should be read.
+
+\subsection{Paired inference}
+\label{sec:paired}
+
+Our initial analysis compared systems using independent binomial confidence
+intervals, which is the wrong estimator for this design. All eleven models
+answer identical items; task difficulty is a shared random effect, and
+treating systems as independent samples charges each separately for it.
+
+Under a paired bootstrap---resampling tasks with replacement, scoring all
+models on each resample, and forming per-pair differences---task difficulty
+cancels and only genuine disagreement contributes. With $B = 10{,}000$
+resamples and a fixed seed:
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lr}
+\toprule
+Procedure & pairs resolved at 95\% (of 55) \\
+\midrule
+Independent binomial intervals & 1 \\
+Paired bootstrap, \usable{}@3 & 9 \\
+Paired bootstrap, \pass{}@3 & 15 \\
+Paired bootstrap, \vuln{}@3 & 15 \\
+\bottomrule
+\end{tabular}
+\caption{Resolvable pairwise comparisons under independent versus paired
+inference on identical data.}
+\label{tab:paired}
+\end{table}
+
+The correction is not marginal: it changes the number of defensible
+comparisons by nearly an order of magnitude. We note this because
+independent intervals appear to be the default in adjacent evaluation
+literature, and the design---all systems, all items---is nearly universal.
+
+Even corrected, the middle of the table does not separate. For example
+\texttt{qwen3.6-max-preview} versus \texttt{gpt-5.6-sol} yields
+$+0.7\%$ with a 95\% interval of $[-2.9\%, +4.3\%]$.
+
+\subsection{Discriminative power of the corpus}
+\label{sec:power}
+
+A structural constraint underlies the above. On \usable{}@3, \textbf{62\% of
+tasks produce identical outcomes across all eleven models}; on \pass{}@3,
+56\%; on \vuln{}@3, 77\%. Approximately 167 of 450 tasks contribute any
+discriminative signal.
+
+For calibration: resolving a 3-percentage-point difference at $p \approx 0.2$
+with independent intervals requires roughly 2{,}800 items---more than the
+full 762-task corpus contains. Paired inference reduces this requirement
+substantially but cannot manufacture signal from items on which every system
+agrees. Benchmark construction for system comparison should therefore
+optimise for discriminative yield, not corpus size.
+
+\section{Threats to Validity}
+\label{sec:threats}
+
+\paragraph{Contamination.} The corpus predates every evaluated model and is
+publicly available; performance may partly reflect memorisation. We have no
+held-out private task set and cannot bound this. We regard it as the most
+significant unaddressed threat.
+
+\paragraph{Single prompt.} All results are conditional on one unoptimised
+prompt. Given the underspecification documented in \cref{sec:goldstandard},
+sensitivity to phrasing---particularly regarding match-anchoring
+convention---is plausibly large and is unmeasured.
+
+\paragraph{Sampling control.} Temperature is unset (\cref{sec:metrics}), so
+sampling temperature varies across providers by default. Diversity was
+verified but not equalised.
+
+\paragraph{Estimator degeneracy.} At $n=k=3$ the $\pass{}@k$ estimator
+reduces to any-of-3.
+
+\paragraph{Coverage asymmetry.} Nine models cover all 450 tasks;
+\texttt{kimi-k3} covers 447 (budget exhaustion mid-run) and
+\texttt{claude-opus-5} 445 (refusals). Denominators differ by $<1\%$.
+
+\paragraph{Screening, not proof.} \vuln{} is a lower bound
+(\cref{sec:metrics}).
+
+\paragraph{Single corpus.} We do not test whether the observed banding
+survives corpus change.
+
+\paragraph{Self-adjudication.} See \cref{sec:goldstandard}.
+
+\section{Recommendations for Evaluation Design}
+
+\begin{enumerate}
+\item \textbf{Partition metrics by reference dependence.} Metrics evaluated
+by execution against inputs (\pass{}, \vuln{}) are robust to reference-set
+defects. Metrics evaluated against a human answer key inherit its error rate.
+These should not be reported with equal confidence, and composites spanning
+both should state which conjunct carries the dependency.
+
+\item \textbf{Sample and adjudicate disagreements.} The cost is hours. In our
+case it changed the paper's conclusion.
+
+\item \textbf{Use paired inference when all systems answer all items.}
+\cref{tab:paired}.
+
+\item \textbf{Report discriminative yield}, not only corpus size
+(\cref{sec:power}).
+
+\item \textbf{Pin the serving provider and verify post hoc.} Record what
+served each request, not only what was requested (\cref{sec:serving}).
+
+\item \textbf{Instrument the scorer with controls} that must pass and must
+fail (\cref{sec:metrics}).
+
+\item \textbf{Release raw generations.} This permits scoring decisions to be
+overturned without repurchasing inference, which is the difference between a
+reproducible result and an unfalsifiable one.
+\end{enumerate}
+
+\section{Conclusion}
+
+Across eleven contemporary models, roughly half of all regular expressions
+that satisfy their tests fail an additional correctness or safety criterion,
+and the proportion is insensitive to a $98\times$ variation in inference
+cost. Models are uniformly safer than the human-written reference patterns
+against which they are scored, which locates ReDoS prevalence in the training
+distribution rather than in generation.
+
+Our second contribution is negative and, we suspect, more broadly applicable:
+the semantic-equivalence metric standard in this task family is, in our
+sample, dominated by reference-set error and task underspecification rather
+than by model behaviour. We were able to establish this only by auditing our
+own results after collecting them, and it changed what we were willing to
+publish. We recommend the practice generally.
+
+\section*{Acknowledgements}
+
+Scoring is performed by \texttt{regexbench}~\citep{regexbench}, prior work by
+the present authors, used here as a pinned dependency and not contributed by
+this paper. The corpus is Re(gEx$|$DoS)Eval~\citep{regexeval}, used under its
+original terms and not redistributed.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\appendix
+
+\section{Failure taxonomy}
+\label{app:failures}
+
+Of 14{,}850 requests, 54 (0.36\%) failed and are reported rather than
+excluded.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llr}
+\toprule
+Model & Cause & Count \\
+\midrule
+\texttt{claude-opus-5} & content-filter refusal & 29 \\
+\texttt{kimi-k3} & account spending limit reached mid-run & 11 \\
+\texttt{kimi-k3} & response without resolved provider & 3 \\
+\texttt{gpt-5.6-sol} & response without resolved provider & 1 \\
+\bottomrule
+\end{tabular}
+\caption{Request failures by cause. Responses lacking a resolved provider are
+discarded rather than scored, as provenance is a precondition for
+reproducibility.}
+\end{table}
+
+Empty completions are classified by reported \texttt{finish\_reason} into
+refusal, token-budget exhaustion, and unexplained, rather than being scored
+as empty patterns---which would be indistinguishable from a maximally poor
+answer.
+
+\section{Operational hazards}
+\label{app:hazards}
+
+We document configuration hazards encountered during this study, each of
+which produced plausible-looking but invalid data. We believe this list has
+independent value.
+
+\begin{enumerate}
+\item \textbf{Parameter combinations that are silently unroutable.} Setting
+\texttt{temperature} together with \texttt{require\_parameters=true} yields a
+hard routing failure on 6 of 11 models. Our first pilot failed all 396 calls.
+
+\item \textbf{Systems that cannot satisfy the experimental condition.} Two
+Gemini variants return \emph{``Reasoning is mandatory for this endpoint''}
+and cannot be evaluated with reasoning disabled. Undetected, this would have
+placed one reasoning-enabled system in an otherwise reasoning-disabled
+comparison.
+
+\item \textbf{Empty completions from budget exhaustion.} At a 200-token cap,
+reasoning models consumed the entire budget on hidden reasoning and returned
+no content.
+
+\item \textbf{Resumption across configuration changes.} Our collection is
+resumable by (model, task, sample). An aborted run at one token cap left
+truncated rows that a resumed run at a different cap treated as complete,
+interleaving two configurations indistinguishably. Rows now carry a
+configuration fingerprint and resumption refuses on mismatch.
+
+\item \textbf{Sample collapse in scoring.} An early scorer retained only the
+final sample per task, which would have rendered all $@3$ statistics
+disguised $@1$ statistics with no visible symptom.
+\end{enumerate}
+
+\section{Reproduction}
+
+\begin{lstlisting}[language=bash]
+git clone https://github.com/foothills-labs/regexleaderboard
+cd regexleaderboard
+make setup      # pinned scorer + corpus download
+make score RUN=sweep
+\end{lstlisting}
+
+Scoring reads only committed generations; no API access or expenditure is
+required. We verified reproduction from a clean checkout with fresh
+dependency installation and corpus download, obtaining bit-identical metrics.
+A reduced form of this check executes in continuous integration on every
+commit.
+
+\end{document}
