@@ -430,7 +430,7 @@ unbiased estimator of~\citet{chen2021codex}:
 \widehat{\mathrm{metric}}@k \;=\;
 \mathbb{E}_{T}\left[\,1 - \frac{\binom{n-c}{k}}{\binom{n}{k}}\right].
 \]
-We draw $n=3$ and report $k=3$. Note that at $n=k$ this estimator degenerates to $\mathbf{1}[c \geq 1]$ and
+We draw $n=3$ and report $k=3$. At $n=k$ this estimator degenerates to $\mathbf{1}[c \geq 1]$ and
 buys no variance reduction over the naive any-of-$n$ statistic. We report it as
 $@3$ for comparability, not because the estimator is doing any work at this
 setting.
@@ -653,8 +653,8 @@ populations, which is the only comparison that would be interesting. Anyone
 wanting that comparison should re-run their harness on the current models
 rather than read it off the two papers.
 
-We think the divergence is more useful than agreement would have been. Three
-explanations seem plausible. We cannot separate them with this data:
+We have several explanations for the divergence and cannot separate them with
+this data:
 
 \begin{enumerate}
 \item \textbf{Attack surface.} A regular expression is a single expression
@@ -675,8 +675,9 @@ insecure,'' and more useful. \emph{The size of the correctness-to-security
 penalty depends on the domain and has to be measured there.} Assuming it
 transfers is what we did, and we were wrong. Worse, our composite showed a gap
 of about the expected size for entirely the wrong reason
-(\cref{sec:decomp}), which is exactly the situation in which an undecomposed
-joint metric will mislead you.
+(\cref{sec:decomp}). An undecomposed joint metric will mislead you exactly
+there, where its aggregate agrees with the literature and its components do
+not.
 
 \subsection{Cost}
 
@@ -689,7 +690,7 @@ by the serving layer rather than estimated from list prices.}
 \label{tab:cost}
 \end{table}
 
-The extremes differ by a factor of 98 in price and about three percentage
+The extremes differ by a factor of 98 in price and 3.2 percentage
 points in \usable{}@3, which is at the boundary of what we can resolve
 (\cref{sec:paired}). This observation is about this task only. It is not a
 general claim about model capability.
@@ -849,7 +850,7 @@ inference on identical data.}
 \end{table}
 
 The correction is not marginal. It changes the number of defensible
-comparisons by nearly an order of magnitude. We flag it because independent
+comparisons ninefold. We flag it because independent
 intervals look like the default in adjacent evaluation work, and the design
 they are applied to, all systems answering all items, is close to universal.
 
@@ -862,7 +863,7 @@ $+0.7\%$ with a 95\% interval of $[-2.9\%, +4.3\%]$.
 
 There is a structural reason behind this. On \usable{}@3, \textbf{62\% of
 tasks produce the same outcome for all eleven models}. On \pass{}@3 it is
-56\%, on \vuln{}@3, 77\%. Only about 167 of 450 tasks carry any
+56\%, on \vuln{}@3, 77\%. Only 167 of 450 tasks carry any
 discriminative signal at all.
 
 For calibration: resolving a 3-percentage-point difference at $p \approx 0.2$
@@ -934,8 +935,7 @@ served each request, not only what was requested (\cref{sec:serving}).
 fail (\cref{sec:metrics}).
 
 \item \textbf{Release raw generations.} Anyone can then overturn a scoring
-decision without buying the inference again. That is the difference between a
-result someone can check and one they have to take on faith.
+decision without buying the inference again.
 \end{enumerate}
 
 \section{Conclusion}
@@ -960,9 +960,8 @@ The methodological result is the one we did not plan on. A metric that
 compares against a human answer key inherits that key's error rate, and a
 composite built on such a term can produce a finding that is large, plausible
 and mostly spurious. We only found this by reading our own output after
-collecting it. The audit cost a few hours against a run that cost \$10.95, and
-it changed what we were willing to publish. We would do it earlier next
-time.
+collecting it. Fourteen cases were enough to change what we were willing to
+publish off a \$10.95 run. We would read them earlier next time.
 
 \section*{Acknowledgements}
 
