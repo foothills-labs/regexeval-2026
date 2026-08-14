@@ -102,3 +102,43 @@ if ps:
     write("tab_at1.tex", "lrrrrrr",
           r"Model & \pass{}@1 & \pass{}@3 & \usable{}@1 & \usable{}@3 & \vuln{}@1 & $n{<}3$ \\",
           body)
+
+
+# --- decomposition of the pass -> usable gap, and cross-benchmark context ----
+cs = {}
+for f in sorted(_glob.glob(str(REPO / "results/sweep/correct_secure/*.json"))):
+    cs[pathlib.Path(f).stem] = json.loads(open(f).read())
+
+if cs and ps:
+    body, safety_loss, equiv_loss, cond = [], [], [], []
+    for r in rows:
+        m = r["model"]
+        if m not in cs:
+            continue
+        pa, _ = _at(ps[m], "pass", 3)
+        ca, _ = _at(cs[m], "correct_secure", 3)
+        ua, _ = _at(ps[m], "usable", 3)
+        n_corr = sum(v["pass"] for v in ps[m].values())
+        n_cs = sum(v["correct_secure"] for v in cs[m].values())
+        vgc = (n_corr - n_cs) / n_corr
+        safety_loss.append(pa - ca); equiv_loss.append(ca - ua); cond.append(vgc)
+        body.append(f"\\texttt{{{esc(m)}}} & {pa*100:.1f} & {(pa-ca)*100:.1f} & {ca*100:.1f} & "
+                    f"{(ca-ua)*100:.1f} & {ua*100:.1f} & {vgc*100:.1f} \\\\")
+    mean = lambda xs: sum(xs)/len(xs)
+    body += [r"\midrule",
+             f"\\textit{{mean}} & --- & {mean(safety_loss)*100:.1f} & --- & "
+             f"{mean(equiv_loss)*100:.1f} & --- & {mean(cond)*100:.1f} \\\\"]
+    write("tab_decomp.tex", "lrrrrrr",
+          r"Model & \pass{}@3 & $-$safety & C\&S@3 & $-$equiv. & \usable{}@3 & vuln.$\mid$correct \\",
+          body)
+
+    xb = [
+      (r"This work (regex, ReDoS)", "450", f"{mean([_at(ps[m],'pass',3)[0] for m in cs])*100:.0f}",
+       f"{mean([_at(cs[m],'correct_secure',3)[0] for m in cs])*100:.0f}", f"{mean(cond)*100:.0f}"),
+      (r"BaxBench \citep{vero2025baxbench}", "392", "62 (best)", "---", r"$\approx$50"),
+      (r"SecureAgentBench \citep{chen2025secureagentbench}", "105", "---", "15.2 (best), 9.2 (mean)", "---"),
+      (r"DualGauge \citep{patir2025dualgauge}", "154", "$>$50", "$<$12", "---"),
+    ]
+    write("tab_crossbench.tex", "lrrrr",
+          r"Benchmark & tasks & functional (\%) & joint (\%) & vuln.$\mid$correct (\%) \\",
+          [f"{a} & {b} & {c} & {d} & {e} \\\\" for a,b,c,d,e in xb])

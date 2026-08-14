@@ -48,24 +48,37 @@ generation over 450 tasks with three samples each ($14{,}850$ requests,
 tests, whether it denotes the same language as a human reference, and whether
 it is vulnerable to regular-expression denial of service (ReDoS).
 
-Two empirical results are robust. First, \emph{passing is roughly twice as
-easy as shipping}: models pass 38.0--47.5\% of tasks but produce a correct,
-safe, semantically-verified pattern on only 17.1--24.8\%, a gap that holds
-uniformly across a $98\times$ range in price. Second, and contrary to the
-expected framing, \emph{models are safer than the humans whose answers define
-the benchmark}: 13.6\% of the corpus's human-written reference patterns are
-ReDoS-vulnerable against 9.0\% for models pooled, and every individual model
-is safer than the reference set.
+Our headline result is a negative one about a composite metric we
+constructed and then had to abandon. A composite requiring correctness,
+safety and semantic equivalence appears to show that ``passing is twice as
+easy as shipping'': models pass 38.0--47.5\% of tasks but satisfy all three
+criteria on only 17.1--24.8\%. Decomposing that gap shows that
+\textbf{87\% of it is contributed by the semantic-equivalence term}, and a
+manual audit shows that term is itself dominated by reference-set error and
+task underspecification rather than model behaviour. Using only the two
+criteria that never consult a human answer key, the gap is
+\textbf{2.9 percentage points}: just 7.4\% of functionally correct patterns
+are ReDoS-vulnerable.
 
-We then audit our own instrument, and report a negative result about
-benchmark methodology that we believe generalises. Metrics that compare
-generated output against a human answer key inherit that key's error rate. In
-a random sample of disagreements where a model passed every test yet was
-scored as semantically different, the model was clearly at fault in
-approximately 15\% of cases; the remainder divided between demonstrably
-incorrect reference patterns (including a reference character class
-containing a literal \texttt{|}) and prompts that never specified the
-property in dispute. We further show that independent binomial intervals---the
+That figure is itself informative by contrast. Joint correctness-and-security
+benchmarks in general code generation report far larger penalties---BaxBench
+finds roughly half of correct backends exploitable, SecureAgentBench 15.2\%
+correct-and-secure for its best agent. The regex domain does \emph{not}
+reproduce that pattern, and we report the difference rather than the
+similarity. Separately, \emph{models are safer than the humans whose answers
+define the benchmark}: 13.6\% of the corpus's human-written reference patterns
+are ReDoS-vulnerable against 9.0\% for models pooled, and every individual
+model is safer than the reference set.
+
+The audit behind this is the paper's methodological contribution. Metrics
+that compare generated output against a human answer key inherit that key's
+error rate. In a random sample of disagreements where a model passed every
+test yet was scored as semantically different, the model was clearly at fault
+in approximately 15\% of cases; the remainder divided between demonstrably
+incorrect reference patterns (including a reference character class containing
+a literal \texttt{|}) and prompts that never specified the property in
+dispute. Because that unreliable term supplies 87\% of our composite's
+headline gap, the composite was measuring its own weakest component. We further show that independent binomial intervals---the
 default in this literature---are the wrong inferential tool when all systems
 answer identical items, and that a paired bootstrap resolves nine times as
 many pairwise comparisons on the same data.
@@ -106,9 +119,14 @@ have motivated ecosystem-scale study.
 \begin{enumerate}
   \item \textbf{A three-axis evaluation of eleven current models}
   (\cref{sec:results}), reporting test correctness, semantic equivalence and
-  ReDoS safety jointly rather than separately, together with a composite
-  (\usable{}) requiring all three. To our knowledge safety has not previously
-  been reported as a first-class axis alongside correctness in this task.
+  ReDoS safety jointly, together with a composite (\usable{}) requiring all
+  three. Joint correctness-and-security scoring is established prior art
+  (\cref{sec:jointprior}); our contribution is its transfer to
+  natural-language-to-regex generation, a setting that differs from existing
+  joint benchmarks in three respects: the vulnerability class is ReDoS rather
+  than CWE-classified defects, correctness is \emph{partly decidable} rather
+  than test-only, and a per-task human reference exists, which enables
+  \cref{sec:humanbaseline}.
 
   \item \textbf{A human baseline for ReDoS} (\cref{sec:humanbaseline}). We
   apply the identical safety screen to the corpus's own reference patterns.
@@ -119,7 +137,10 @@ have motivated ecosystem-scale study.
   \item \textbf{A quantified audit of reference-standard error}
   (\cref{sec:goldstandard}). We sample disagreements and adjudicate them,
   finding that the majority of apparent semantic errors are not model errors.
-  We are not aware of prior work in this task family that measures this.
+  Existing joint benchmarks are largely reference-free---they execute tests and
+  exploits rather than comparing against a gold artifact---so this failure mode
+  does not arise there. It arises here because the NL-to-regex literature is
+  built on reference comparison.
 
   \item \textbf{A methodological correction} (\cref{sec:paired}). We show
   that independent intervals substantially understate resolvable differences
@@ -162,6 +183,32 @@ portability and re-use across languages. \citet{icpc2024llmredos} examine
 ReDoS specifically in LLM-generated patterns and report a skew toward
 polynomial rather than exponential vulnerability; we compare against that
 finding in \cref{sec:humanbaseline}.
+
+\subsection{Joint correctness-and-security benchmarks}
+\label{sec:jointprior}
+
+Evaluating functional correctness and security together is an active area, and
+this paper is not its first instance. \citet{peng2025cweval} introduce CWEval,
+scoring 119 security-critical tasks across 31 CWEs and five languages with
+outcome-driven oracles for both properties, and report a substantial
+population of functionally correct but insecure generations.
+\citet{vero2025baxbench} present BaxBench, 392 backend tasks with expert
+exploits, and find that roughly half of functionally correct solutions are
+exploitable. \citet{chen2025secureagentbench} evaluate coding \emph{agents} on
+105 repository-level tasks, reporting 15.2\% correct-and-secure for the best
+agent and 9.2\% on average. \citet{patir2025dualgauge} automate the joint
+pipeline in DualGauge over 154 tasks and 10 models, observing secure-pass@1
+below 12\% while functional pass@1 exceeds 50\%.
+
+Our results are consistent with all four and, we argue, strengthened by that
+consistency; \cref{sec:crossbench} makes the comparison quantitative. The
+present work differs in domain rather than in framing: the artifact is a
+regular expression rather than a program, the vulnerability class is ReDoS
+rather than a CWE taxonomy, correctness is partly decidable rather than
+established solely by tests, and---because the NL-to-regex literature supplies
+a per-task human reference---a same-instrument human baseline is available.
+That last difference is what makes \cref{sec:humanbaseline} possible and is
+unavailable in reference-free joint benchmarks.
 
 \paragraph{Sampling-based metrics.}
 We use the unbiased $\pass{}@k$ estimator of \citet{chen2021codex}, with the
@@ -359,12 +406,56 @@ models.
 \label{tab:main}
 \end{table}
 
-The central quantitative observation in \cref{tab:main} is the gap between
-$\pass{}@3$ (38.0--47.5\%) and $\usable{}@3$ (17.1--24.8\%). Approximately
-half of all test-passing generations fail at least one of the remaining two
-criteria, and the ratio is stable across the entire price range. We count 135
-model-task pairs in which a pattern satisfied every test and was
-simultaneously screened as ReDoS-vulnerable.
+The apparent headline in \cref{tab:main} is the gap between $\pass{}@3$
+(38.0--47.5\%) and $\usable{}@3$ (17.1--24.8\%): approximately half of all
+test-passing generations fail at least one of the remaining two criteria, and
+the ratio is stable across the entire price range.
+
+\cref{sec:decomp} shows that this reading is wrong, or at least that it
+attributes the gap to the wrong cause. We present it here as stated because it
+is what the composite reports, and because constructing such a composite is a
+natural thing to do; the point of the following section is that doing so
+without decomposing it is a mistake we made and had to correct.
+
+\subsection{Decomposing the gap}
+\label{sec:decomp}
+
+\usable{} conjoins three conditions. \cref{tab:decomp} attributes the drop
+from \pass{}@3 to \usable{}@3 between the safety term and the equivalence
+term, and additionally reports the rate of ReDoS vulnerability
+\emph{conditional on functional correctness}.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\input{tab_decomp}
+\caption{Decomposition of the \pass{}$\to$\usable{} gap. ``C\&S'' is
+correct-and-secure: correctness conjoined with safety, omitting the
+equivalence term. The final column is the share of functionally correct
+patterns that are ReDoS-vulnerable.}
+\label{tab:decomp}
+\end{table}
+
+The safety term costs \textbf{2.9 percentage points} on average. The
+equivalence term costs \textbf{18.9}. The equivalence conjunct therefore
+supplies \textbf{87\%} of the gap that motivated the composite.
+
+This matters because \cref{sec:goldstandard} establishes independently that
+the equivalence term is approximately 85\% reference-set error and task
+underspecification rather than model error. The composite's headline result
+was, in the main, a measurement of its own least reliable component. We
+report this because we did not anticipate it: the decomposition was run late,
+after the audit, and it changed the paper's claim.
+
+Restricting attention to the two reference-independent criteria, the finding
+is far more modest and far better supported: \textbf{7.4\% of functionally
+correct regular expressions are ReDoS-vulnerable} (range 5.6--10.0\%).
+
+We count 135 model-task pairs in which a pattern satisfied every test and was
+simultaneously screened as unsafe. Expressed as a rate over correct
+generations rather than as a count, this is the 7.4\% above---approximately
+one in fourteen, not one in two.
 
 $\exact{}@3$---string identity with the reference---ranges from 2.0\% to
 6.3\%, confirming that string-comparison scoring would misrank essentially
@@ -435,6 +526,62 @@ cleanly: pooled across models we observe 5.3\% exponential against 3.8\%
 polynomial, the opposite direction, while the human references skew
 polynomial (6.4\% vs.\ 7.1\%). Subcategory counts are small and we do not
 advance a strong claim; we note the discrepancy as warranting replication.
+
+\subsection{Comparison against joint benchmarks in other domains}
+\label{sec:crossbench}
+
+Because \usable{} carries a semantic-equivalence conjunct that the joint
+benchmarks of \cref{sec:jointprior} do not, comparing it directly to their
+figures would understate us. We therefore also report
+\emph{correct-and-secure}: correctness conjoined with safety, omitting the
+equivalence term, which is the construction those benchmarks use.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\input{tab_crossbench}
+\caption{Our correct-and-secure rate against joint correctness-security
+results from other domains. Task types, vulnerability classes and evaluation
+methods differ substantially; the comparison is of magnitude and of the ratio
+between functional and joint success, not of models or difficulty.}
+\label{tab:crossbench}
+\end{table}
+
+\textbf{We do not reproduce the pattern.} \citet{vero2025baxbench} report
+that roughly half of functionally correct backends are exploitable;
+\citet{chen2025secureagentbench} report 15.2\% correct-and-secure for their
+strongest agent against substantially higher functional correctness;
+\citet{patir2025dualgauge} report secure-pass@1 below 12\% while functional
+pass@1 exceeds 50\%. In each case the security criterion removes a large
+majority of functionally correct output.
+
+In our setting it removes 7.4\%.
+
+We consider the divergence more informative than agreement would have been,
+and offer three candidate explanations, which we cannot separate with this
+data:
+
+\begin{enumerate}
+\item \textbf{Attack surface.} A regular expression is a single expression
+with one failure mode of interest. A backend application has many
+independently exploitable components, so the probability that at least one is
+vulnerable compounds with program size.
+\item \textbf{Vulnerability class.} ReDoS is a structural property of the
+pattern, plausibly well represented in training data as a recognised
+anti-pattern. CWE-classified defects in application code are more diverse and
+more context-dependent.
+\item \textbf{Task difficulty ceiling.} Our functional pass rate is itself low
+(38--47\%), so the correct subset may be biased toward simpler tasks whose
+solutions have less structural room for catastrophic backtracking.
+\end{enumerate}
+
+The generalisable claim is therefore weaker than ``correct code is often
+insecure'' and, we think, more useful: \emph{the size of the
+correctness-to-security penalty is domain-specific and must be measured
+per domain, not assumed}. Reporting a joint metric without decomposing it
+would have concealed this in our case (\cref{sec:decomp}), since our composite
+showed a gap of the expected magnitude for entirely the wrong reason.
 
 \subsection{Cost}
 
@@ -653,11 +800,13 @@ survives corpus change.
 \section{Recommendations for Evaluation Design}
 
 \begin{enumerate}
-\item \textbf{Partition metrics by reference dependence.} Metrics evaluated
-by execution against inputs (\pass{}, \vuln{}) are robust to reference-set
-defects. Metrics evaluated against a human answer key inherit its error rate.
-These should not be reported with equal confidence, and composites spanning
-both should state which conjunct carries the dependency.
+\item \textbf{Partition metrics by reference dependence, and decompose any
+composite that spans the partition.} Metrics evaluated by execution against
+inputs (\pass{}, \vuln{}) are robust to reference-set defects. Metrics
+evaluated against a human answer key inherit its error rate. A composite
+conjoining both can report a large gap that is almost entirely attributable to
+the unreliable term---in our case 87\% of it (\cref{sec:decomp})---while
+appearing to be a statement about the reliable ones.
 
 \item \textbf{Sample and adjudicate disagreements.} The cost is hours. In our
 case it changed the paper's conclusion.
@@ -681,19 +830,29 @@ reproducible result and an unfalsifiable one.
 
 \section{Conclusion}
 
-Across eleven contemporary models, roughly half of all regular expressions
-that satisfy their tests fail an additional correctness or safety criterion,
-and the proportion is insensitive to a $98\times$ variation in inference
-cost. Models are uniformly safer than the human-written reference patterns
-against which they are scored, which locates ReDoS prevalence in the training
-distribution rather than in generation.
+We set out to measure a correctness-to-shippability gap in generated
+regular expressions, constructed a composite metric that appeared to show a
+large one, and found on decomposition that 87\% of it came from the single
+term we had independently shown to be unreliable. The defensible version of
+the result is considerably smaller: 7.4\% of functionally correct patterns
+carry a ReDoS vulnerability, against roughly 50\% for functionally correct
+backends in comparable work. The correctness-to-security penalty is
+domain-specific; ours is small.
 
-Our second contribution is negative and, we suspect, more broadly applicable:
-the semantic-equivalence metric standard in this task family is, in our
-sample, dominated by reference-set error and task underspecification rather
-than by model behaviour. We were able to establish this only by auditing our
-own results after collecting them, and it changed what we were willing to
-publish. We recommend the practice generally.
+Two findings survive that correction intact, both resting only on criteria
+that never consult a human answer key. Models are uniformly safer than the
+human-written reference patterns against which they are scored, which locates
+ReDoS prevalence in the training distribution rather than in generation. And
+the entire eleven-model field lies within eight percentage points across a
+$98\times$ range in inference cost.
+
+The methodological contribution is the one we did not plan. A metric that
+compares against a human answer key inherits that key's error rate; a
+composite containing such a term can present a large, plausible, and
+essentially spurious result. We established this only by auditing our own
+output after collecting it, and it changed what we were willing to publish.
+We recommend the practice generally, and note that the cost of the audit was
+a few hours against a run of \$10.95.
 
 \section*{Acknowledgements}
 

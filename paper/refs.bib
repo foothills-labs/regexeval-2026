@@ -135,3 +135,68 @@
   note         = {All raw model responses, scoring code and analysis for this
                   paper.}
 }
+
+% --- Joint correctness-and-security benchmarks (prior art) -------------------
+% These establish the joint framing this paper applies to regular expressions.
+% Verified via public records; author lists confirmed.
+
+@inproceedings{peng2025cweval,
+  title     = {{CWEval}: Outcome-driven Evaluation on Functionality and Security
+               of {LLM} Code Generation},
+  author    = {Peng, Jinjun and Cui, Leyi and Huang, Kele and Yang, Junfeng and
+               Ray, Baishakhi},
+  booktitle = {Proceedings of the 2025 IEEE/ACM International Workshop on Large
+               Language Models for Code (LLM4Code)},
+  year      = {2025},
+  eprint    = {2501.08200},
+  archivePrefix = {arXiv},
+  note      = {119 security-critical tasks over 31 CWEs in 5 languages, scored
+               with outcome-driven oracles for functionality and security
+               jointly. Artifact: \url{https://github.com/Co1lin/CWEval}}
+}
+
+@inproceedings{vero2025baxbench,
+  title     = {{BaxBench}: Can {LLMs} Generate Correct and Secure Backends?},
+  author    = {Vero, Mark and M{\"u}ndler, Niels and Chibotaru, Victor and
+               Raychev, Veselin and Baader, Maximilian and Jovanovi{\'c}, Nikola
+               and He, Jingxuan and Vechev, Martin},
+  booktitle = {Proceedings of the 42nd International Conference on Machine
+               Learning (ICML)},
+  series    = {PMLR},
+  volume    = {267},
+  year      = {2025},
+  eprint    = {2502.11844},
+  archivePrefix = {arXiv},
+  note      = {392 backend tasks (28 scenarios $\times$ 14 frameworks, 6
+               languages). Reports that roughly half of functionally correct
+               solutions are exploitable.}
+}
+
+@misc{chen2025secureagentbench,
+  title        = {{SecureAgentBench}: Benchmarking Secure Code Generation under
+                  Realistic Vulnerability Scenarios},
+  author       = {Chen, Junkai and Huang, Huihui and Lyu, Yunbo and An, Junwen
+                  and Shi, Jieke and Yang, Chengran and Zhang, Ting and
+                  Tian, Haoye and Li, Yikun and Li, Zhenhao and Zhou, Xin and
+                  Hu, Xing and Lo, David},
+  year         = {2025},
+  eprint       = {2509.22097},
+  archivePrefix = {arXiv},
+  note         = {105 repository-level tasks. Best agent (SWE-agent with
+                  DeepSeek-V3.1) attains 15.2\% correct-and-secure; mean across
+                  agents 9.2\%.}
+}
+
+@misc{patir2025dualgauge,
+  title        = {{DualGauge}: Automated Joint Security-Functionality
+                  Benchmarking of Specification-Only Code Generation by {LLMs}
+                  and Coding Agents},
+  author       = {Patir, Rupam and Guo, Keyan and Barua, Suvadra and
+                  Pathak, Abhijeet and Gudimetla, Dinesh and Guo, Jiawei and
+                  Hu, Hongxin and Cai, Haipeng},
+  year         = {2025},
+  eprint       = {2511.20709},
+  archivePrefix = {arXiv},
+  note        = {154 tasks, 10 models. Reports secure-pass@1 below 12\% for all
+                 models evaluated while functional pass@1 exceeds 50\%.}
+}
