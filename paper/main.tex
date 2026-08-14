@@ -229,8 +229,8 @@ quantified group, as in \texttt{(a+)+}. Detecting it statically is a
 developed area: \citet{kirrage2013static} give an analysis for exponential
 blow-up by search over the pattern's derivation tree,
 \citet{wustholz2017static} extend detection to programs that construct
-patterns dynamically, and \citet{sok2025redos} systematise the detector and
-mitigation landscape. The scoring engine we depend on
+patterns dynamically, and \citet{sok2025redos} survey the detector and
+mitigation literature. The scoring engine we depend on
 \citep{regexbench} sits in that lineage and combines a structural screen with
 witness-string execution. On prevalence, \citet{davis2018redos} document
 ReDoS at ecosystem scale and \citet{davis2019linguafranca} study regex
@@ -456,7 +456,7 @@ sampling. We think it is the right trade and note it as a limitation.
 Since $k>1$ is only informative under output diversity, we verified diversity
 directly: repeated queries on a fixed task yielded 3, 3, 3 and 2 distinct
 patterns for \texttt{claude-opus-5}, \texttt{gpt-5.6-sol}, \texttt{kimi-k3}
-and \texttt{glm-5.2} respectively. The analysis pipeline additionally warns
+and \texttt{glm-5.2} respectively. The analysis pipeline also warns
 if $>90\%$ of a model's tasks return identical samples.
 
 \subsection{Controls}
@@ -505,7 +505,7 @@ without decomposing it was a mistake, and it was ours.
 
 \usable{} conjoins three conditions. \cref{tab:decomp} attributes the drop
 from \pass{}@3 to \usable{}@3 between the safety term and the equivalence
-term, and additionally reports the rate of ReDoS vulnerability
+term, and reports alongside it the rate of ReDoS vulnerability
 \emph{conditional on functional correctness}.
 
 \begin{table}[htbp]
@@ -552,7 +552,7 @@ which is what justifies the automata-theoretic treatment.
 \label{sec:atk}
 
 Because $n=k=3$ renders the $\pass{}@k$ estimator degenerate
-(\cref{sec:metrics}), we additionally report $@1$, which is the per-sample
+(\cref{sec:metrics}), we also report $@1$, which is the per-sample
 success rate and the quantity most directly comparable to single-sample
 protocols. \cref{tab:at1} gives both.
 
@@ -828,7 +828,7 @@ A paired bootstrap fixes this, and the fix is not ours: the procedure is
 and \citet{dror2018hitchhiker} recommend it for exactly this design. Resample
 tasks with replacement~\citep{efron1994bootstrap}, score every
 model on each resample, and form the per-pair differences. Task difficulty
-cancels, and only genuine disagreement contributes. With $B = 10{,}000$
+cancels, and only disagreement between the two systems contributes. With $B = 10{,}000$
 resamples and a fixed seed:
 
 \begin{table}[htbp]
@@ -913,7 +913,7 @@ survives corpus change.
 \begin{enumerate}
 \item \textbf{Partition metrics by reference dependence, and decompose any
 composite that spans the partition.} Metrics evaluated by execution against
-inputs (\pass{}, \vuln{}) are robust to reference-set defects. Metrics
+inputs (\pass{}, \vuln{}) are unaffected by reference-set defects. Metrics
 evaluated against a human answer key inherit its error rate. A composite
 conjoining both can report a large gap that is almost entirely attributable to
 the unreliable term---in our case 87\% of it (\cref{sec:decomp})---while
