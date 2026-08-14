@@ -118,8 +118,14 @@ Then we asked three questions about every answer:
 3. **Is it safe?** Screen it for the shapes that backtrack catastrophically,
    then actually try to break it with attack strings.
 
-The second and third questions are why this corpus exists rather than one of
-the older regex benchmarks, which only ask the first.
+The scoring is done by [regexbench][regexbench], a tool we wrote before this
+project and pinned to one commit for the run. It is ours, so treat it the way
+you would any measurement taken with the measurer's own instrument. The
+equivalence check inside it is [dk.brics.automaton][brics], which is not.
+
+The second and third questions are why this corpus exists rather than the
+older regex benchmarks, [KB13][kb13] and [NL-RX][nlrx], which score a
+candidate against a reference by language equivalence and stop there.
 
 ---
 
@@ -370,17 +376,12 @@ strings. Nothing about a flawed answer key can corrupt them.
 The question that compares against a human is, in our sample, 85% noise from
 bad answer keys and ambiguous prompts.
 
-Nobody designed the benchmark around that distinction. We found it by
-auditing our own results, and it changed what we were willing to publish.
-
-> **Separate the metrics that consult a human answer key from the metrics
+> **Where possible, separate the metrics that consult a human answer key from the metrics
 > that don't, and trust them differently.**
 
 If you report a metric that compares against gold answers, sample your
 disagreements and read them. You may find, as we did, that most of what you
-are measuring is not the thing you meant to measure. Reading fourteen of
-them changed what we were prepared to publish off a $10.95 run. We would do
-it earlier next time.
+are measuring is not the thing you meant to measure. 
 
 ---
 
@@ -405,8 +406,10 @@ what is published cannot drift away from the evidence behind it.
 Every request was pinned to one named provider and refused substitution,
 because the router that sits in front of these models will otherwise serve
 you the same model from different companies at different numerical
-precision, and then you are measuring the router. All eleven models were
-served by exactly the endpoint they were pinned to.
+precision, and then you are measuring the router. [A survey of AI-safety
+codebases using one such router][pinning] found 31 of 32 did not pin the
+provider. All eleven of our models were served by exactly the endpoint they
+were pinned to.
 
 And on every run, three fake answers ride through the scoring alongside the
 real ones: a known-good pattern that must pass, a known-bad one that must
@@ -419,18 +422,9 @@ know and check that it comes back the way it should.
 
 ## What is next
 
-The clearest gap is a task set of our own: a hundred problems written
-in-house and never published. It would fix the wrong answer keys, the
-ambiguous prompts, and the contamination we cannot currently measure. The
-compute for it is trivial, and the cost is a week of someone writing
-carefully.
-
-Then there is the audit itself, which needs redoing by people who are not
-us, on more than fourteen cases.
-
-The other open question is whether letting these models think helps. We have
+The large open question is whether letting these models think helps. We have
 a twelve-task comparison, which is too small to mean anything, and one firm
-number: turning reasoning on made each request **15.7× more expensive**. On
+number: turning reasoning on made each request **15.7x more expensive**. On
 the easiest task in the corpus, matching a single digit, one model spent
 1,571 tokens of hidden reasoning before answering `^[0-9]$`. With reasoning
 off it gave the same answer in ten tokens.
@@ -442,6 +436,15 @@ probably its own article.
 
 ## References
 
+Natural-language-to-regex generation, where language equivalence against a
+reference became the standard criterion:
+
+- Kushman & Barzilay. *Using Semantic Unification to Generate Regular
+  Expressions from Natural Language.* NAACL-HLT 2013. [aclanthology][kb13]
+- Locascio, Narasimhan, DeLeon, Kushman & Barzilay. *Neural Generation of
+  Regular Expressions from Natural Language with Minimal Domain Knowledge.*
+  EMNLP 2016. [aclanthology][nlrx]
+
 The benchmark and metrics we used:
 
 - Siddiq, Zhang, Roney & Santos. *Re(gEx|DoS)Eval: Evaluating Generated
@@ -452,7 +455,7 @@ The benchmark and metrics we used:
   Service (ReDoS): Insights from LLM-Generated Regexes and Developer
   Forums.* ICPC 2024. [doi:10.1145/3643916.3644424][icpc]
 - Chen et al. *Evaluating Large Language Models Trained on Code.* 2021.
-  [arXiv:2107.03374][codex] — the pass@k estimator.
+  [arXiv:2107.03374][codex]. Source of the pass@k estimator.
 
 Joint correctness-and-security benchmarking:
 
@@ -479,10 +482,21 @@ Measurement:
   [arXiv:2103.14749][northcutt]
 - Berg-Kirkpatrick, Burkett & Klein. *An Empirical Investigation of
   Statistical Significance in NLP.* EMNLP-CoNLL 2012. [aclanthology][bkk]
+- Koehn. *Statistical Significance Tests for Machine Translation
+  Evaluation.* EMNLP 2004. [aclanthology][koehn]
 - Dror et al. *The Hitchhiker's Guide to Testing Statistical Significance in
   NLP.* ACL 2018. [aclanthology][dror]
 - Sainz et al. *NLP Evaluation in Trouble.* Findings of EMNLP 2023.
   [aclanthology][sainz]
+
+Tooling, disclosed because two of these are ours:
+
+- [regexbench][regexbench], the scorer. Prior work by this lab, pinned to a
+  single commit for this run.
+- [dk.brics.automaton][brics], Anders Møller's finite-state automata
+  library, which does the language-equivalence check.
+- [Not Pinning Your OpenRouter Provider Might Invalidate Your
+  Research][pinning], the survey behind the serving-provider discipline.
 
 The full technical write-up, with the statistics, the failure taxonomy and
 every adjudicated case, is in [`paper/main.tex`][paper] in the repository.
@@ -505,3 +519,9 @@ every adjudicated case, is in [`paper/main.tex`][paper] in the repository.
 [sainz]: https://aclanthology.org/2023.findings-emnlp.722/
 [codex]: https://arxiv.org/abs/2107.03374
 [paper]: https://github.com/foothills-labs/regexleaderboard/blob/main/paper/main.tex
+[kb13]: https://aclanthology.org/N13-1103/
+[nlrx]: https://aclanthology.org/D16-1197/
+[koehn]: https://aclanthology.org/W04-3250/
+[regexbench]: https://github.com/foothills-labs/regexbench
+[brics]: https://www.brics.dk/automaton/
+[pinning]: https://www.lesswrong.com/posts/KsyoSAyBRXtwzSugg/
