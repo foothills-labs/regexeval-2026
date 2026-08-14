@@ -225,9 +225,17 @@ the most expensive frontier model behave the same way.
 
 *(Read these as bands, not a ranking. §4.4 explains why.)*
 
-## 3.2 About one in ten passing regexes can hang your server
+## 3.2 About one in fourteen passing regexes can hang your server
 
-This is the finding we'd lead with, and the one nobody else reports.
+This is the finding we'd lead with. It is *not* unprecedented: scoring
+correctness and security jointly is an active area, and CWEval, BaxBench,
+SecureAgentBench and DualGauge all do it for general code generation. What is
+new here is the setting — regular expressions, where the vulnerability class
+is ReDoS and where a per-task human answer exists to compare against (§3.3).
+Our numbers land close to theirs, which we take as corroboration rather than
+as a problem: BaxBench finds roughly half of functionally correct backends are
+exploitable, and SecureAgentBench reports 15.2% correct-and-secure for its best
+agent.
 
 Asked to *"test the validity of a domain or hostname"*, `claude-opus-5`
 produced:

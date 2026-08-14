@@ -64,7 +64,7 @@ built this for.
 
 ---
 
-## Passing is about twice as easy as shipping
+## Passing looks about twice as easy as shipping — but that turned out to be mostly our own metric
 
 Across all eleven models, roughly **40% of answers pass their tests**. And
 roughly **20% survive all three questions**.
