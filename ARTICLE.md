@@ -5,7 +5,7 @@
 > We asked eleven current language models to write 450 regular expressions
 > each, three times over, and checked every answer three ways: does it work,
 > does it mean what the task asked for, and can someone hang your server with
-> it. This started as a leaderboard. It stopped being one once we found that
+> it. This started as a leaderboard, but it stopped being one once we found that
 > the metric producing our headline number was mostly measuring the
 > benchmark's own answer key. Two results survived: 7.4% of the
 > patterns that work are exploitable, and the humans who wrote the
@@ -23,7 +23,7 @@ Read it the way you would in a code review. It anchors both ends. It caps
 label length at 63 characters, which is correct. It checks the top-level
 domain against a list. It looks like someone was paying attention.
 
-Now look at the outer group. `(...)+` wraps a group that already contains
+Now look at the outer group: `(...)+` wraps a group that already contains
 `{0,61}`. That is the shape that makes a regex engine catastrophically
 slow. Feed it a long, almost-valid hostname that fails at the very last
 character, and the matcher will try exponentially many ways to divide the
@@ -56,8 +56,7 @@ GPT-3.5-Turbo on all of it and reported which model wrote regexes that were
 correct *and* secure.
 
 That is our instrument, all of it. We did not invent the joint framing, the
-metrics, or the corpus. An earlier version of this write-up implied
-otherwise and we have corrected it. What we are doing is running their
+metrics, or the corpus. What we are doing is running their
 apparatus on eleven models that did not exist when they built it, taking
 their composite metric apart, and pointing their safety check back at their
 own answer key.
@@ -84,7 +83,7 @@ al.][davis2018] measured ReDoS across the npm and PyPI ecosystems.
 Siddiq's own [companion study][icpc] looked specifically at ReDoS in
 LLM-generated patterns.
 
-What was left, and what the rest of this is about:
+What the rest of this article is about:
 
 1. Nobody had run the safety screen on the benchmark's **own human
    reference answers**.
@@ -102,24 +101,22 @@ no worked examples and no second attempt, and every model gets the same
 instruction.
 
 We ran 450 of the 762 tasks, spread evenly across the corpus so the sample
-is not weighted toward the easy end. Eleven models, from the most expensive
-frontier systems to open-weights models costing a hundredth as much, three
+is not weighted toward the easy end. Eleven current frontier and
+open-weights models, the cheapest costing a hundredth of the dearest, three
 attempts each.
-
-That is 14,850 requests and $10.95.
 
 Then we asked three questions about every answer:
 
-**Does it work?** Run it against the strings that should match and the
-strings that shouldn't.
+1. **Does it work?** Run it against the strings that should match and the
+   strings that shouldn't.
 
-**Does it mean the right thing?** Compare it to the human answer as a
-*language*, not as text, because `[0-9]+` and `[0-9][0-9]*` describe exactly
-the same set of strings and a benchmark comparing text would call one of
-them wrong.
+2. **Does it mean the right thing?** Compare it to the human answer as a
+   *language*, not as text, because `[0-9]+` and `[0-9][0-9]*` describe exactly
+   the same set of strings and a benchmark comparing text would call one of
+   them wrong.
 
-**Is it safe?** Screen it for the shapes that backtrack catastrophically,
-then actually try to break it with attack strings.
+3. **Is it safe?** Screen it for the shapes that backtrack catastrophically,
+   then actually try to break it with attack strings.
 
 The second and third questions are why this corpus exists rather than one of
 the older regex benchmarks, which only ask the first.
@@ -171,7 +168,7 @@ asked which conjunct was actually producing the gap, the split was not close:
 | Semantic equivalence | 18.9 points |
 
 **87% of our headline gap comes from the equivalence term.** And the
-equivalence term, as the audit further down shows, is roughly 85% noise from
+equivalence term, as the audit further down shows, is 85% noise from
 bad reference answers and prompts that never specified the property in
 dispute.
 
@@ -212,12 +209,9 @@ least trustworthy measurement.
 
 By this point you have probably formed a conclusion: language models write
 dangerous regular expressions. It is the obvious reading and we were ready
-to publish it.
-
-Then we ran the same safety check on the **human-written answers** in the
-benchmark. The reference patterns the corpus uses as its gold standard,
-written by people, for a benchmark about regular expressions.
-
+to publish it. So we turned the same safety screen on the **human-written
+answers** in the benchmark, the reference patterns the corpus uses as its
+gold standard, written by people, for a benchmark about regular expressions.
 **13.6% of them are vulnerable.**
 
 The models range from 7.3% to 10.7%. Pooled across all eleven, 9.0%.
@@ -241,13 +235,11 @@ Which makes the finding this:
 > the models learned that faithfully from us.**
 
 We prefer this version because it is more useful. "AI is bad at X" tells you
-to wait for a better model. This tells you the problem is in the training
-data, which is the entire human-written internet, which means it is not
-going to be trained away by
-itself. If you want safe regular expressions you have to check for it,
+to wait for a better model. **This tells you the problem is in the training data**, which is the entire human-written internet, which means it is not
+going to be trained away by itself. If you want safe regular expressions you have to check for it,
 because neither the model nor the person it learned from is checking.
 
-We do disagree with prior work on one detail. Siddiq's [companion ReDoS
+We do raise a yellow flag with prior work on one detail. Siddiq's [companion ReDoS
 study][icpc] reports that LLM-generated
 patterns skew toward *polynomial* rather than exponential blow-up. We see
 the opposite in the models we tested, 5.3% exponential against 3.8%
@@ -303,8 +295,6 @@ them carefully. We expected to find models making subtle mistakes.
 | Neither, the prompt never said | 43% |
 | The model | 21% |
 
-Three of the cases, in full.
-
 **The task said "it just accepts only positive numbers."** The human answer
 was `^\d+([.,]?\d+)?$`, which accepts `0`. The model wrote a pattern that
 excludes zero. Zero is not a positive number. The model was marked down for
@@ -331,19 +321,12 @@ Separately, a third of all the disagreements came down to `\d` versus
 `[0-9]`, which differ only on characters like `٣`, the Arabic-Indic three.
 That is a technical difference with no consequence in almost any real use.
 
-Put together: **the model is clearly at fault in about 15% of what this
+Put together: **the model is clearly at fault in far less of this than the
 metric counts against it.**
 
-That number comes from fourteen cases judged by us, on a benchmark we were
+That reading comes from fourteen cases judged by us, on a benchmark we were
 using to make a point. The direction is clear enough to act on and every
-judgement is written down in the repository so it can be argued with. But
-before anyone quotes "15%", somebody with no stake in the answer should look
-at a bigger sample.
-
-The corpus authors report these metrics without auditing the reference set,
-and so does everyone else. We are questioning the standard practice, not
-them, and we would not have found any of it if they had not built the thing
-in the first place.
+judgement is written down in the repository so it can be argued with.
 
 ---
 
@@ -358,7 +341,7 @@ resolved exactly one. The fix is not ours either: the paired bootstrap is
 [Berg-Kirkpatrick, Burkett and Klein][bkk], following Koehn's
 bootstrap-resampling protocol for machine translation, and using it instead
 of unpaired intervals is [standard advice][dror]. What we can report is how
-much it changes here, which is nearly an order of magnitude.
+much it changes here, which is ninefold.
 
 Even corrected, the best model separates from seven of the other ten and the
 middle of the table does not separate at all. There is a structural reason.
