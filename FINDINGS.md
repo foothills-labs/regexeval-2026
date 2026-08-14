@@ -39,8 +39,15 @@ corpus.
 
 **Re(gEx|DoS)Eval** — 762 regex problems collected from real users. Each
 one has a description, strings that must match, strings that must not, and
-a human-written "gold" answer. It is the closest existing benchmark to
-this one, which is why we used it.
+a human-written "gold" answer.
+
+It comes from [Siddiq, Zhang, Roney & Santos, ICSE-NIER
+2024](https://doi.org/10.1145/3639476.3639757), and so do the four metrics we
+report: pass@k, vulnerable@k, dfa-eq@k and exact match. That paper already
+scores correctness and security jointly, on this corpus, over T5, Phi-1.5 and
+GPT-3.5-Turbo. We are running their instrument on eleven newer models, taking
+the joint metric apart, and then pointing the safety check back at their own
+reference answers — which they did not do.
 
 We used **450 of the 762**, chosen by spreading evenly across the corpus
 rather than taking the first 450 (which are mostly easy). The number 450
