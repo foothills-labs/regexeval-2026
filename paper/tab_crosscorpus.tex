@@ -1,0 +1,17 @@
+\begin{tabular}{llrr}
+\toprule
+Population & Origin & $n$ & vulnerable \\
+\midrule
+NL-RX-Synth        & grammar-generated (control) & 5{,}840 & 35.2\% $\pm$ 1.2 \\
+KB13 gold          & human reference             &   532 & 16.7\% $\pm$ 3.2 \\
+Re(gEx$|$DoS)Eval gold & human reference         &   755 & 13.1\% $\pm$ 2.4 \\
+\midrule
+This work, 11 models pooled & generated          &     --- & \phantom{0}9.0\% \\
+\midrule
+Production code    & human, shipped packages     & 5{,}000 & \phantom{0}4.9\% $\pm$ 0.6 \\
+\addlinespace
+\multicolumn{4}{l}{\emph{Task-mix control: anchored \texttt{\^{}...\$} patterns only}} \\
+Re(gEx$|$DoS)Eval gold & human reference         &   538 & 13.4\% $\pm$ 2.9 \\
+Production code    & human, shipped packages     & 4{,}000 & \phantom{0}8.9\% $\pm$ 0.9 \\
+\bottomrule
+\end{tabular}
