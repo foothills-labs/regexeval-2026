@@ -68,11 +68,14 @@ reproduce that pattern, and we report the difference rather than the
 similarity. Separately, every model is safer than the corpus's own
 human-written reference patterns (9.0\% pooled against 13.6\%). We initially
 read that as evidence that ReDoS is endemic to human practice. Extending the
-identical screen to 537{,}806 regular expressions extracted from shipped
-packages refutes it: production code screens at 4.9\%, and at 8.9\% once
-restricted to the anchored patterns that match this corpus's task mix.
-\emph{Model output is indistinguishable from shipped human code; both are
-safer than the answer key that grades them.}
+identical screen to five further populations, including half a million
+regular expressions extracted from shipped packages, refutes it and replaces
+it with a sharper ordering. Controlling for task mix, patterns \emph{written
+to be read} are ReDoS-prone (reusable library entries 20.1\%, Stack Overflow
+answers 17.3\%, this corpus's reference answers 13.4\%), while patterns that
+are \emph{executed} in shipped packages sit at 8.9\%, statistically
+indistinguishable from the models at 9.0\%. \emph{Vulnerability tracks
+whether a pattern was ever run, not whether a human or a model wrote it.}
 
 The audit behind this is the paper's methodological contribution. Metrics
 that compare generated output against a human answer key inherit that key's
@@ -152,13 +155,15 @@ on itself.
   auditing the reference set they compare against, which is the standard
   practice we are questioning rather than a defect specific to them.
 
-  \item \textbf{A human baseline for ReDoS across four populations}
+  \item \textbf{A human baseline for ReDoS across six populations}
   (\cref{sec:humanbaseline}). We apply the identical safety screen to the
-  corpus's own reference patterns, to a second NL-to-regex gold set, to a
-  grammar-generated control, and to half a million regular expressions
-  extracted from shipped packages. Models are uniformly safer than both gold
-  sets and indistinguishable from production code. Screening costs no
-  inference, so this generalises where the model-side results cannot.
+  corpus's own reference patterns, a second NL-to-regex gold set, a
+  grammar-generated control, a reusable-pattern library, Stack Overflow, and
+  half a million regular expressions from shipped packages. The resulting
+  ordering is monotone in whether a pattern is executed rather than in who
+  wrote it, which identifies the mechanism behind the reference set's
+  unreliability instead of only observing it. Screening costs no inference,
+  so this generalises where the model-side results cannot.
 
   \item \textbf{An updated model population.}
   \citet{siddiq2024regexeval} evaluate T5, Phi-1.5 and GPT-3.5-Turbo. We
@@ -606,58 +611,71 @@ expressions, and models merely reproduce it at a lower rate. We drafted that
 claim. It does not survive the obvious check, which is that a benchmark
 answer key is not the same population as working code.
 
-\subsubsection{Four populations}
+\subsubsection{Six populations}
 \label{sec:crosscorpus}
 
 Screening a pattern requires no inference, so the human side of this
 comparison can be extended to any corpus at no cost. We applied the identical
-screen to three further populations: the gold answers of
+screen to five further populations: the gold answers of
 KB13~\citep{kushman2013semantic}; the targets of
-NL-RX~\citep{locascio2016neural}, which are generated from a grammar rather
-than written by people and serve here as a control; and 537{,}806 regular
-expressions extracted from shipped packages across eight registries by
-\citet{davis2019linguafranca}, sampled at a fixed seed.
+NL-RX~\citep{locascio2016neural}, generated from a grammar rather than
+written by people and included as a control; and three corpora from the
+artifact of \citet{davis2019linguafranca}, namely regular expressions
+extracted from shipped packages across eight registries, regular expressions
+posted to Stack Overflow, and the reusable patterns published on
+\texttt{regexlib.com}. Samples are drawn at a fixed seed.
 
 \begin{table}[htbp]
 \centering
 \small
 \input{tab_crosscorpus}
-\caption{The identical ReDoS screen applied to four populations.
-Intervals are 95\% binomial. Model figures are the pooled per-sample rate
-from \cref{tab:vuln}.}
+\caption{The identical ReDoS screen applied to six populations. Intervals are
+95\% binomial. Model figures are the pooled per-sample rate from
+\cref{tab:vuln}. The anchored block is the comparison to read: the
+unanchored figures are dominated by task mix, which is why Stack Overflow
+moves from 5.9\% to 17.3\% between the two blocks.}
 \label{tab:crosscorpus}
 \end{table}
 
-Production code screens at 4.9\%, below every model we evaluated. The
-endemic reading is therefore wrong, and we would have published it.
+Production code screens at 4.9\%, below every model we evaluated. The endemic
+reading is therefore wrong, and we would have published it.
 
-The comparison is confounded by task mix. This corpus is unusually rich in
-validators (email, ISBN, hostname), which is the construction that
-backtracks, whereas production regexes are mostly short utility patterns with
-no opportunity to. Restricting both sides to anchored \texttt{\^{}...\$}
-patterns gives the closest matched populations available and removes most of
-the gap: 13.4\% against 8.9\%. What remains is
-\emph{not} a claim about models versus humans:
+The raw comparison is confounded by task mix. This corpus is unusually rich
+in validators (email, ISBN, hostname), the construction that backtracks,
+whereas most regular expressions in the wild are short fragments with no
+opportunity to. Restricting every population to anchored
+\texttt{\^{}...\$} patterns gives the closest matched populations available,
+and the ordering that emerges does not follow the axis we expected:
 
 \begin{quote}
-Model output is statistically indistinguishable from shipped human code
-(9.0\% against 8.9\%). Both are safer than the reference set the models are
-scored against (13.4\%).
+The dividing line is not human against machine. It is whether the pattern was
+ever run. Every population written to be \emph{read} --- library entries at
+20.1\%, forum answers at 17.3\%, benchmark reference answers at 13.4\% ---
+is ReDoS-prone. The one population that has been \emph{executed} under real
+traffic sits at 8.9\%, and the models sit with it at 9.0\%.
 \end{quote}
 
-Two corpora of NL-to-regex gold answers (13.1\%, 16.7\%) exceed both, so the
-effect is not specific to Re(gEx$|$DoS)Eval. The mechanism is not mysterious.
-A reference answer is written once to satisfy a description and then never
-exercised, reviewed, or subjected to traffic; \citet{davis2018redos} document
-remediation activity in deployed packages, which answer keys do not receive.
-This is the same conclusion \cref{sec:goldstandard} reaches from semantics,
-arrived at independently from safety: the reference set is the least
-reliable artifact in the evaluation.
+This is a measurement of the mechanism rather than a conjecture about it. A
+pattern published for reuse, posted in an answer, or written to key a
+benchmark is authored once to communicate an idea, and nothing subsequently
+happens to it. A pattern in a shipped package is executed, profiled, and
+occasionally repaired; \citet{davis2018redos} document exactly that
+remediation activity at ecosystem scale. Vulnerability tracks exposure to
+execution, and answer keys have none.
 
-The revised finding is weaker than the one we drafted and better supported.
-It also preserves the practical implication. Safety screening must be applied
-at the point of use, because neither the generator, nor the reference author,
-nor the benchmark performs it.
+It also explains why this corpus's answers are ReDoS-prone without appeal to
+authorial carelessness. Re(gEx$|$DoS)Eval was assembled from real user posts,
+and forum posts screen at 17.3\%. That the gold set is safer than its own
+source population (13.4\%) suggests its authors curated, which is to their
+credit and does not close the gap to executed code.
+
+\cref{sec:goldstandard} reaches the same conclusion from semantics, and this
+section reaches it from safety without consulting the reference at all: the
+reference set is the least reliable artifact in the evaluation. The revised
+finding is weaker than the one we drafted, better supported, and preserves
+the practical implication. Safety screening must be applied at the point of
+use, because neither the generator, nor the reference author, nor the
+benchmark performs it.
 
 \paragraph{Relation to prior work.} \citet{siddiq2024redos} report that
 LLM-generated regexes skew toward polynomial ReDoS. We do not reproduce this
@@ -1020,9 +1038,10 @@ small.
 Two findings survive that correction intact, both resting only on criteria
 that never consult a human answer key. Models are uniformly safer than the
 human-written reference patterns against which they are scored, and
-indistinguishable from the regular expressions in shipped packages, which
-locates the anomaly in the answer key rather than in generation or in human
-practice. And the entire eleven-model field lies within eight percentage
+indistinguishable from the regular expressions in shipped packages. Across
+six populations, ReDoS prevalence tracks whether a pattern is ever executed
+rather than whether a human or a model wrote it, which locates the anomaly in
+the answer key rather than in generation or in human practice. And the entire eleven-model field lies within eight percentage
 points across a $98\times$ range in inference cost.
 
 Both corrections in this paper ran the same way. A composite agreed with the
