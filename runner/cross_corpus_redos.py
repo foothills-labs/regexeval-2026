@@ -21,6 +21,14 @@ Production code     regexes extracted from shipped packages across eight
                     registries by Davis et al. (LinguaFranca, FSE 2019). This
                     is the population the "how do people write regexes" claim
                     is actually about.
+Stack Overflow      regexes posted to Stack Overflow, from the same artifact.
+                    This is the provenance Re(gEx|DoS)Eval draws from, so it
+                    separates "answer keys are dangerous" from "forum
+                    snippets are dangerous".
+RegexLib            regexes published to regexlib.com for reuse. A library of
+                    shared validators: written once, published, and never
+                    subjected to traffic. The closest population in kind to a
+                    benchmark answer key.
 
 Dialect note
 ------------
@@ -119,12 +127,39 @@ def production():
     return out
 
 
+def internet(source):
+    """Stack Overflow / RegexLib patterns from the LinguaFranca artifact."""
+    path = (SC / "lf" / "data" / "internet-regexes" / source / "data" /
+            ("internetSources-stackoverflow.json" if source == "stackoverflow"
+             else "internetSources-regExLib.json"))
+    seen = []
+    with path.open(errors="replace") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)
+            except Exception:
+                continue
+            for pattern in obj.get("patterns", []):
+                if isinstance(pattern, str) and pattern:
+                    seen.append(pattern)
+    uniq = [p for p in dict.fromkeys(seen) if compiles(p)]
+    random.Random(SEED).shuffle(uniq)
+    return uniq
+
+
 def main():
     prod_all = production()
+    so_all = internet("stackoverflow")
+    lib_all = internet("regexlib")
     corpora = [
         ("RegexEval gold (all 762)", "human, real user posts", regexeval()),
         ("KB13 (dialect-clean)", "human, Kushman & Barzilay 2013", deep_regex("KB13")),
         ("NL-RX-Synth (dialect-clean)", "MACHINE-GENERATED (control)", deep_regex("NL-RX-Synth")),
+        (f"RegexLib (all {len(lib_all)})", "human, published for reuse", lib_all),
+        (f"Stack Overflow (sample of {len(so_all)})", "human, forum posts", so_all[:SAMPLE]),
         (f"Production code (sample of {len(prod_all)})", "human, shipped packages", prod_all[:SAMPLE]),
     ]
 
@@ -141,9 +176,13 @@ def main():
 
     ev_anchored = [p for p in regexeval() if ANCHORED.match(p)]
     prod_anchored = [p for p in prod_all if ANCHORED.match(p)][:ANCHORED_SAMPLE]
+    so_anchored = [p for p in so_all if ANCHORED.match(p)][:ANCHORED_SAMPLE]
+    lib_anchored = [p for p in lib_all if ANCHORED.match(p)][:ANCHORED_SAMPLE]
     print("=" * 68)
     print("Task-mix control: anchored ^...$ patterns only\n")
     for name, pats in (("RegexEval gold, anchored", ev_anchored),
+                       ("RegexLib, anchored", lib_anchored),
+                       ("Stack Overflow, anchored", so_anchored),
                        ("Production code, anchored", prod_anchored)):
         r = rate(pats)
         results["anchored"][name] = r
