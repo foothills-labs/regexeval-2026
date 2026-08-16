@@ -92,10 +92,18 @@ literature, are the wrong inferential tool when all systems answer identical
 items, and that a paired bootstrap resolves nine times as
 many pairwise comparisons on the same data.
 
+Replicating the two reference-independent criteria on a second corpus
+\citep{ye2020structuredregex} shows the qualitative finding holds and the
+number does not: the same eleven models leave \textbf{16.5\%} of their
+correct patterns ReDoS-vulnerable there against 7.4\% here, on tasks twenty
+points \emph{easier}. The correctness-to-security penalty is a property of
+the corpus, not of the models.
+
 We therefore decline to publish a ranking. We release all raw generations,
 scoring code and adjudications, and recommend that evaluations separate
-reference-dependent from reference-independent metrics and assign them
-different evidentiary weight.
+reference-dependent from reference-independent metrics, assign them different
+evidentiary weight, and treat any effect size as corpus-local until
+replicated.
 \end{abstract}
 
 \vspace{0.5em}
@@ -170,6 +178,15 @@ on itself.
   evaluate eleven models released in the intervening period under pinned
   serving providers (\cref{sec:serving}), and find the population compressed
   into an eight-point band that a hundredfold price range does not order.
+
+  \item \textbf{A second-corpus replication} (\cref{sec:replication}). We
+  re-run the two reference-independent criteria on
+  StructuredRegex~\citep{ye2020structuredregex} with the same models and
+  configuration. The finding replicates in kind and not in size: 16.5\%
+  against 7.4\%, on easier tasks, with the model ordering not preserved. This
+  is the direct test of \cref{sec:crossbench}'s domain-dependence claim,
+  which otherwise rests on comparison across languages and vulnerability
+  classes.
 
   \item \textbf{Full artifact release} including raw generations, which
   permits any of our scoring decisions to be overturned without re-running
@@ -754,6 +771,67 @@ of about the expected size for entirely the wrong reason
 there, where its aggregate agrees with the literature and its components do
 not.
 
+\subsection{Replication on a second corpus}
+\label{sec:replication}
+
+Every figure above comes from one corpus, so the 7.4\% is a property of
+Re(gEx$|$DoS)Eval until shown otherwise. The two criteria that never consult
+a reference can be computed anywhere that supplies test strings, and
+StructuredRegex~\citep{ye2020structuredregex} supplies them: each instance
+carries positive and negative example strings alongside its description. Its
+own targets are in a prefix DSL and we never read them, so this run has no
+$\dfaeq{}$ and no $\exact{}$ term, which suits the argument of this paper.
+
+We collected one sample per task from the same eleven pinned models under the
+same configuration, 622 of the 629 test instances (seven ship no positive or
+negative strings, leaving $\pass{}@k$ undefined), for \$3.67.
+\cref{tab:srcommon} reports the 513 tasks every model answered.
+\cref{app:hazards} records why that number is not 622.
+
+\begin{table}[htbp]
+\centering
+\small
+\input{tab_sr_common}
+\caption{StructuredRegex, one sample per task, on the 513 instances answered
+by all eleven models. Percentages. The last column is the share of
+functionally correct patterns that are ReDoS-vulnerable, the same quantity
+this paper reports as 7.4\% on Re(gEx$|$DoS)Eval.}
+\label{tab:srcommon}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\small
+\input{tab_sr_compare}
+\caption{The two reference-independent criteria across both corpora, at
+$@1$ in each so the comparison is like for like.}
+\label{tab:srcompare}
+\end{table}
+
+The qualitative result replicates and the quantitative one does not. Working
+patterns are exploitable at a material rate on both corpora, which is the
+finding. But the rate is \textbf{16.5\%} here against 7.4\% on
+Re(gEx$|$DoS)Eval, and the obvious deflationary reading, that harder problems
+produce worse patterns, is ruled out by the direction of the difficulty gap:
+StructuredRegex is \emph{easier}, by roughly twenty points of $\pass{}@1$.
+Its targets are built from a grammar over repetition, optionality and
+concatenation, and models answering those descriptions write more
+backtracking-prone patterns than models answering the validator-heavy prompts
+of Re(gEx$|$DoS)Eval.
+
+\cref{sec:crossbench} argues from BaxBench and SecureAgentBench that the
+correctness-to-security penalty is domain-dependent. That argument compares
+across languages and vulnerability classes, and a reader is entitled to
+discount it. The same conclusion now holds between two corpora of the same
+task, in the same language, under the same screen and the same eleven
+models, with the effect size differing by a factor of 2.2. We regard this as
+the stronger form of the claim, and it cuts against our own headline number.
+
+The ordering of models is also not preserved. \texttt{claude-sonnet-5} leads
+here and sits mid-table on Re(gEx$|$DoS)Eval; \texttt{kimi-k3} leads there
+and sits eighth here. \cref{sec:power} declines to publish a ranking on
+single-corpus evidence, and this is the direct test of that caution.
+
 \subsection{Cost}
 
 \begin{table}[htbp]
@@ -958,12 +1036,13 @@ measured per benchmark rather than assumed negligible, and we cannot measure
 it: we have no held-out private task set, so we cannot put a bound on it.
 This is the largest unaddressed threat in the paper.
 
-\paragraph{One corpus on the model side.} \cref{sec:crosscorpus} extends the
-human baseline to four populations, but only because screening a pattern is
-free. Measuring a \emph{model} elsewhere needs both new inference and a
-corpus carrying test strings, and no other NL-to-regex benchmark supplies
-them: KB13 and NL-RX are (description, regex) pairs. So \pass{} and
-\dfaeq{} were never computed anywhere but here. A further hazard we avoided
+\paragraph{Corpus-local effect sizes.} \cref{sec:replication} replicates
+$\pass{}$ and $\vuln{}$ on a second corpus and finds the vulnerability rate
+among correct patterns differs by a factor of 2.2. Every effect size in this
+paper should therefore be read as a property of Re(gEx$|$DoS)Eval rather than
+of natural-language-to-regex generation. $\dfaeq{}$ and $\exact{}$ remain
+single-corpus: replicating those needs a second corpus with a reference in
+standard syntax, and neither KB13, NL-RX nor StructuredRegex supplies one. A further hazard we avoided
 rather than solved: KB13 and NL-RX are written in a DSL where \texttt{\&} is
 intersection and \texttt{\~{}} is negation, both of which Python's
 \texttt{re} accepts silently as literals. We excluded the 3{,}948 of 9{,}648
@@ -1022,6 +1101,16 @@ fail (\cref{sec:metrics}).
 
 \item \textbf{Release raw generations.} Anyone can then overturn a scoring
 decision without buying the inference again.
+
+\item \textbf{Treat an effect size as corpus-local until replicated.} Our
+reference-independent gap is 7.4\% on one corpus and 16.5\% on another under
+an identical screen (\cref{sec:replication}). Reference-independence buys
+freedom from answer-key error. It does not buy generality.
+
+\item \textbf{Check that a partial run is not a biased run.} When a model
+loses tasks to infrastructure, score the remaining models on the tasks it
+lost. Ours were 8.1 points harder (\cref{app:hazards}), which would have
+flattered the affected model rather than penalised it.
 \end{enumerate}
 
 \section{Conclusion}
@@ -1044,10 +1133,19 @@ rather than whether a human or a model wrote it, which locates the anomaly in
 the answer key rather than in generation or in human practice. And the entire eleven-model field lies within eight percentage
 points across a $98\times$ range in inference cost.
 
-Both corrections in this paper ran the same way. A composite agreed with the
+A third check went the same way. The 7.4\% that survived the first two
+corrections is 16.5\% on a second corpus under the same screen and the same
+models (\cref{sec:replication}), so the number we were left defending is
+corpus-local too.
+
+All three corrections ran the same way. A composite agreed with the
 literature and turned out to be dominated by its weakest term; a human
 baseline on one corpus supported a strong claim that a second population
-refuted. In each case the check was cheap and we nearly skipped it.
+refuted; a reference-independent rate proved to be a fact about the corpus.
+In each case the check was cheap and we nearly skipped it. The recurring
+lesson is not about regular expressions. It is that a number which agrees
+with what you expected is the one most worth spending an afternoon
+attacking.
 
 The methodological result is the one we did not plan on. A metric that
 compares against a human answer key inherits that key's error rate, and a
@@ -1129,6 +1227,26 @@ configuration fingerprint and resumption refuses on mismatch.
 final sample per task, which would have rendered all $@3$ statistics
 disguised $@1$ statistics with no visible symptom.
 \end{enumerate}
+
+\paragraph{A content filter can silently bias a subset.}
+Collecting StructuredRegex, Anthropic's content filter rejected 182 of 622
+descriptions for \texttt{claude-opus-5}, all of them benign (``A string that
+starts with one or more digits and optionally ends with `NU' or `DG'.'').
+A probe suggested the filter was stochastic: 8 of 20 rejected prompts
+succeeded when resent unchanged. Five retry rounds recovered 98, with the
+per-round yield collapsing (51, 31, 9, 2, 5), which shows a stochastic
+component over a hard core the filter rejects every time. Final coverage was
+513 of 622.
+
+The recovery is not the interesting part. Scoring the other ten models on the
+109 blocked tasks against the 513 kept shows the blocked tasks are
+$8.1$ points harder on average (sd $3.3$, negative for all ten). The
+surviving subset therefore \emph{flattered} the affected model, at the same
+time as counting the blocked rows as failures \emph{penalised} it. Either
+error alone is visible; together they produce a plausible number that means
+nothing. We report the common 513-task subset for all eleven models
+(\cref{tab:srcommon}) and release \texttt{runner/filter\_bias\_check.py},
+which needs no API access.
 
 \section{Reproduction}
 
