@@ -1,0 +1,398 @@
+{
+  "claude-opus-5": {
+    "tasks": 622,
+    "answered": 415,
+    "failed": 207,
+    "pass_at_1": 41.6,
+    "pass_ci95": [
+      37.8,
+      45.6
+    ],
+    "vulnerable_at_1": 14.2,
+    "vuln_ci95": [
+      11.2,
+      17.9
+    ],
+    "correct_and_secure_at_1": 35.0,
+    "vuln_given_correct": 15.8,
+    "_counts": {
+      "passed": 259,
+      "vulnerable": 59,
+      "correct_secure": 218
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "claude-sonnet-5": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 65.4,
+    "pass_ci95": [
+      61.6,
+      69.1
+    ],
+    "vulnerable_at_1": 14.0,
+    "vuln_ci95": [
+      11.5,
+      16.9
+    ],
+    "correct_and_secure_at_1": 56.1,
+    "vuln_given_correct": 14.3,
+    "_counts": {
+      "passed": 407,
+      "vulnerable": 87,
+      "correct_secure": 349
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "deepseek-v4-flash-0731": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 51.1,
+    "pass_ci95": [
+      47.2,
+      55.0
+    ],
+    "vulnerable_at_1": 15.6,
+    "vuln_ci95": [
+      13.0,
+      18.7
+    ],
+    "correct_and_secure_at_1": 43.2,
+    "vuln_given_correct": 15.4,
+    "_counts": {
+      "passed": 318,
+      "vulnerable": 97,
+      "correct_secure": 269
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "gemini-3.1-flash-lite": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 58.5,
+    "pass_ci95": [
+      54.6,
+      62.3
+    ],
+    "vulnerable_at_1": 16.2,
+    "vuln_ci95": [
+      13.5,
+      19.3
+    ],
+    "correct_and_secure_at_1": 47.7,
+    "vuln_given_correct": 18.4,
+    "_counts": {
+      "passed": 364,
+      "vulnerable": 101,
+      "correct_secure": 297
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "glm-5.2": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 54.0,
+    "pass_ci95": [
+      50.1,
+      57.9
+    ],
+    "vulnerable_at_1": 17.5,
+    "vuln_ci95": [
+      14.7,
+      20.7
+    ],
+    "correct_and_secure_at_1": 44.1,
+    "vuln_given_correct": 18.5,
+    "_counts": {
+      "passed": 336,
+      "vulnerable": 109,
+      "correct_secure": 274
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "gpt-5.6-luna": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 57.9,
+    "pass_ci95": [
+      54.0,
+      61.7
+    ],
+    "vulnerable_at_1": 14.8,
+    "vuln_ci95": [
+      12.2,
+      17.8
+    ],
+    "correct_and_secure_at_1": 48.9,
+    "vuln_given_correct": 15.6,
+    "_counts": {
+      "passed": 360,
+      "vulnerable": 92,
+      "correct_secure": 304
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "gpt-5.6-sol": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 63.8,
+    "pass_ci95": [
+      60.0,
+      67.5
+    ],
+    "vulnerable_at_1": 13.3,
+    "vuln_ci95": [
+      10.9,
+      16.2
+    ],
+    "correct_and_secure_at_1": 55.0,
+    "vuln_given_correct": 13.9,
+    "_counts": {
+      "passed": 397,
+      "vulnerable": 83,
+      "correct_secure": 342
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "gpt-5.6-terra": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 61.1,
+    "pass_ci95": [
+      57.2,
+      64.8
+    ],
+    "vulnerable_at_1": 15.1,
+    "vuln_ci95": [
+      12.5,
+      18.1
+    ],
+    "correct_and_secure_at_1": 51.8,
+    "vuln_given_correct": 15.3,
+    "_counts": {
+      "passed": 380,
+      "vulnerable": 94,
+      "correct_secure": 322
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "kimi-k3": {
+    "tasks": 622,
+    "answered": 621,
+    "failed": 1,
+    "pass_at_1": 57.9,
+    "pass_ci95": [
+      54.0,
+      61.7
+    ],
+    "vulnerable_at_1": 16.3,
+    "vuln_ci95": [
+      13.6,
+      19.4
+    ],
+    "correct_and_secure_at_1": 48.6,
+    "vuln_given_correct": 16.1,
+    "_counts": {
+      "passed": 360,
+      "vulnerable": 101,
+      "correct_secure": 302
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "qwen3.6-max-preview": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 58.5,
+    "pass_ci95": [
+      54.6,
+      62.3
+    ],
+    "vulnerable_at_1": 13.2,
+    "vuln_ci95": [
+      10.7,
+      16.1
+    ],
+    "correct_and_secure_at_1": 50.5,
+    "vuln_given_correct": 13.7,
+    "_counts": {
+      "passed": 364,
+      "vulnerable": 82,
+      "correct_secure": 314
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  },
+  "qwen3.6-plus": {
+    "tasks": 622,
+    "answered": 622,
+    "failed": 0,
+    "pass_at_1": 54.2,
+    "pass_ci95": [
+      50.3,
+      58.1
+    ],
+    "vulnerable_at_1": 15.1,
+    "vuln_ci95": [
+      12.5,
+      18.1
+    ],
+    "correct_and_secure_at_1": 45.5,
+    "vuln_given_correct": 16.0,
+    "_counts": {
+      "passed": 337,
+      "vulnerable": 94,
+      "correct_secure": 283
+    },
+    "controls": {
+      "control/good": {
+        "passes": true,
+        "vulnerable": false
+      },
+      "control/bad": {
+        "passes": false,
+        "vulnerable": false
+      },
+      "control/vulnerable": {
+        "passes": true,
+        "vulnerable": true
+      }
+    }
+  }
+}
