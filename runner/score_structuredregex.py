@@ -84,7 +84,9 @@ def wilson(k, n):
     return (100 * max(0.0, c - h), 100 * min(1.0, c + h))
 
 
-def score_model(path: Path):
+def score_model(path: Path, only=None):
+    """Score one model. `only` restricts to a fixed task set, for the
+    common-subset comparison."""
     rows = [json.loads(l) for l in path.read_text().splitlines() if l.strip()]
     controls = {}
     n = ok = passed = vuln = correct_secure = failed = 0
@@ -99,6 +101,9 @@ def score_model(path: Path):
                     "passes": passes(pattern, r["pos"], r["neg"]),
                     "vulnerable": is_vulnerable(pattern),
                 }
+            continue
+
+        if only is not None and name not in only:
             continue
 
         n += 1
@@ -131,11 +136,31 @@ def main():
     args = ap.parse_args()
 
     pred_dir = config.PREDICTIONS_DIR / args.run
+    paths = sorted(pred_dir.glob("*.jsonl"))
+
+    # Tasks every model actually answered. claude-opus-5 lost 109 of 622 to a
+    # content filter, and filter_bias_check.py shows those tasks run 8.1
+    # points harder for the other ten, so opus's own subset flatters it. The
+    # common subset is the only footing on which all eleven compare.
+    answered = []
+    for path in paths:
+        got = set()
+        for line in path.read_text().splitlines():
+            if not line.strip():
+                continue
+            r = json.loads(line)
+            if (not r["task_name"].startswith("control/")
+                    and r["status"] == "ok" and r.get("pattern")):
+                got.add(r["task_name"])
+        answered.append(got)
+    common = set.intersection(*answered) if answered else set()
+
     out = {}
     bad_controls = []
-    for path in sorted(pred_dir.glob("*.jsonl")):
+    for path in paths:
         label = path.stem
         out[label] = score_model(path)
+        out[label]["common_subset"] = score_model(path, only=common)
         c = out[label]["controls"]
         if c.get("control/good", {}).get("passes") is not True:
             bad_controls.append(f"{label}: control/good did not pass")
@@ -153,6 +178,20 @@ def main():
               f"{s['correct_and_secure_at_1'] or 0:7.1f}% "
               f"{s['vuln_given_correct'] or 0:12.1f}%")
 
+    print(f"\nCommon subset: {len(common)} tasks every model answered "
+          f"(of 622). All eleven are comparable here; the table above is not,\n"
+          f"because claude-opus-5 answered a non-random 513.\n")
+    hdr2 = f"{'model':26s} {'n':>5s} {'pass@1':>8s} {'vuln@1':>8s} {'c&s@1':>8s} {'vuln|correct':>13s}"
+    print(hdr2)
+    print("-" * len(hdr2))
+    for label, s_ in sorted(out.items(),
+                            key=lambda x: -(x[1]["common_subset"]["correct_and_secure_at_1"] or 0)):
+        c = s_["common_subset"]
+        print(f"{label:26s} {c['tasks']:5d} "
+              f"{c['pass_at_1'] or 0:7.1f}% {c['vulnerable_at_1'] or 0:7.1f}% "
+              f"{c['correct_and_secure_at_1'] or 0:7.1f}% "
+              f"{c['vuln_given_correct'] or 0:12.1f}%")
+
     print()
     if bad_controls:
         print("CONTROL FAILURES -- do not trust these numbers:")
@@ -163,7 +202,8 @@ def main():
 
     dest = config.REPO / "results" / "structuredregex_scores.json"
     dest.parent.mkdir(exist_ok=True)
-    dest.write_text(json.dumps(out, indent=2) + "\n")
+    dest.write_text(json.dumps(
+        {"common_subset_size": len(common), "models": out}, indent=2) + "\n")
     print(f"wrote {dest}")
 
 
