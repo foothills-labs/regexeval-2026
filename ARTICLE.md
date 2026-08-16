@@ -1,43 +1,40 @@
-# The regex your model wrote passes every test. It can also take down your server.
+# Correct and safe are separate properties in generated regular expressions
 
-*Foothills Labs · 2026-08-14*
+*Eleven models, two benchmarks, and three results. Foothills Labs · 2026-08-14*
 
-> We asked eleven current language models to write 450 regular expressions
-> each, three times over, and checked every answer three ways: does it work,
-> does it mean what the task asked for, and can someone hang your server with
-> it. This started as a leaderboard, but it stopped being one once we found that
-> the metric producing our headline number was mostly measuring the
-> benchmark's own answer key. Two results survived: 7.4% of the
-> patterns that work are exploitable, how ReDoS-prone a regular expression is
-> turns out to depend on whether anyone ever ran it rather than on whether a
-> human or a model wrote it, and when we re-ran the whole thing on a second
-> benchmark that 7.4% came back as 16.5%.
+> Eleven current language models wrote 450 regular expressions each, three
+> times over, scored three ways: whether the pattern passes its tests,
+> whether it means what the task asked for, and whether it is vulnerable to
+> regular-expression denial of service. The project began as a leaderboard
+> and stopped being one when the metric producing the headline number turned
+> out to be measuring the benchmark's own answer key. Three results survived.
+> 7.4% of the patterns that work are exploitable. ReDoS prevalence depends on
+> whether a pattern was ever executed rather than on whether a human or a
+> model wrote it. And on a second benchmark, that 7.4% came back as 16.5%.
 
-Here is a regular expression. It validates domain names. It was written by
-Claude Opus 5, one of the best models available today, and it passes every
-test the benchmark gave it.
+Claude Opus 5 produced the following pattern for a domain-name validation
+task. It passes every test the benchmark supplies.
 
 ```
 ^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+(com|org|net|mil|edu)$
 ```
 
-Read it the way you would in a code review. It anchors both ends. It caps
-label length at 63 characters, which is correct. It checks the top-level
-domain against a list. It looks like someone was paying attention.
+Under review it reads as careful work. It anchors both ends, caps label
+length at 63 characters, which is correct, and checks the top-level domain
+against a list.
 
-Now look at the outer group: `(...)+` wraps a group that already contains
-`{0,61}`. That is the shape that makes a regex engine catastrophically
-slow. Feed it a long, almost-valid hostname that fails at the very last
-character, and the matcher will try exponentially many ways to divide the
-input before it concludes there is no match. Put this on a signup form and
-you have handed anyone who notices a denial-of-service button.
+The defect is the outer group. `(...)+` wraps a group that already contains
+`{0,61}`, which is the construction that makes a backtracking engine
+catastrophically slow. Given a long, almost-valid hostname that fails at the
+final character, the matcher tries exponentially many ways to divide the
+input before concluding there is no match. Deployed on a signup form, the
+pattern is a denial-of-service vector.
 
-This is called [ReDoS][redos]. It is well enough documented to have its own
-[systematisation-of-knowledge paper][sok], and nobody would ship it on
-purpose. It shipped here because it passed its tests, and because it looks
-careful.
+This is [ReDoS][redos], well enough documented to have its own
+[systematisation-of-knowledge paper][sok]. Nobody ships it on purpose. It
+shipped here because it passed its tests and because it looks careful.
 
-We wanted to know how often that happens.
+The question this project set out to answer is how often that happens.
 
 ---
 
@@ -114,21 +111,21 @@ attempts each.
 
 Then we asked three questions about every answer:
 
-1. **Does it work?** Run it against the strings that should match and the
-   strings that shouldn't.
+1. **Does it work?** The pattern is run against the strings that should
+   match and the strings that shouldn't.
 
-2. **Does it mean the right thing?** Compare it to the human answer as a
-   *language*, not as text, because `[0-9]+` and `[0-9][0-9]*` describe exactly
-   the same set of strings and a benchmark comparing text would call one of
-   them wrong.
+2. **Does it mean the right thing?** The pattern is compared to the human
+   answer as a *language* rather than as text, because `[0-9]+` and
+   `[0-9][0-9]*` describe exactly the same set of strings and a benchmark
+   comparing text would call one of them wrong.
 
-3. **Is it safe?** Screen it for the shapes that backtrack catastrophically,
-   then actually try to break it with attack strings.
+3. **Is it safe?** The pattern is screened for the shapes that backtrack
+   catastrophically, then attacked with strings built to trigger them.
 
 The scoring is done by [regexbench][regexbench], a tool we wrote before this
-project and pinned to one commit for the run. It is ours, so treat it the way
-you would any measurement taken with the measurer's own instrument. The
-equivalence check inside it is [dk.brics.automaton][brics], which is not.
+project and pinned to one commit for the run. It is our own instrument, which
+is a caveat these results carry rather than one they escape. The equivalence
+check inside it is [dk.brics.automaton][brics], which is not ours.
 
 The second and third questions are why this corpus exists rather than the
 older regex benchmarks, [KB13][kb13] and [NL-RX][nlrx], which score a
@@ -185,9 +182,9 @@ equivalence term, as the audit further down shows, is 85% noise from
 bad reference answers and prompts that never specified the property in
 dispute.
 
-So drop it and score only the two criteria that never consult a human answer
-key, which is also the construction the general-code benchmarks use. What
-survives is this:
+Dropping it and scoring only the two criteria that never consult a human
+answer key, which is also the construction the general-code benchmarks use,
+leaves this:
 
 > **7.4% of the regular expressions that work are ReDoS-vulnerable.**
 
@@ -220,9 +217,9 @@ least trustworthy measurement.
 
 ## Surprise, surprise, ground truth is hard
 
-By this point you have probably formed a conclusion: language models write
-dangerous regular expressions. It is the obvious reading and we were ready
-to publish it. So we turned the same safety screen on the **human-written
+The obvious conclusion at this stage is that language models write dangerous
+regular expressions. That was our reading, and we were ready to publish it.
+So we turned the same safety screen on the **human-written
 answers** in the benchmark, the reference patterns the corpus uses as its
 gold standard, written by people, for a benchmark about regular expressions.
 **13.6% of them are vulnerable.**
@@ -303,10 +300,10 @@ actually *safer* than the population it was drawn from, which suggests the
 corpus authors filtered as they went. It still does not get them down to the
 level of code that runs.
 
-So the practical advice survives, with a better reason behind it. If you want
-safe regular expressions you have to screen for them, because the copy you
-found on the internet has never been run in anger and neither has the one the
-model just wrote you.
+The practical implication survives with a better reason behind it. Safe
+regular expressions require screening at the point of use. Neither a pattern
+copied from the internet nor one just produced by a model has been run in
+anger.
 
 ---
 
@@ -357,9 +354,9 @@ Re(gEx|DoS)Eval until somebody checks it somewhere else, so we checked.
 
 [StructuredRegex][sr] is a second benchmark for the same task, and it has the
 one thing the older ones lack: example strings for every problem, both
-matching and non-matching. That is all you need for *does it work*. We never
-touch its answer key, which is written in a notation of its own, so this run
-has no equivalence score at all. Just the two questions we trust.
+matching and non-matching. That is sufficient for *does it work*. Its answer
+key, written in a notation of its own, is never read, so this run carries no
+equivalence score at all. Only the two questions that held up.
 
 Same eleven models, same settings, 622 problems, one answer each, $3.67.
 
@@ -369,8 +366,8 @@ Same eleven models, same settings, 622 problems, one answer each, $3.67.
 | vulnerable | 7.3–10.7% | 13.6–17.9% |
 | **vulnerable, of the ones that work** | **7.4%** | **16.5%** |
 
-The finding holds. Patterns that pass their tests and can still hang your
-server are not a quirk of one benchmark.
+The finding holds. Patterns that pass their tests and remain exploitable are
+not a quirk of one benchmark.
 
 The number does not hold. It more than doubles. And the easy explanation,
 that the second benchmark is harder so the answers are worse, is the wrong
@@ -388,7 +385,7 @@ own headline number.
 The ordering moved too. Sonnet 5 comes first here and sits in the middle of
 the other table. Kimi K3 comes first there and eighth here. We already said a
 numbered list of eleven models was not defensible. This is what that looks
-like when you test it.
+like under test.
 
 One thing worth reporting because it nearly bit us. Anthropic's content
 filter refused 182 of the 622 descriptions for Opus, all of them harmless
@@ -405,8 +402,8 @@ problems all eleven models actually answered.
 ## Then we checked our own work
 
 The second question, *does it mean the right thing?*, compares the model's
-pattern against a human's. That only tells you something about the model if
-the human was right.
+pattern against a human's. That measures the model only if the human was
+right.
 
 This is not a new worry in the abstract. [Northcutt, Athalye and
 Mueller][northcutt] audited ten of the most-used test sets in machine
@@ -433,7 +430,7 @@ excludes zero. Zero is not a positive number. The model was marked down for
 being right.
 
 **The task asked for a simple ISBN check, "a 10 digit number."** The human
-answer was `^\d{9}[\d|X]$`. Look inside the brackets: digit, **pipe**, X.
+answer was `^\d{9}[\d|X]$`. Inside the brackets: digit, **pipe**, X.
 Someone wrote `|` meaning "or", inside a character class, where it is just
 the pipe character. That answer accepts `000000000|` as a valid ISBN. The
 model wrote `^\d{9}[\dX]$`, which is what the task described, and lost.
@@ -501,29 +498,28 @@ work.
 
 ---
 
-## The thing we would tell other people building evaluations
+## Which of the three metrics held up
 
-The two questions that never look at the human answer key, *does it work*
-and *is it safe*, are trustworthy. They run a real regex engine against real
-strings. Nothing about a flawed answer key can corrupt them.
+The two questions that never look at the human answer key, *does it work* and
+*is it safe*, held up. They run a real regex engine against real strings, and
+no defect in an answer key can corrupt them.
 
-The question that compares against a human is, in our sample, 85% noise from
-bad answer keys and ambiguous prompts.
+The question that compares against a human did not. In our sample it was 85%
+noise from bad answer keys and ambiguous prompts.
 
-> **Where possible, separate the metrics that consult a human answer key from the metrics
-> that don't, and trust them differently.**
+> **The metrics that consult a human answer key behaved differently from the
+> metrics that do not, and only the second kind survived scrutiny.**
 
-If you report a metric that compares against gold answers, sample your
-disagreements and read them. You may find, as we did, that most of what you
-are measuring is not the thing you meant to measure. 
+Reading the disagreements is what exposed it. Most of what that metric
+counted was not the thing it was meant to measure.
 
 ---
 
-## Check us
+## Reproduction
 
 Every response from every model is committed to the repository. The scores
-compute from those files and nothing else, so reproducing them costs you
-nothing and needs no API key:
+compute from those files and nothing else, so reproduction costs nothing and
+needs no API key:
 
 ```bash
 git clone https://github.com/foothills-labs/regexleaderboard
@@ -539,18 +535,18 @@ what is published cannot drift away from the evidence behind it.
 
 Every request was pinned to one named provider and refused substitution,
 because the router that sits in front of these models will otherwise serve
-you the same model from different companies at different numerical
-precision, and then you are measuring the router. [A survey of AI-safety
-codebases using one such router][pinning] found 31 of 32 did not pin the
-provider. All eleven of our models were served by exactly the endpoint they
-were pinned to.
+the same model from different companies at different numerical
+precision, at which point the measurement is of the router. [A survey of
+AI-safety codebases using one such router][pinning] found 31 of 32 did not
+pin the provider. All eleven of our models were served by exactly the
+endpoint they were pinned to.
 
-And on every run, three fake answers ride through the scoring alongside the
-real ones: a known-good pattern that must pass, a known-bad one that must
-fail, and a known-dangerous one that must be flagged. If any of them
-misbehaves the run is thrown away. A scorer quietly returning zeros looks
-exactly like a model that failed, unless you plant an answer you already
-know and check that it comes back the way it should.
+On every run, three fake answers ride through the scoring alongside the real
+ones: a known-good pattern that must pass, a known-bad one that must fail,
+and a known-dangerous one that must be flagged. If any of them misbehaves the
+run is discarded. A scorer quietly returning zeros is indistinguishable from
+a set of models that all failed, unless a known answer is planted and checked
+on the way through.
 
 ---
 
