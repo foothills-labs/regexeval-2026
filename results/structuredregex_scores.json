@@ -1,397 +1,796 @@
 {
-  "claude-opus-5": {
-    "tasks": 622,
-    "answered": 415,
-    "failed": 207,
-    "pass_at_1": 41.6,
-    "pass_ci95": [
-      37.8,
-      45.6
-    ],
-    "vulnerable_at_1": 14.2,
-    "vuln_ci95": [
-      11.2,
-      17.9
-    ],
-    "correct_and_secure_at_1": 35.0,
-    "vuln_given_correct": 15.8,
-    "_counts": {
-      "passed": 259,
-      "vulnerable": 59,
-      "correct_secure": 218
-    },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+  "common_subset_size": 513,
+  "models": {
+    "claude-opus-5": {
+      "tasks": 622,
+      "answered": 513,
+      "failed": 109,
+      "pass_at_1": 50.8,
+      "pass_ci95": [
+        46.9,
+        54.7
+      ],
+      "vulnerable_at_1": 14.4,
+      "vuln_ci95": [
+        11.6,
+        17.7
+      ],
+      "correct_and_secure_at_1": 42.8,
+      "vuln_given_correct": 15.8,
+      "_counts": {
+        "passed": 316,
+        "vulnerable": 74,
+        "correct_secure": 266
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 61.6,
+        "pass_ci95": [
+          57.3,
+          65.7
+        ],
+        "vulnerable_at_1": 14.4,
+        "vuln_ci95": [
+          11.6,
+          17.7
+        ],
+        "correct_and_secure_at_1": 51.9,
+        "vuln_given_correct": 15.8,
+        "_counts": {
+          "passed": 316,
+          "vulnerable": 74,
+          "correct_secure": 266
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "claude-sonnet-5": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 65.4,
-    "pass_ci95": [
-      61.6,
-      69.1
-    ],
-    "vulnerable_at_1": 14.0,
-    "vuln_ci95": [
-      11.5,
-      16.9
-    ],
-    "correct_and_secure_at_1": 56.1,
-    "vuln_given_correct": 14.3,
-    "_counts": {
-      "passed": 407,
-      "vulnerable": 87,
-      "correct_secure": 349
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "claude-sonnet-5": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 65.4,
+      "pass_ci95": [
+        61.6,
+        69.1
+      ],
+      "vulnerable_at_1": 14.0,
+      "vuln_ci95": [
+        11.5,
+        16.9
+      ],
+      "correct_and_secure_at_1": 56.1,
+      "vuln_given_correct": 14.3,
+      "_counts": {
+        "passed": 407,
+        "vulnerable": 87,
+        "correct_secure": 349
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 66.1,
+        "pass_ci95": [
+          61.9,
+          70.0
+        ],
+        "vulnerable_at_1": 14.2,
+        "vuln_ci95": [
+          11.5,
+          17.5
+        ],
+        "correct_and_secure_at_1": 56.3,
+        "vuln_given_correct": 14.7,
+        "_counts": {
+          "passed": 339,
+          "vulnerable": 73,
+          "correct_secure": 289
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "deepseek-v4-flash-0731": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 51.1,
-    "pass_ci95": [
-      47.2,
-      55.0
-    ],
-    "vulnerable_at_1": 15.6,
-    "vuln_ci95": [
-      13.0,
-      18.7
-    ],
-    "correct_and_secure_at_1": 43.2,
-    "vuln_given_correct": 15.4,
-    "_counts": {
-      "passed": 318,
-      "vulnerable": 97,
-      "correct_secure": 269
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "deepseek-v4-flash-0731": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 51.1,
+      "pass_ci95": [
+        47.2,
+        55.0
+      ],
+      "vulnerable_at_1": 15.6,
+      "vuln_ci95": [
+        13.0,
+        18.7
+      ],
+      "correct_and_secure_at_1": 43.2,
+      "vuln_given_correct": 15.4,
+      "_counts": {
+        "passed": 318,
+        "vulnerable": 97,
+        "correct_secure": 269
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 51.7,
+        "pass_ci95": [
+          47.3,
+          56.0
+        ],
+        "vulnerable_at_1": 15.8,
+        "vuln_ci95": [
+          12.9,
+          19.2
+        ],
+        "correct_and_secure_at_1": 43.5,
+        "vuln_given_correct": 15.8,
+        "_counts": {
+          "passed": 265,
+          "vulnerable": 81,
+          "correct_secure": 223
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "gemini-3.1-flash-lite": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 58.5,
-    "pass_ci95": [
-      54.6,
-      62.3
-    ],
-    "vulnerable_at_1": 16.2,
-    "vuln_ci95": [
-      13.5,
-      19.3
-    ],
-    "correct_and_secure_at_1": 47.7,
-    "vuln_given_correct": 18.4,
-    "_counts": {
-      "passed": 364,
-      "vulnerable": 101,
-      "correct_secure": 297
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "gemini-3.1-flash-lite": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 58.5,
+      "pass_ci95": [
+        54.6,
+        62.3
+      ],
+      "vulnerable_at_1": 16.2,
+      "vuln_ci95": [
+        13.5,
+        19.3
+      ],
+      "correct_and_secure_at_1": 47.7,
+      "vuln_given_correct": 18.4,
+      "_counts": {
+        "passed": 364,
+        "vulnerable": 101,
+        "correct_secure": 297
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 60.0,
+        "pass_ci95": [
+          55.7,
+          64.2
+        ],
+        "vulnerable_at_1": 16.6,
+        "vuln_ci95": [
+          13.6,
+          20.0
+        ],
+        "correct_and_secure_at_1": 48.7,
+        "vuln_given_correct": 18.8,
+        "_counts": {
+          "passed": 308,
+          "vulnerable": 85,
+          "correct_secure": 250
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "glm-5.2": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 54.0,
-    "pass_ci95": [
-      50.1,
-      57.9
-    ],
-    "vulnerable_at_1": 17.5,
-    "vuln_ci95": [
-      14.7,
-      20.7
-    ],
-    "correct_and_secure_at_1": 44.1,
-    "vuln_given_correct": 18.5,
-    "_counts": {
-      "passed": 336,
-      "vulnerable": 109,
-      "correct_secure": 274
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "glm-5.2": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 54.0,
+      "pass_ci95": [
+        50.1,
+        57.9
+      ],
+      "vulnerable_at_1": 17.5,
+      "vuln_ci95": [
+        14.7,
+        20.7
+      ],
+      "correct_and_secure_at_1": 44.1,
+      "vuln_given_correct": 18.5,
+      "_counts": {
+        "passed": 336,
+        "vulnerable": 109,
+        "correct_secure": 274
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 55.9,
+        "pass_ci95": [
+          51.6,
+          60.2
+        ],
+        "vulnerable_at_1": 17.9,
+        "vuln_ci95": [
+          14.9,
+          21.5
+        ],
+        "correct_and_secure_at_1": 45.0,
+        "vuln_given_correct": 19.5,
+        "_counts": {
+          "passed": 287,
+          "vulnerable": 92,
+          "correct_secure": 231
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "gpt-5.6-luna": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 57.9,
-    "pass_ci95": [
-      54.0,
-      61.7
-    ],
-    "vulnerable_at_1": 14.8,
-    "vuln_ci95": [
-      12.2,
-      17.8
-    ],
-    "correct_and_secure_at_1": 48.9,
-    "vuln_given_correct": 15.6,
-    "_counts": {
-      "passed": 360,
-      "vulnerable": 92,
-      "correct_secure": 304
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "gpt-5.6-luna": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 57.9,
+      "pass_ci95": [
+        54.0,
+        61.7
+      ],
+      "vulnerable_at_1": 14.8,
+      "vuln_ci95": [
+        12.2,
+        17.8
+      ],
+      "correct_and_secure_at_1": 48.9,
+      "vuln_given_correct": 15.6,
+      "_counts": {
+        "passed": 360,
+        "vulnerable": 92,
+        "correct_secure": 304
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 59.8,
+        "pass_ci95": [
+          55.5,
+          64.0
+        ],
+        "vulnerable_at_1": 15.0,
+        "vuln_ci95": [
+          12.2,
+          18.4
+        ],
+        "correct_and_secure_at_1": 50.1,
+        "vuln_given_correct": 16.3,
+        "_counts": {
+          "passed": 307,
+          "vulnerable": 77,
+          "correct_secure": 257
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "gpt-5.6-sol": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 63.8,
-    "pass_ci95": [
-      60.0,
-      67.5
-    ],
-    "vulnerable_at_1": 13.3,
-    "vuln_ci95": [
-      10.9,
-      16.2
-    ],
-    "correct_and_secure_at_1": 55.0,
-    "vuln_given_correct": 13.9,
-    "_counts": {
-      "passed": 397,
-      "vulnerable": 83,
-      "correct_secure": 342
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "gpt-5.6-sol": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 63.8,
+      "pass_ci95": [
+        60.0,
+        67.5
+      ],
+      "vulnerable_at_1": 13.3,
+      "vuln_ci95": [
+        10.9,
+        16.2
+      ],
+      "correct_and_secure_at_1": 55.0,
+      "vuln_given_correct": 13.9,
+      "_counts": {
+        "passed": 397,
+        "vulnerable": 83,
+        "correct_secure": 342
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 65.5,
+        "pass_ci95": [
+          61.3,
+          69.5
+        ],
+        "vulnerable_at_1": 14.0,
+        "vuln_ci95": [
+          11.3,
+          17.3
+        ],
+        "correct_and_secure_at_1": 55.8,
+        "vuln_given_correct": 14.9,
+        "_counts": {
+          "passed": 336,
+          "vulnerable": 72,
+          "correct_secure": 286
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "gpt-5.6-terra": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 61.1,
-    "pass_ci95": [
-      57.2,
-      64.8
-    ],
-    "vulnerable_at_1": 15.1,
-    "vuln_ci95": [
-      12.5,
-      18.1
-    ],
-    "correct_and_secure_at_1": 51.8,
-    "vuln_given_correct": 15.3,
-    "_counts": {
-      "passed": 380,
-      "vulnerable": 94,
-      "correct_secure": 322
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "gpt-5.6-terra": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 61.1,
+      "pass_ci95": [
+        57.2,
+        64.8
+      ],
+      "vulnerable_at_1": 15.1,
+      "vuln_ci95": [
+        12.5,
+        18.1
+      ],
+      "correct_and_secure_at_1": 51.8,
+      "vuln_given_correct": 15.3,
+      "_counts": {
+        "passed": 380,
+        "vulnerable": 94,
+        "correct_secure": 322
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 62.2,
+        "pass_ci95": [
+          57.9,
+          66.3
+        ],
+        "vulnerable_at_1": 16.0,
+        "vuln_ci95": [
+          13.1,
+          19.4
+        ],
+        "correct_and_secure_at_1": 51.9,
+        "vuln_given_correct": 16.6,
+        "_counts": {
+          "passed": 319,
+          "vulnerable": 82,
+          "correct_secure": 266
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "kimi-k3": {
-    "tasks": 622,
-    "answered": 621,
-    "failed": 1,
-    "pass_at_1": 57.9,
-    "pass_ci95": [
-      54.0,
-      61.7
-    ],
-    "vulnerable_at_1": 16.3,
-    "vuln_ci95": [
-      13.6,
-      19.4
-    ],
-    "correct_and_secure_at_1": 48.6,
-    "vuln_given_correct": 16.1,
-    "_counts": {
-      "passed": 360,
-      "vulnerable": 101,
-      "correct_secure": 302
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "kimi-k3": {
+      "tasks": 622,
+      "answered": 621,
+      "failed": 1,
+      "pass_at_1": 57.9,
+      "pass_ci95": [
+        54.0,
+        61.7
+      ],
+      "vulnerable_at_1": 16.3,
+      "vuln_ci95": [
+        13.6,
+        19.4
+      ],
+      "correct_and_secure_at_1": 48.6,
+      "vuln_given_correct": 16.1,
+      "_counts": {
+        "passed": 360,
+        "vulnerable": 101,
+        "correct_secure": 302
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 58.9,
+        "pass_ci95": [
+          54.6,
+          63.0
+        ],
+        "vulnerable_at_1": 17.2,
+        "vuln_ci95": [
+          14.1,
+          20.7
+        ],
+        "correct_and_secure_at_1": 48.7,
+        "vuln_given_correct": 17.2,
+        "_counts": {
+          "passed": 302,
+          "vulnerable": 88,
+          "correct_secure": 250
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "qwen3.6-max-preview": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 58.5,
-    "pass_ci95": [
-      54.6,
-      62.3
-    ],
-    "vulnerable_at_1": 13.2,
-    "vuln_ci95": [
-      10.7,
-      16.1
-    ],
-    "correct_and_secure_at_1": 50.5,
-    "vuln_given_correct": 13.7,
-    "_counts": {
-      "passed": 364,
-      "vulnerable": 82,
-      "correct_secure": 314
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "qwen3.6-max-preview": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 58.5,
+      "pass_ci95": [
+        54.6,
+        62.3
+      ],
+      "vulnerable_at_1": 13.2,
+      "vuln_ci95": [
+        10.7,
+        16.1
+      ],
+      "correct_and_secure_at_1": 50.5,
+      "vuln_given_correct": 13.7,
+      "_counts": {
+        "passed": 364,
+        "vulnerable": 82,
+        "correct_secure": 314
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 60.6,
+        "pass_ci95": [
+          56.3,
+          64.8
+        ],
+        "vulnerable_at_1": 13.6,
+        "vuln_ci95": [
+          10.9,
+          16.9
+        ],
+        "correct_and_secure_at_1": 51.7,
+        "vuln_given_correct": 14.8,
+        "_counts": {
+          "passed": 311,
+          "vulnerable": 70,
+          "correct_secure": 265
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
-    }
-  },
-  "qwen3.6-plus": {
-    "tasks": 622,
-    "answered": 622,
-    "failed": 0,
-    "pass_at_1": 54.2,
-    "pass_ci95": [
-      50.3,
-      58.1
-    ],
-    "vulnerable_at_1": 15.1,
-    "vuln_ci95": [
-      12.5,
-      18.1
-    ],
-    "correct_and_secure_at_1": 45.5,
-    "vuln_given_correct": 16.0,
-    "_counts": {
-      "passed": 337,
-      "vulnerable": 94,
-      "correct_secure": 283
     },
-    "controls": {
-      "control/good": {
-        "passes": true,
-        "vulnerable": false
+    "qwen3.6-plus": {
+      "tasks": 622,
+      "answered": 622,
+      "failed": 0,
+      "pass_at_1": 54.2,
+      "pass_ci95": [
+        50.3,
+        58.1
+      ],
+      "vulnerable_at_1": 15.1,
+      "vuln_ci95": [
+        12.5,
+        18.1
+      ],
+      "correct_and_secure_at_1": 45.5,
+      "vuln_given_correct": 16.0,
+      "_counts": {
+        "passed": 337,
+        "vulnerable": 94,
+        "correct_secure": 283
       },
-      "control/bad": {
-        "passes": false,
-        "vulnerable": false
+      "controls": {
+        "control/good": {
+          "passes": true,
+          "vulnerable": false
+        },
+        "control/bad": {
+          "passes": false,
+          "vulnerable": false
+        },
+        "control/vulnerable": {
+          "passes": true,
+          "vulnerable": true
+        }
       },
-      "control/vulnerable": {
-        "passes": true,
-        "vulnerable": true
+      "common_subset": {
+        "tasks": 513,
+        "answered": 513,
+        "failed": 0,
+        "pass_at_1": 55.9,
+        "pass_ci95": [
+          51.6,
+          60.2
+        ],
+        "vulnerable_at_1": 15.6,
+        "vuln_ci95": [
+          12.7,
+          19.0
+        ],
+        "correct_and_secure_at_1": 46.4,
+        "vuln_given_correct": 17.1,
+        "_counts": {
+          "passed": 287,
+          "vulnerable": 80,
+          "correct_secure": 238
+        },
+        "controls": {
+          "control/good": {
+            "passes": true,
+            "vulnerable": false
+          },
+          "control/bad": {
+            "passes": false,
+            "vulnerable": false
+          },
+          "control/vulnerable": {
+            "passes": true,
+            "vulnerable": true
+          }
+        }
       }
     }
   }
