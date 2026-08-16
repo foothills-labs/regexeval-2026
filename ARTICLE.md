@@ -8,9 +8,10 @@
 > it. This started as a leaderboard, but it stopped being one once we found that
 > the metric producing our headline number was mostly measuring the
 > benchmark's own answer key. Two results survived: 7.4% of the
-> patterns that work are exploitable, and how ReDoS-prone a regular
-> expression is turns out to depend on whether anyone ever ran it, not on
-> whether a human or a model wrote it.
+> patterns that work are exploitable, how ReDoS-prone a regular expression is
+> turns out to depend on whether anyone ever ran it rather than on whether a
+> human or a model wrote it, and when we re-ran the whole thing on a second
+> benchmark that 7.4% came back as 16.5%.
 
 Here is a regular expression. It validates domain names. It was written by
 Claude Opus 5, one of the best models available today, and it passes every
@@ -91,6 +92,11 @@ What the rest of this article is about:
 2. Nobody had **audited the reference set** these metrics compare against.
    When we did, the headline number fell apart.
 3. Nobody had run any of it on the **current model population**.
+
+And one thing we only did because the first draft of this article deserved
+it: we ran the whole measurement again on a **second benchmark**, to see
+which of our numbers were about regular expressions and which were about
+Re(gEx\|DoS)Eval.
 
 ---
 
@@ -344,6 +350,58 @@ runs picked up about the same competence at them.
 
 ---
 
+## We ran the whole thing again on a different benchmark
+
+Everything up to here rests on one corpus. The 7.4% is a fact about
+Re(gEx|DoS)Eval until somebody checks it somewhere else, so we checked.
+
+[StructuredRegex][sr] is a second benchmark for the same task, and it has the
+one thing the older ones lack: example strings for every problem, both
+matching and non-matching. That is all you need for *does it work*. We never
+touch its answer key, which is written in a notation of its own, so this run
+has no equivalence score at all. Just the two questions we trust.
+
+Same eleven models, same settings, 622 problems, one answer each, $3.67.
+
+| | Re(gEx\|DoS)Eval | StructuredRegex |
+| --- | ---: | ---: |
+| passes its tests | 30.0–41.4% | 51.7–66.1% |
+| vulnerable | 7.3–10.7% | 13.6–17.9% |
+| **vulnerable, of the ones that work** | **7.4%** | **16.5%** |
+
+The finding holds. Patterns that pass their tests and can still hang your
+server are not a quirk of one benchmark.
+
+The number does not hold. It more than doubles. And the easy explanation,
+that the second benchmark is harder so the answers are worse, is the wrong
+way round: StructuredRegex is *easier*, by about twenty points. Its problems
+are built out of repetition and optional parts, and models answering those
+write more of the shape that backtracks.
+
+We had already argued that this penalty depends on the domain, on the
+strength of BaxBench and SecureAgentBench doing something rather different in
+other languages. Anyone was free to shrug at that. This is the same task, the
+same language, the same screen, the same eleven models, and the answer is
+2.2× apart. It is a better version of our own argument and it is aimed at our
+own headline number.
+
+The ordering moved too. Sonnet 5 comes first here and sits in the middle of
+the other table. Kimi K3 comes first there and eighth here. We already said a
+numbered list of eleven models was not defensible. This is what that looks
+like when you test it.
+
+One thing worth reporting because it nearly bit us. Anthropic's content
+filter refused 182 of the 622 descriptions for Opus, all of them harmless
+("a string that starts with one or more digits and optionally ends with 'NU'
+or 'DG'"). Retrying recovered 98. The temptation is to score Opus on what
+survived and move on. Instead we checked what the other ten models did on the
+problems Opus lost, and those problems turned out to be **8.1 points harder**
+than average. So the leftovers flattered Opus, while counting the refusals as
+wrong answers punished it, both at once. Every number above is on the 513
+problems all eleven models actually answered.
+
+---
+
 ## Then we checked our own work
 
 The second question, *does it mean the right thing?*, compares the model's
@@ -426,12 +484,13 @@ do any work telling these models apart.
 Bands are defensible. A numbered list from one to eleven is not, and anyone
 who re-ran this and got a different order would be right to.
 
-The model numbers also rest on one corpus. We could extend the human
-baseline to four populations because screening a pattern is free, but
-measuring a *model* on a second corpus needs both new inference spend and a
-corpus with test strings, and no other natural-language-to-regex benchmark
-has test strings. So *does it work* and *does it mean the right thing* were
-never checked anywhere but here.
+We are not claiming any of these percentages travel. We used to say the
+model numbers rested on one corpus and leave it there. Now we have run two,
+and the vulnerability rate among working patterns came out 2.2× apart, so
+treat every figure in this article as a fact about the benchmark it was
+measured on. *Does it mean the right thing* is still single-corpus and
+always will be, because no other benchmark for this task ships an answer key
+in ordinary regex syntax.
 
 We also could not test contamination. This corpus was published in 2024 and
 built from public forum posts, so it is plausibly inside every one of these
@@ -531,6 +590,8 @@ The benchmark and metrics we used:
   Forums.* ICPC 2024. [doi:10.1145/3643916.3644424][icpc]
 - Chen et al. *Evaluating Large Language Models Trained on Code.* 2021.
   [arXiv:2107.03374][codex]. Source of the pass@k estimator.
+- Ye, Chen, Dillig & Durrett. *Benchmarking Multimodal Regex Synthesis with
+  Complex Structures.* ACL 2020. [aclanthology][sr]. The second corpus.
 
 Joint correctness-and-security benchmarking:
 
@@ -597,6 +658,7 @@ every adjudicated case, is in [`paper/main.tex`][paper] in the repository.
 [sainz]: https://aclanthology.org/2023.findings-emnlp.722/
 [codex]: https://arxiv.org/abs/2107.03374
 [paper]: https://github.com/foothills-labs/regexleaderboard/blob/main/paper/main.tex
+[sr]: https://aclanthology.org/2020.acl-main.541/
 [linguafranca]: https://github.com/VTLeeLab/LinguaFranca-FSE19
 [crosscorpus]: https://github.com/foothills-labs/regexleaderboard/blob/main/results/cross_corpus_redos.json
 [kb13]: https://aclanthology.org/N13-1103/
