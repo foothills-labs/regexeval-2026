@@ -1,0 +1,20 @@
+\begin{tabular}{llrr}
+\toprule
+Population & Written to be & $n$ & vulnerable \\
+\midrule
+\multicolumn{4}{l}{\emph{All patterns}} \\
+NL-RX-Synth (grammar-generated control) & ---     & 5{,}840 & 35.2\% $\pm$ 1.2 \\
+RegexLib, published for reuse           & read    & 3{,}446 & 17.2\% $\pm$ 1.3 \\
+KB13 gold answers                       & read    &   532 & 16.7\% $\pm$ 3.2 \\
+Re(gEx$|$DoS)Eval gold answers          & read    &   755 & 13.1\% $\pm$ 2.4 \\
+Stack Overflow posts                    & read    & 5{,}000 & \phantom{0}5.9\% $\pm$ 0.7 \\
+Production code                         & run     & 5{,}000 & \phantom{0}4.9\% $\pm$ 0.6 \\
+\addlinespace
+\multicolumn{4}{l}{\emph{Anchored \texttt{\^{}...\$} only, controlling for task mix}} \\
+RegexLib, published for reuse           & read    & 1{,}684 & 20.1\% $\pm$ 1.9 \\
+Stack Overflow posts                    & read    & 4{,}000 & 17.3\% $\pm$ 1.2 \\
+Re(gEx$|$DoS)Eval gold answers          & read    &   538 & 13.4\% $\pm$ 2.9 \\
+\textbf{This work, 11 models pooled}    & ---     &     --- & \textbf{\phantom{0}9.0\%} \\
+\textbf{Production code}                & \textbf{run} & 4{,}000 & \textbf{\phantom{0}8.9\% $\pm$ 0.9} \\
+\bottomrule
+\end{tabular}

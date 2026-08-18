@@ -30,10 +30,19 @@ every model.
 
 **Re(gEx|DoS)Eval** — 762 regex problems collected from real users, each
 with a description, strings that must match, strings that must not, and a
-human-written reference answer. It's the closest existing benchmark to this
-one, which makes our numbers comparable to prior work.
+human-written reference answer.
 
-We don't redistribute it; `make setup` downloads it from
+The corpus and the four metrics used here (pass@k, vulnerable@k, dfa-eq@k,
+exact match) both come from Siddiq, Zhang, Roney & Santos, *"Re(gEx|DoS)Eval:
+Evaluating Generated Regular Expressions and their Proneness to DoS
+Attacks"*, ICSE-NIER 2024
+([doi:10.1145/3639476.3639757](https://doi.org/10.1145/3639476.3639757)).
+They score correctness and security jointly on T5, Phi-1.5 and GPT-3.5-Turbo.
+The measuring apparatus in this project is theirs; what we add is an updated
+model population, a decomposition of the joint metric, and an audit of the
+reference set it compares against.
+
+We don't redistribute the corpus; `make setup` downloads it from
 [s2e-lab/RegexEval](https://github.com/s2e-lab/RegexEval).
 
 **The run used 450 of those 762 tasks**, chosen by spreading evenly across

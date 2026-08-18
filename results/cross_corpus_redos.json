@@ -1,0 +1,104 @@
+{
+  "seed": 20260814,
+  "workers": 4,
+  "corpora": {
+    "RegexEval gold (all 762)": {
+      "n": 755,
+      "errors": 0,
+      "exponential": 45,
+      "polynomial": 54,
+      "vulnerable": 99,
+      "rate_pct": 13.1,
+      "ci95_pct": 2.4,
+      "origin": "human, real user posts"
+    },
+    "KB13 (dialect-clean)": {
+      "n": 532,
+      "errors": 0,
+      "exponential": 32,
+      "polynomial": 57,
+      "vulnerable": 89,
+      "rate_pct": 16.7,
+      "ci95_pct": 3.2,
+      "origin": "human, Kushman & Barzilay 2013"
+    },
+    "NL-RX-Synth (dialect-clean)": {
+      "n": 5840,
+      "errors": 0,
+      "exponential": 1166,
+      "polynomial": 891,
+      "vulnerable": 2057,
+      "rate_pct": 35.2,
+      "ci95_pct": 1.2,
+      "origin": "MACHINE-GENERATED (control)"
+    },
+    "RegexLib (all 3446)": {
+      "n": 3446,
+      "errors": 0,
+      "exponential": 353,
+      "polynomial": 238,
+      "vulnerable": 591,
+      "rate_pct": 17.2,
+      "ci95_pct": 1.3,
+      "origin": "human, published for reuse"
+    },
+    "Stack Overflow (sample of 438563)": {
+      "n": 5000,
+      "errors": 0,
+      "exponential": 164,
+      "polynomial": 131,
+      "vulnerable": 295,
+      "rate_pct": 5.9,
+      "ci95_pct": 0.7,
+      "origin": "human, forum posts"
+    },
+    "Production code (sample of 510904)": {
+      "n": 5000,
+      "errors": 0,
+      "exponential": 64,
+      "polynomial": 179,
+      "vulnerable": 243,
+      "rate_pct": 4.9,
+      "ci95_pct": 0.6,
+      "origin": "human, shipped packages"
+    }
+  },
+  "anchored": {
+    "RegexEval gold, anchored": {
+      "n": 538,
+      "errors": 0,
+      "exponential": 38,
+      "polynomial": 34,
+      "vulnerable": 72,
+      "rate_pct": 13.4,
+      "ci95_pct": 2.9
+    },
+    "RegexLib, anchored": {
+      "n": 1684,
+      "errors": 0,
+      "exponential": 223,
+      "polynomial": 116,
+      "vulnerable": 339,
+      "rate_pct": 20.1,
+      "ci95_pct": 1.9
+    },
+    "Stack Overflow, anchored": {
+      "n": 4000,
+      "errors": 0,
+      "exponential": 397,
+      "polynomial": 295,
+      "vulnerable": 692,
+      "rate_pct": 17.3,
+      "ci95_pct": 1.2
+    },
+    "Production code, anchored": {
+      "n": 4000,
+      "errors": 0,
+      "exponential": 105,
+      "polynomial": 253,
+      "vulnerable": 358,
+      "rate_pct": 8.9,
+      "ci95_pct": 0.9
+    }
+  }
+}
