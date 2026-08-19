@@ -187,7 +187,8 @@ APPENDIX.md    the harder metrics and the honest limitations
 ```
 
 Scoring by [`regexbench`](https://github.com/foothills-labs/regexbench)
-(Apache-2.0), pinned to commit `05d7547b`. Corpus:
+(Apache-2.0), pinned to `regexbench==0.4.0` on PyPI, which is commit
+`05d7547b`; both are recorded in every result file. Corpus:
 [Re(gEx|DoS)Eval](https://github.com/s2e-lab/RegexEval), not redistributed
 here — `make setup` fetches it.
 

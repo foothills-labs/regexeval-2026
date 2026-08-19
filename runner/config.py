@@ -21,10 +21,19 @@ REGEXEVAL_URL = (
 PREDICTIONS_DIR = REPO / "predictions"
 RESULTS_DIR = REPO / "results"
 
-# The scoring engine is pinned by commit: 0.4.0 is not on PyPI, so a
-# version specifier does not resolve to it.
+# The scoring engine. 0.4.0 reached PyPI on 2026-08-11, after this run was
+# collected, so the Makefile now pins the release rather than the commit --
+# but both are still recorded with every result, because the commit is what
+# the published numbers were actually produced by.
 REGEXBENCH_COMMIT = "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd"
 REGEXBENCH_VERSION = "0.4.0"
+
+# The date each published run was collected. Prose in README/METHODOLOGY says
+# it too, but the site generator needs it mechanically: a workflow that
+# regenerates /benchmarks/ cannot be asked to remember a date.
+RUN_DATES = {
+    "sweep": "2026-08-12",
+}
 
 # Sampling, recorded with every result.
 TEMPERATURE = 0.0

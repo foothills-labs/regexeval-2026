@@ -34,6 +34,12 @@ unchanged from the original.
 
 ### 0.2 `regexbench` 0.4.0 (2026-08-10)
 
+> **Superseded 2026-08-19.** 0.4.0 is now on PyPI, so the Makefile pins
+> `regexbench==0.4.0` rather than the commit. Verified by re-scoring the
+> committed predictions against the PyPI build: every metric is
+> byte-identical. The commit is still recorded in every result file.
+> The reasoning below was correct when written and is kept as written.
+
 Not yet published to PyPI (still shows 0.3.0 as latest there) — installed
 from GitHub at commit `05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd`
 (`main`, 2026-08-11). **This exact commit, not a version string, is what
