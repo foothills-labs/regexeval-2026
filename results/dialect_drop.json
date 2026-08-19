@@ -1,0 +1,15 @@
+{
+  "kept": 510904,
+  "dropped": 26900,
+  "kept_anchored_pct": 17.2,
+  "dropped_anchored_pct": 23.7,
+  "recovered": 17151,
+  "recovered_pct": 63.8,
+  "unrecovered_by_cause": {
+    "malformed or truncated by extraction": 4588,
+    "\\G": 2268,
+    "\\p{...}": 1577,
+    "inline flags": 904,
+    "host-language interpolation": 412
+  }
+}

@@ -364,6 +364,15 @@ if by_reg:
     lo, hi = min(rates, key=rates.get), max(rates, key=rates.get)
     _MACROS["droprange"] = (f"\\texttt{{{hi}}} at {rates[hi]:.1f}\\% down to "
                             f"\\texttt{{{lo}}} at {rates[lo]:.1f}\\%")
+_dd = optional(RESULTS / "dialect_drop.json")
+if _dd:
+    _MACROS["dropanchoredpct"] = f"{_dd['dropped_anchored_pct']:.1f}"
+    _MACROS["keptanchoredpct"] = f"{_dd['kept_anchored_pct']:.1f}"
+    _MACROS["recoveredpct"] = f"{_dd['recovered_pct']:.0f}"
+    _top = next(iter(_dd["unrecovered_by_cause"]))
+    _MACROS["topunrecovered"] = _top.replace("\\", "\\texttt{\\textbackslash ") + ("}" if _top.startswith("\\") else "")
+    _MACROS["topunrecoveredn"] = f"{_dd['unrecovered_by_cause'][_top]:,}".replace(",", "{,}")
+
 _rob = cc.get("robustness", {})
 if _rob:
     _MACROS["recovered"] = "{:,}".format(_rob.get("recovered_by_normalisation", 0)).replace(",", "{,}")

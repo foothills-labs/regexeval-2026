@@ -873,8 +873,10 @@ most work in this paper did not previously get it.
 What is removed is \texttt{\textbackslash A\ldots\textbackslash z},
 \texttt{\textbackslash G}, \texttt{\textbackslash Q\ldots\textbackslash E},
 Perl's \texttt{\textbackslash x\{\ldots\}} and Unicode properties --- Perl and
-Ruby syntax, concentrated in the anchored validator shapes the matched
-comparison rests on. We had assumed this biased in our favour and it does not
+Ruby syntax, and it is enriched for the anchored validator shapes the matched
+comparison rests on: \dropanchoredpct{}\% of what is dropped is anchored
+against \keptanchoredpct{}\% of what is kept. We had assumed this biased in
+our favour and it does not
 obviously do so: the read-to-be-read populations lose the larger share, and
 losing vulnerable patterns from those would understate the very gap we report.
 Assuming either direction is guessing, so we measure it. We translate what
@@ -895,9 +897,13 @@ backtracking engine is a category error. We report the production rate with
 them excluded.
 
 \paragraph{Neither correction moves the number.} Normalisation recovers
-\recovered{} of the \proddropped{} dropped production patterns, roughly
-two-thirds, and the rest carry \texttt{\textbackslash G} or a Unicode
-property and stay out. Screening the recovered population takes anchored
+\recovered{} of the \proddropped{} dropped production patterns
+(\recoveredpct{}\%). What stays out is mostly not exotic syntax: the largest
+group, \topunrecoveredn{} patterns, is malformed or truncated by the static
+extraction that produced the corpus --- template fragments rather than
+regular expressions --- followed by \texttt{\textbackslash G} and Unicode
+properties, which we decline rather than approximate. Screening the recovered
+population takes anchored
 production from \anchoredprod{}\% to \robnorm{}\%; dropping the linear-engine
 registries takes it to \robbt{}\%; doing both gives \robboth{}\%. The whole
 range is \robrange{}\%, well inside the interval on any one of them, and the
@@ -1288,7 +1294,7 @@ for having put its answer beyond checking. Between 78 and 133 tasks per model
 land there, a spread of 55, which is large enough to matter.
 
 The obvious test is to correlate a model's \textsc{undec} count against its
-\usable{}@3. That returns nothing (Pearson $-0.07$), and it returns nothing
+\usable{}@3. That returns nothing (Pearson $-0.13$), and it returns nothing
 misleadingly: undecidability credit and equivalence skill push the composite
 in opposite directions, and a correlation on the sum nets them out. So we
 decompose instead. \cref{tab:undec} recomputes \usable{}@3 under the stricter
@@ -1305,12 +1311,14 @@ two.}
 \label{tab:undec}
 \end{table}
 
-Roughly \undecshare{}\% of all \usable{}@3 credit rests on a verdict the
-engine could not reach rather than on demonstrated equivalence, and the share
-tracks \textsc{undec} count closely across models ($r = +0.82$) even though
-the composite itself does not. Removing the credit reorders the field:
-\texttt{gpt-5.6-sol}, which has the most undecidable comparisons of any model
-at 133, falls six places.
+\undecshare{}\% of all \usable{}@3 credit --- \undecsupported{} of
+\undecusable{} task-credits --- rests on a verdict the engine could not reach
+rather than on demonstrated equivalence, and the share tracks \textsc{undec}
+count closely across models ($r = +0.82$) even though the composite itself
+does not. Removing the credit reorders the field. \texttt{gpt-5.6-sol} has the
+most undecidable comparisons of any model at 133; it has the third-highest
+\usable{}@3 and one of the three lowest proven-equivalence rates, and it falls
+seven places.
 
 We are not proposing the stricter rule --- it would charge a model for a
 theorem, which is the objection to \dfaeq{} --- and we are not claiming any

@@ -1,0 +1,177 @@
+{
+  "correlations": {
+    "undec_vs_gap": {
+      "pearson": 0.603,
+      "spearman": 0.264
+    },
+    "undec_vs_proven": {
+      "pearson": -0.615,
+      "spearman": -0.527
+    },
+    "undec_vs_undec_supported_share": {
+      "pearson": 0.816,
+      "spearman": 0.7
+    },
+    "undec_vs_usable": {
+      "pearson": -0.134,
+      "spearman": -0.109
+    }
+  },
+  "models": {
+    "claude-opus-5": {
+      "proven": 47,
+      "proven_pct": 10.6,
+      "tasks": 444,
+      "undec_supported": 45,
+      "undec_supported_share_pct": 48.9,
+      "undecided": 104,
+      "usable": 92,
+      "usable_pct": 20.7
+    },
+    "claude-sonnet-5": {
+      "proven": 44,
+      "proven_pct": 9.8,
+      "tasks": 450,
+      "undec_supported": 37,
+      "undec_supported_share_pct": 45.7,
+      "undecided": 97,
+      "usable": 81,
+      "usable_pct": 18.0
+    },
+    "deepseek-v4-flash-0731": {
+      "proven": 49,
+      "proven_pct": 10.9,
+      "tasks": 450,
+      "undec_supported": 40,
+      "undec_supported_share_pct": 44.9,
+      "undecided": 93,
+      "usable": 89,
+      "usable_pct": 19.8
+    },
+    "gemini-3.1-flash-lite": {
+      "proven": 39,
+      "proven_pct": 8.7,
+      "tasks": 450,
+      "undec_supported": 38,
+      "undec_supported_share_pct": 49.4,
+      "undecided": 95,
+      "usable": 77,
+      "usable_pct": 17.1
+    },
+    "glm-5.2": {
+      "proven": 43,
+      "proven_pct": 9.6,
+      "tasks": 450,
+      "undec_supported": 41,
+      "undec_supported_share_pct": 48.8,
+      "undecided": 86,
+      "usable": 84,
+      "usable_pct": 18.7
+    },
+    "gpt-5.6-luna": {
+      "proven": 38,
+      "proven_pct": 8.4,
+      "tasks": 450,
+      "undec_supported": 45,
+      "undec_supported_share_pct": 54.2,
+      "undecided": 112,
+      "usable": 83,
+      "usable_pct": 18.4
+    },
+    "gpt-5.6-sol": {
+      "proven": 39,
+      "proven_pct": 8.7,
+      "tasks": 450,
+      "undec_supported": 55,
+      "undec_supported_share_pct": 58.5,
+      "undecided": 133,
+      "usable": 94,
+      "usable_pct": 20.9
+    },
+    "gpt-5.6-terra": {
+      "proven": 44,
+      "proven_pct": 9.8,
+      "tasks": 450,
+      "undec_supported": 40,
+      "undec_supported_share_pct": 47.6,
+      "undecided": 100,
+      "usable": 84,
+      "usable_pct": 18.7
+    },
+    "kimi-k3": {
+      "proven": 58,
+      "proven_pct": 13.0,
+      "tasks": 447,
+      "undec_supported": 47,
+      "undec_supported_share_pct": 44.8,
+      "undecided": 78,
+      "usable": 105,
+      "usable_pct": 23.5
+    },
+    "qwen3.6-max-preview": {
+      "proven": 57,
+      "proven_pct": 12.7,
+      "tasks": 450,
+      "undec_supported": 40,
+      "undec_supported_share_pct": 41.2,
+      "undecided": 94,
+      "usable": 97,
+      "usable_pct": 21.6
+    },
+    "qwen3.6-plus": {
+      "proven": 46,
+      "proven_pct": 10.2,
+      "tasks": 450,
+      "undec_supported": 43,
+      "undec_supported_share_pct": 48.3,
+      "undecided": 99,
+      "usable": 89,
+      "usable_pct": 19.8
+    }
+  },
+  "order_proven": [
+    "kimi-k3",
+    "qwen3.6-max-preview",
+    "deepseek-v4-flash-0731",
+    "claude-opus-5",
+    "qwen3.6-plus",
+    "claude-sonnet-5",
+    "gpt-5.6-terra",
+    "glm-5.2",
+    "gemini-3.1-flash-lite",
+    "gpt-5.6-sol",
+    "gpt-5.6-luna"
+  ],
+  "order_usable": [
+    "kimi-k3",
+    "qwen3.6-max-preview",
+    "gpt-5.6-sol",
+    "claude-opus-5",
+    "deepseek-v4-flash-0731",
+    "qwen3.6-plus",
+    "glm-5.2",
+    "gpt-5.6-terra",
+    "gpt-5.6-luna",
+    "claude-sonnet-5",
+    "gemini-3.1-flash-lite"
+  ],
+  "pooled": {
+    "undec_supported": 471,
+    "undec_supported_share_pct": 48.3,
+    "usable": 975
+  },
+  "rank_shift": {
+    "claude-opus-5": 0,
+    "claude-sonnet-5": -4,
+    "deepseek-v4-flash-0731": -2,
+    "gemini-3.1-flash-lite": -2,
+    "glm-5.2": 1,
+    "gpt-5.6-luna": 2,
+    "gpt-5.6-sol": 7,
+    "gpt-5.6-terra": -1,
+    "kimi-k3": 0,
+    "qwen3.6-max-preview": 0,
+    "qwen3.6-plus": -1
+  },
+  "run": "sweep"
+}

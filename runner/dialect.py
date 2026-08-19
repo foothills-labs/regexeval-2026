@@ -109,3 +109,76 @@ ANCHOR_END = re.compile(r"(?:\$|\\Z|\(\?=\\n\?\\Z\))$")
 
 def is_anchored(pattern: str) -> bool:
     return bool(ANCHOR_START.search(pattern) and ANCHOR_END.search(pattern))
+
+
+def _report():
+    """What the compile filter removes from the production corpus, and why.
+
+    Run as `python3 runner/dialect.py`. Compiling half a million patterns is
+    seconds; no screening happens here, so this is cheap enough to re-run
+    whenever the normaliser changes. Writes results/dialect_drop.json.
+    """
+    import json
+    import sys
+    from collections import Counter
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).parent))
+    import config
+
+    config.require_corpora()
+    anchored = re.compile(r"^\^.*\$$", re.S)
+    perl_anchored = re.compile(r"^\\A.*\\[zZ]$", re.S)
+    causes = Counter()
+    kept = dropped = kept_anchored = dropped_anchored = recovered = 0
+
+    path = config.LINGUA_FRANCA_DIR / "data" / "production-regexes" / "uniq-regexes-8.json"
+    with path.open() as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                pattern = json.loads(line).get("pattern")
+            except Exception:
+                continue
+            if not isinstance(pattern, str) or not pattern:
+                continue
+            try:
+                re.compile(pattern)
+                kept += 1
+                kept_anchored += bool(anchored.match(pattern))
+                continue
+            except Exception:
+                pass
+            dropped += 1
+            dropped_anchored += bool(anchored.match(pattern) or perl_anchored.match(pattern))
+            if to_python(pattern) is not None:
+                recovered += 1
+            elif re.search(r"\\G", pattern):
+                causes[r"\G"] += 1
+            elif re.search(r"\\[pP]\{", pattern):
+                causes[r"\p{...}"] += 1
+            elif re.search(r"\(\?[a-zA-Z]+\)", pattern):
+                causes["inline flags"] += 1
+            elif re.search(r"\$\{|\$[a-zA-Z_]", pattern):
+                causes["host-language interpolation"] += 1
+            else:
+                causes["malformed or truncated by extraction"] += 1
+
+    out = {
+        "kept": kept, "dropped": dropped,
+        "kept_anchored_pct": round(100 * kept_anchored / kept, 1),
+        "dropped_anchored_pct": round(100 * dropped_anchored / dropped, 1),
+        "recovered": recovered,
+        "recovered_pct": round(100 * recovered / dropped, 1),
+        "unrecovered_by_cause": dict(causes.most_common()),
+    }
+    target = config.RESULTS_DIR / "dialect_drop.json"
+    target.write_text(json.dumps(out, indent=2) + "\n")
+    print(json.dumps(out, indent=2))
+    print(f"wrote {target}")
+
+
+if __name__ == "__main__":
+    _report()

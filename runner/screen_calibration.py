@@ -51,6 +51,7 @@ import sys
 import tempfile
 import warnings
 from collections import Counter, defaultdict
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -73,6 +74,8 @@ BATCH = 40                 # patterns per JVM launch
 DETECTOR_TIMEOUT = 600     # seconds per batch
 PUMPS = (25, 50, 100, 200, 400, 800, 1600)
 DYNAMIC_TIMEOUT = 2.0      # seconds per (pattern, input)
+WORKERS = 4
+SLICE = 600                # candidates screened per round when filling a stratum
 
 DETECTOR = (config.LINGUA_FRANCA_DIR / "analysis" / "performance" / "vuln-regex-detector" /
             "src" / "detect" / "src" / "detectors" / "weideman-RegexStaticAnalysis")
@@ -279,30 +282,34 @@ def sample_populations() -> dict[str, list[str]]:
     return pops
 
 
+def _screen_bucket(pattern: str) -> str:
+    try:
+        return "SAFE" if screen(pattern, empirical=True).risk.name == "SAFE" else "VULNERABLE"
+    except Exception:
+        return "ERROR"
+
+
 def stratified(patterns: list[str], rng) -> list[tuple[str, str]]:
     """Sample within each screen verdict, so both error directions are estimable.
 
-    An unstratified draw from a population that screens at 5% would spend the
+    An unstratified draw from a population that screens at 5\% would spend the
     whole budget establishing specificity and almost none of it on recall,
-    which is the quantity in question.
+    which is the quantity in question. Filling the vulnerable stratum from such
+    a population means screening a few thousand candidates, so the screening
+    runs in a pool and in slices: enough slices to fill the buckets, and no
+    more.
     """
     unique = list(dict.fromkeys(patterns))
     rng.shuffle(unique)
     buckets: dict[str, list[str]] = defaultdict(list)
-    examined = 0
-    for p in unique:
-        if examined >= 40 * PER_STRATUM:
-            break
-        examined += 1
-        try:
-            risk = screen(p, empirical=True).risk.name
-        except Exception:
-            continue
-        key = "SAFE" if risk == "SAFE" else "VULNERABLE"
-        if len(buckets[key]) < PER_STRATUM:
-            buckets[key].append(p)
-        if all(len(buckets[k]) >= PER_STRATUM for k in ("SAFE", "VULNERABLE")):
-            break
+    with ProcessPoolExecutor(max_workers=WORKERS) as pool:
+        for start in range(0, min(len(unique), 40 * PER_STRATUM), SLICE):
+            chunk = unique[start:start + SLICE]
+            for pattern, verdict in zip(chunk, pool.map(_screen_bucket, chunk, chunksize=16)):
+                if verdict != "ERROR" and len(buckets[verdict]) < PER_STRATUM:
+                    buckets[verdict].append(pattern)
+            if all(len(buckets[k]) >= PER_STRATUM for k in ("SAFE", "VULNERABLE")):
+                break
     return [(p, k) for k, ps in buckets.items() for p in ps]
 
 

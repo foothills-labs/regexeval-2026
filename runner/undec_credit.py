@@ -182,8 +182,12 @@ def main():
 
     # Whether removing the credit reorders the field, which is the question
     # a reader of the main table actually has.
-    out["order_usable"] = sorted(models, key=lambda m: -out["models"][m]["usable_pct"])
-    out["order_proven"] = sorted(models, key=lambda m: -out["models"][m]["proven_pct"])
+    # Ties broken by name, so the recorded order is a property of the data and
+    # not of dict insertion order. Several models tie to the tenth of a point
+    # on both columns, and a rank shift read off an unstable order is not a
+    # finding.
+    out["order_usable"] = sorted(models, key=lambda m: (-out["models"][m]["usable_pct"], m))
+    out["order_proven"] = sorted(models, key=lambda m: (-out["models"][m]["proven_pct"], m))
     out["rank_shift"] = {
         m: out["order_proven"].index(m) - out["order_usable"].index(m) for m in models
     }
