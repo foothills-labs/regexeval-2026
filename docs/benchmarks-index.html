@@ -10,13 +10,24 @@
 actually ship? regexbench scored across 11 models on Re(gEx|DoS)Eval."
     />
     <link rel="canonical" href="https://foothills-labs.com/benchmarks/" />
-    <meta name="theme-color" content="#2e3a42" />
+    <!-- Blueprint's ground, --fh-print. Kept in step with tokens.css by hand;
+         the previous value here (#2e3a42) was a leftover from a palette two
+         repaints ago and tinted the mobile browser chrome off-brand. -->
+    <meta name="theme-color" content="#082C35" />
 
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon-180.png" />
 
+    <!-- Archivo sets the page; JetBrains Mono sets the nav, the eyebrows and
+         the buttons, all above the fold. Without these preloads the browser
+         only discovers the mono after parsing style.css. Both weights: 400
+         for the nav and footer, 700 for eyebrows and buttons. -->
     <link rel="preload" as="font" type="font/woff2"
           href="/assets/fonts/archivo.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2"
+          href="/assets/fonts/jetbrains-mono-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2"
+          href="/assets/fonts/jetbrains-mono-700.woff2" crossorigin />
 
     <link rel="stylesheet" href="/assets/tokens.css" />
     <link rel="stylesheet" href="/assets/style.css" />

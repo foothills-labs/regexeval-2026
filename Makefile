@@ -3,7 +3,7 @@
 
 PY ?= python3
 RUN ?= preview
-REGEXBENCH_PIN = git+https://github.com/foothills-labs/regexbench.git@05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd
+REGEXBENCH_PIN = regexbench==0.4.0
 
 help:
 	@echo "make setup   install the pinned scorer + download the corpus"
