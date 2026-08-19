@@ -150,31 +150,45 @@ incorrect, `ambiguous` (6) → description underspecifies, `gold_right` (3) →
 model incorrect. That mapping is correct as printed in Table 10 but is
 nowhere stated.
 
-#### 6. The `undec` asymmetry — **CONFIRMED as a mechanism; the predicted correlation is absent**
+#### 6. The `undec` asymmetry — **CONFIRMED, and the effect is large; only the proposed statistic returns null**
 
 `dfa-eq` counts UNDECIDABLE as failure; `usable`'s third conjunct excludes
 only proven DIFFERENT, so undecidability is scored as a pass. A model that
-reaches for backreferences is mechanically credited. That much is exactly as
-described and deserves naming.
+reaches for backreferences is mechanically credited.
 
-The predicted correlation does not appear. Across the eleven models:
+The specific test proposed — correlate a model's undec count against its
+`usable@3` — comes back null (Pearson −0.07). That is because undec credit
+and equivalence skill trade off against each other, and the composite sums
+them. Decomposing instead of correlating shows the effect plainly. For each
+model we recomputed `usable@3` under the stricter rule that the verdict must
+be *proven* EQUIVALENT (`runner/undec_credit.py`):
 
-| undec vs | Pearson | Spearman |
-| --- | ---: | ---: |
-| `usable@3` | −0.03 | −0.14 |
-| `pass@3` | −0.07 | −0.13 |
-| `dfa-eq@3` | −0.42 | −0.46 |
+| model | undec | `usable@3` | proven-EQ only | undec-supported |
+| --- | ---: | ---: | ---: | ---: |
+| `kimi-k3` | 82 | 23.5 | 13.0 | 47 (44.8%) |
+| `qwen3.6-max-preview` | 94 | 21.6 | 12.7 | 40 (41.2%) |
+| `gpt-5.6-sol` | 133 | 20.9 | 8.7 | 55 (58.5%) |
+| `claude-opus-5` | 109 | 20.7 | 10.6 | 45 (48.9%) |
+| `deepseek-v4-flash-0731` | 93 | 19.8 | 10.9 | 40 (44.9%) |
+| `qwen3.6-plus` | 99 | 19.8 | 10.2 | 43 (48.3%) |
+| `glm-5.2` | 86 | 18.7 | 9.6 | 41 (48.8%) |
+| `gpt-5.6-terra` | 100 | 18.7 | 9.8 | 40 (47.6%) |
+| `gpt-5.6-luna` | 113 | 18.4 | 8.4 | 45 (54.2%) |
+| `claude-sonnet-5` | 97 | 18.0 | 9.8 | 37 (45.7%) |
+| `gemini-3.1-flash-lite` | 95 | 17.1 | 8.7 | 38 (49.4%) |
 
-If anything the sign is negative, and `gpt-5.6-sol` has the most undec (133)
-while sitting fourth. The between-model correlation is a weak test at n = 11
-and confounded by overall model quality, so the paper should report the
-*within-model* quantity instead: what share of each model's `usable@3` rests
-on a non-EQUIVALENT verdict. That computation is in flight
-(`runner/undec_credit.py`) and will be reported whichever way it lands.
+**471 of 975 usable task-credits (48.3%) rest on a verdict the engine could
+not decide rather than on demonstrated equivalence**, and the share tracks
+undec count at **r = +0.82** (undec against the `usable` − proven-EQ gap:
+r = +0.66). Removing the credit reorders the table: `gpt-5.6-sol` falls from
+third to ninth and `gpt-5.6-luna` from ninth to eleventh — both high-undec
+models — while `deepseek-v4-flash-0731` rises from fifth to third.
 
-Reporting a null here is worth more than reporting nothing: it says the
-perverse incentive is real in the metric's definition but is not, on this
-data, moving the composite.
+So the incentive is real, it is worth roughly half the composite, and it
+moves the ordering. It is a third independent reason to distrust the
+composite, which strengthens the paper's own argument. Report the null
+correlation too: it is the reason the effect is invisible in the headline
+number.
 
 ### Arithmetic and consistency — every item checked
 
@@ -234,6 +248,42 @@ them is what makes "one careful pass from a single source of truth" stick.
 
 ---
 
+5. **`pass_at_k` credits every task with fewer than `k` samples as a success,
+   on every metric.** `regexbench.harness.pass_at_k` early-returns `1.0` when
+   `n - c < k`. That guard is sound only when `n >= k`; when a task lost
+   samples to refusals or budget exhaustion, `n - c <= n < k` holds
+   unconditionally and the task scores 1.0 whether or not any sample
+   succeeded. Verified directly: `pass_at_k(1, 0, 3) == 1.0`.
+
+   This is the real cause of the Table 1 / Table 3 disagreement the reviewer
+   noticed as item 9 — not a denominator convention. Table 3 excludes
+   short-sample tasks and is right; Table 1 includes them at full credit and
+   is not. Recomputing Table 1 scoring each short task on the samples that
+   did come back:
+
+   | model | short tasks | `pass@3` T1 → fixed | `usable@3` T1 → fixed |
+   | --- | ---: | ---: | ---: |
+   | `kimi-k3` | 6 | 47.2 → 45.9 | 24.8 → **23.5** |
+   | `claude-opus-5` | 12 | 47.5 → 45.3 | 23.0 → **20.7** |
+   | `gpt-5.6-sol` | 1 | 42.2 → 42.2 | 21.1 → 20.9 |
+   | `gpt-5.6-luna` | 1 | 39.3 → 39.1 | 18.7 → 18.4 |
+
+   The seven models that lost no samples are unaffected. The two that lost
+   the most are the two at the top of the table, so the defect inflates
+   exactly where it is most visible: **`claude-opus-5` moves from second to
+   fourth** on `usable@3`, behind `qwen3.6-max-preview` and `gpt-5.6-sol`,
+   and `kimi-k3` rather than `claude-opus-5` has the highest `pass@3`.
+   `vulnerable@3` and `dfa-eq@3` are inflated the same way.
+
+   No stated conclusion turns on this — the paper declines to publish a
+   ranking, and §5.3 already says the band does not separate — but Table 1 is
+   the paper's primary table and its ordering is stated to be by `usable@3`.
+   The fix belongs upstream in `regexbench` (exclude `n < k` tasks from the
+   `@k` estimate, as `tab_at1` already does, or report them at `@n`), which
+   means bumping the pin in the `Makefile` and re-running `make score`.
+
+---
+
 ## Part 3 — Work plan
 
 Ordered by what the reviewer said they would insist on, then by dependency.
@@ -259,6 +309,9 @@ Ordered by what the reviewer said they would insist on, then by dependency.
   block quote around **9.8% ± 1.0 (n = 3,615)** vs production 8.9% ± 0.9.
   State the direction of the correction explicitly, and add the
   doubly-restricted 11.4% vs 13.9% as the honest ceiling.
+* **B1a (new, Part 2 item 5).** Fix `pass_at_k` for `n < k` upstream, bump the
+  `REGEXBENCH_PIN`, re-run `make score`, and regenerate Tables 1, 2, 3 and 4.
+  This changes Table 1's ordering and must land before any table is rebuilt.
 * **B2 (Arithmetic 4).** Replace the "135 model-task pairs" sentence with
   **390 of 5,269 correct samples (7.40%)**, state the denominator as
   per-sample in §4.2, in Table 2's caption, and in Table 8, and add the
@@ -313,9 +366,10 @@ Ordered by what the reviewer said they would insist on, then by dependency.
   ASCII witness"), state that none of the 14 are among the 19 non-ASCII
   cases, and give the combination as `(41/60) × (3/14) = 14.6%`. State the
   verdict-label mapping.
-* **E3 (Major 6).** Name the asymmetry, report the null between-model
-  correlation, and report the within-model undec-supported share of
-  `usable@3`.
+* **E3 (Major 6).** Name the asymmetry; report the proven-EQ-only column, the
+  48.3% pooled undec-supported share, the r = +0.82 against undec count, and
+  the reordering it causes. Report the null correlation against `usable@3`
+  too, with the explanation for why the effect hides there.
 * **E4 (smaller).** One paragraph in §4.2: the decomposition's order makes 87%
   a lower bound, with the reverse-order number to fix the interval.
 * **E5 (smaller).** §4.5: length- and construct-count-matched comparison of
@@ -345,8 +399,12 @@ and `docs/preview.html`.
 
 ### What changes a conclusion
 
-Only B1, and it survives: matched, models 9.8% and production 8.9%, still
+B1, and it survives: matched, models 9.8% and production 8.9%, still
 indistinguishable, still well below every read-to-be-read population. C4
 could in principle overturn the ordering if sensitivity turns out to be
 strongly population-dependent; that is the one open risk in the plan and it
 is the reason C4 is not optional.
+
+B1a changes Table 1's ordering — `claude-opus-5` second to fourth — without
+changing any claim the paper makes, since it publishes no ranking. E3 changes
+how much weight §4.2's decomposition can carry, in the paper's own favour.
