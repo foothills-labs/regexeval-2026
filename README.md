@@ -1,5 +1,34 @@
 # regexleaderboard
 
+> ### Status, 2026-08-19 — read this before quoting anything below
+>
+> **The name is wrong and the framing below is superseded.** This is a study,
+> not a leaderboard. [`ARTICLE.md`](ARTICLE.md) is the current statement of
+> what this work claims, and its "What we are not claiming" section is
+> explicit: *"We started out building a leaderboard. We are not publishing
+> one. [...] Bands are defensible. A numbered list from one to eleven is
+> not."* 62% of the tasks give every model the identical result; only 167 of
+> 450 separate them at all.
+>
+> **The table below is ordered by a metric the article no longer uses**, and
+> the figures in it carry three known defects, all catalogued in
+> [`REVISION-PLAN.md`](REVISION-PLAN.md):
+>
+> 1. `regexbench.harness.pass_at_k` scores any task with **fewer than `k`
+>    samples** as a full pass ([regexbench#8](https://github.com/foothills-labs/regexbench/issues/8)).
+>    It inflates exactly the two models at the top: `kimi-k3` `usable@3`
+>    24.8 → 23.5, `claude-opus-5` 23.0 → 20.7, which moves opus from second
+>    to fourth.
+> 2. **48.3%** of `usable` credits rest on an **UNDECIDABLE** equivalence
+>    verdict rather than demonstrated equivalence. Removing that credit
+>    roughly halves the metric and reorders the table again.
+> 3. **"135 such patterns" below is not reproducible** from the released
+>    data. The candidate counts are 390, 144, 180 and 196; none is 135.
+>
+> The paper is in revision after expert review. Until that lands, treat this
+> file as a description of *how the run was done*, and `ARTICLE.md` as the
+> statement of *what it found*. Nothing here has been published to the site.
+
 **How good are language models at writing regular expressions you could
 actually ship?**
 
@@ -12,10 +41,12 @@ your server.
 
 ---
 
-## The result
+## The run, as originally written up
 
-Every model passes roughly **40%** of tasks. Every model produces something
-shippable on roughly **20%**. That gap is the finding.
+**Superseded — see the status note at the top.** Kept because the shape of
+the finding survives even though the figures move: every model passes
+roughly **40%** of tasks and produces something shippable on far fewer, and
+that gap is the point. The exact numbers below are the uncorrected ones.
 
 | Model | usable@3 | pass@3 | vulnerable@3 | failed | $/task |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -69,8 +100,10 @@ That is **100% correct** on every example it was given. It is also
 > failing suffix*
 
 This is a realistic, production-looking pattern. Put it on a signup form
-and you have a denial-of-service bug. **135 such patterns** appeared across
-the run: correct, and unsafe.
+and you have a denial-of-service bug. This shape is common in the run —
+though **the figure once quoted here, 135, is not reproducible from the
+released data** and is withdrawn pending the revision. The defensible
+per-sample count is **390 of 5,269 correct samples (7.4%)**.
 
 ### It passed every test and it's still wrong
 
@@ -166,8 +199,11 @@ than score, because a row without provenance is not reproducible.
 
 - **Coverage is not perfectly uniform.** Nine models cover all 450 tasks.
   `kimi-k3` covers 447 — the budget ran out mid-collection. `claude-opus-5`
-  covers 445, from the content-filter refusals. Under 1%, no ranking
-  changes, but the denominators differ.
+  covers **444** (this said 445; 444 tasks have at least one scored sample),
+  from the content-filter refusals. Under 1% of tasks, but the denominators
+  differ — and the `pass_at_k` defect above means those short tasks were
+  scored as passes, so this gap is not as harmless as the original wording
+  claimed.
 - **The reference answers contain errors** (see above), so `dfa-eq`
   understates model correctness by an unmeasured amount.
 - **"Not vulnerable" is a screening result, not a proof** — no known-bad
