@@ -20,13 +20,18 @@ name: publish benchmarks
 # receive secrets, and failing them for that is noise. That does mean the
 # automation is inert until the secret is set -- check the run summary.
 
+# DISABLED on the push trigger, 2026-08-19. render_site.py emits a table
+# ordered one-to-eleven by usable@3, and ARTICLE.md's "What we are not
+# claiming" says plainly: "We started out building a leaderboard. We are not
+# publishing one. [...] Bands are defensible. A numbered list from one to
+# eleven is not." Automating that publication would republish the thing the
+# study declines to publish, every time results/ changed.
+#
+# Re-enable the push trigger once render_site.py emits bands rather than a
+# ranking, and once the pass_at_k short-task defect (REVISION-PLAN.md part 2
+# item 5) is fixed upstream in regexbench and the scores re-run. Until then
+# this is manual-only, so a person has to look at what goes out.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "results/**"
-      - "runner/render_site.py"
-      - "runner/config.py"
   workflow_dispatch:
     inputs:
       run:
