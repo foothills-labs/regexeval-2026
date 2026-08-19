@@ -37,6 +37,7 @@ import json
 import re
 import statistics
 import sys
+from concurrent.futures import ProcessPoolExecutor
 import warnings
 from pathlib import Path
 
@@ -47,6 +48,7 @@ from openrouter_client import normalize_pattern  # noqa: E402
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 from regexbench.correctness import check  # noqa: E402
+from regexbench.safety import screen  # noqa: E402
 from regexbench.datasets import load_regexeval  # noqa: E402
 from score_structuredregex import passes as sr_passes  # noqa: E402
 
@@ -144,6 +146,47 @@ def correct_patterns_structuredregex() -> list[str]:
     return out
 
 
+def shapes(patterns: list[str]) -> dict:
+    """Which vulnerable shape the screen actually finds, per corpus.
+
+    Structure alone does not say where the extra vulnerability comes from --
+    two corpora can carry the same quantifier count and trip different
+    families. The screen reports *why* it flagged a pattern, so the reasons
+    are the direct evidence, and they separate the two families that matter:
+    a quantifier wrapping a quantified group (exponential, the shape everyone
+    pictures) against two quantifiers in sequence over overlapping character
+    sets (polynomial, the shape a grammar over concatenation produces).
+    """
+    families = {"nested quantifier": 0, "overlapping alternation": 0,
+                "adjacent quantifiers": 0, "empirical blow-up": 0, "safe": 0}
+    with ProcessPoolExecutor(max_workers=4) as pool:
+        for reason in pool.map(_reason, patterns, chunksize=32):
+            families[reason] += 1
+    vulnerable = sum(v for k, v in families.items() if k != "safe")
+    return {"counts": families, "vulnerable": vulnerable,
+            "vulnerable_pct": round(100 * vulnerable / len(patterns), 1),
+            "share_of_vulnerable_pct": {
+                k: round(100 * v / vulnerable, 1)
+                for k, v in families.items() if k != "safe"} if vulnerable else {}}
+
+
+def _reason(pattern: str) -> str:
+    try:
+        result = screen(pattern, empirical=True)
+    except Exception:
+        return "safe"
+    if result.risk.name == "SAFE":
+        return "safe"
+    text = result.reason or ""
+    if "quantifier wraps a quantified group" in text:
+        return "nested quantifier"
+    if "wraps alternation" in text:
+        return "overlapping alternation"
+    if "two quantifiers over overlapping" in text or "bounded quantifier wraps" in text:
+        return "adjacent quantifiers"
+    return "empirical blow-up"
+
+
 def summarise(patterns: list[str]) -> dict:
     rows = [features(p) for p in patterns]
     out = {"n": len(rows)}
@@ -162,10 +205,12 @@ def main():
     ap.add_argument("--run", default="sweep")
     args = ap.parse_args()
 
-    report = {
-        "Re(gEx|DoS)Eval": summarise(correct_patterns_regexeval(args.run)),
-        "StructuredRegex": summarise(correct_patterns_structuredregex()),
-    }
+    corpora = {"Re(gEx|DoS)Eval": correct_patterns_regexeval(args.run),
+               "StructuredRegex": correct_patterns_structuredregex()}
+    report = {}
+    for name, patterns in corpora.items():
+        report[name] = summarise(patterns)
+        report[name]["shapes"] = shapes(patterns)
     print(f"{'corpus':20s} {'n':>6s} {'len':>6s} {'quant':>6s} {'depth':>6s} "
           f"{'q-grp':>6s} {'has q-grp':>10s}")
     for name, b in report.items():
@@ -173,6 +218,12 @@ def main():
               f"{b['quantifiers']['median']:6.0f} {b['depth']['median']:6.0f} "
               f"{b['quantified_groups']['mean']:6.2f} "
               f"{b['with_quantified_group_pct']:9.1f}%")
+
+    print()
+    for name, b in report.items():
+        sh = b["shapes"]
+        print(f"{name:20s} vulnerable {sh['vulnerable_pct']}%  " +
+              "  ".join(f"{k} {v}%" for k, v in sh["share_of_vulnerable_pct"].items()))
 
     path = config.RESULTS_DIR / "complexity_compare.json"
     path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")

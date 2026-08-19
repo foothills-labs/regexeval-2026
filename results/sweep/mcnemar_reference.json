@@ -1,0 +1,137 @@
+{
+  "models": {
+    "claude-opus-5": {
+      "discordant": 50,
+      "gold_pct": 13.7,
+      "gold_vulnerable": 61,
+      "model_pct": 10.6,
+      "model_safer_on": 32,
+      "model_vulnerable": 47,
+      "model_worse_on": 18,
+      "n": 444,
+      "p_exact_two_sided": 0.0649
+    },
+    "claude-sonnet-5": {
+      "discordant": 53,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 8.9,
+      "model_safer_on": 37,
+      "model_vulnerable": 40,
+      "model_worse_on": 16,
+      "n": 450,
+      "p_exact_two_sided": 0.0055
+    },
+    "deepseek-v4-flash-0731": {
+      "discordant": 58,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 7.3,
+      "model_safer_on": 43,
+      "model_vulnerable": 33,
+      "model_worse_on": 15,
+      "n": 450,
+      "p_exact_two_sided": 0.0003
+    },
+    "gemini-3.1-flash-lite": {
+      "discordant": 57,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 9.8,
+      "model_safer_on": 37,
+      "model_vulnerable": 44,
+      "model_worse_on": 20,
+      "n": 450,
+      "p_exact_two_sided": 0.0331
+    },
+    "glm-5.2": {
+      "discordant": 55,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 10.2,
+      "model_safer_on": 35,
+      "model_vulnerable": 46,
+      "model_worse_on": 20,
+      "n": 450,
+      "p_exact_two_sided": 0.0581
+    },
+    "gpt-5.6-luna": {
+      "discordant": 55,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 8.0,
+      "model_safer_on": 40,
+      "model_vulnerable": 36,
+      "model_worse_on": 15,
+      "n": 450,
+      "p_exact_two_sided": 0.001
+    },
+    "gpt-5.6-sol": {
+      "discordant": 59,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 9.3,
+      "model_safer_on": 39,
+      "model_vulnerable": 42,
+      "model_worse_on": 20,
+      "n": 450,
+      "p_exact_two_sided": 0.0183
+    },
+    "gpt-5.6-terra": {
+      "discordant": 54,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 8.7,
+      "model_safer_on": 38,
+      "model_vulnerable": 39,
+      "model_worse_on": 16,
+      "n": 450,
+      "p_exact_two_sided": 0.0038
+    },
+    "kimi-k3": {
+      "discordant": 65,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 10.7,
+      "model_safer_on": 39,
+      "model_vulnerable": 48,
+      "model_worse_on": 26,
+      "n": 447,
+      "p_exact_two_sided": 0.136
+    },
+    "qwen3.6-max-preview": {
+      "discordant": 50,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 7.3,
+      "model_safer_on": 39,
+      "model_vulnerable": 33,
+      "model_worse_on": 11,
+      "n": 450,
+      "p_exact_two_sided": 0.0001
+    },
+    "qwen3.6-plus": {
+      "discordant": 47,
+      "gold_pct": 13.6,
+      "gold_vulnerable": 61,
+      "model_pct": 8.4,
+      "model_safer_on": 35,
+      "model_vulnerable": 38,
+      "model_worse_on": 12,
+      "n": 450,
+      "p_exact_two_sided": 0.0011
+    }
+  },
+  "models_tested": 11,
+  "resolved_at_95": [
+    "claude-sonnet-5",
+    "deepseek-v4-flash-0731",
+    "gemini-3.1-flash-lite",
+    "gpt-5.6-luna",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "qwen3.6-max-preview",
+    "qwen3.6-plus"
+  ],
+  "run": "sweep"
+}

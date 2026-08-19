@@ -70,6 +70,9 @@
   "table": "claude-sonnet-5\n450 tasks, 450 answered\n  pass@3               40.7%\n  dfa-eq@3             10.4%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   13.3%  (engine limits excluded \u2014 model only)\n  exact@3               3.3%\n  usable@3             18.0%\n  vulnerable@3         10.9%  (lower is better)\n  97 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
   "tasks_answered": 1350,
   "tasks_attempted": 1350,
+  "tasks_scored": 450,
+  "tasks_short_of_k": 0,
+  "tasks_short_of_k_detail": [],
   "temperature": 0.0,
   "wrapped_detail": {
     "regexeval/1587": [

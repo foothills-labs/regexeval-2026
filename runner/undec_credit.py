@@ -29,6 +29,7 @@ import json
 import math
 import sys
 import warnings
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -44,6 +45,8 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 from regexbench import evaluate  # noqa: E402
 from regexbench.datasets import load_regexeval  # noqa: E402
+
+WORKERS = 4
 
 
 def pearson(xs, ys):
@@ -79,31 +82,51 @@ def samples_by_task(model: str, run: str) -> dict[str, list[str]]:
     return out
 
 
-def analyse(model: str, run: str, by_name: dict) -> dict:
+# Scoring is CPU-bound and the equivalence engine dominates it, so tasks are
+# scored in a pool. The dataset is loaded once per worker rather than passed
+# per task: the Task objects carry their example strings and pickling 450 of
+# them for every chunk costs more than reading the corpus once.
+_TASKS: dict = {}
+
+
+def _init(dataset_path: str):
+    global _TASKS
+    _TASKS = {t.name: t for t in load_regexeval(dataset_path)}
+
+
+def _score_task(job):
+    """Was this task usable, and did anything actually prove equivalence?"""
+    task_name, patterns = job
+    task = _TASKS[task_name]
+    usable = proven = False
+    for pattern in patterns:
+        try:
+            rep = evaluate(pattern, task)
+        except Exception:
+            continue
+        if rep.correctness.accuracy != 1.0 or rep.safety.risk.name != "SAFE":
+            continue
+        # `EquivalenceResult.__bool__` is True only for EQUIVALENT, so an
+        # `is not None` test is required here -- a truthiness test silently
+        # reads DIFFERENT as "no verdict" and inflates everything below.
+        verdict = rep.equivalence.verdict.name if rep.equivalence is not None else "NONE"
+        if verdict != "DIFFERENT":
+            usable = True
+        if verdict == "EQUIVALENT":
+            proven = True
+    return usable, proven
+
+
+def analyse(model: str, run: str) -> dict:
     """usable@3 as reported, and under a proven-equivalence rule."""
-    counts = {"tasks": 0, "usable": 0, "proven": 0, "undec_supported": 0}
-    for task_name, patterns in samples_by_task(model, run).items():
-        task = by_name[task_name]
-        counts["tasks"] += 1
-        usable = proven = False
-        for pattern in patterns:
-            try:
-                rep = evaluate(pattern, task)
-            except Exception:
-                continue
-            if rep.correctness.accuracy != 1.0 or rep.safety.risk.name != "SAFE":
-                continue
-            # `EquivalenceResult.__bool__` is True only for EQUIVALENT, so an
-            # `is not None` test is required here -- a truthiness test silently
-            # reads DIFFERENT as "no verdict" and inflates everything below.
-            verdict = rep.equivalence.verdict.name if rep.equivalence is not None else "NONE"
-            if verdict != "DIFFERENT":
-                usable = True
-            if verdict == "EQUIVALENT":
-                proven = True
-        counts["usable"] += usable
-        counts["proven"] += proven
-        counts["undec_supported"] += usable and not proven
+    jobs = sorted(samples_by_task(model, run).items())
+    with ProcessPoolExecutor(max_workers=WORKERS, initializer=_init,
+                             initargs=(str(config.require_dataset()),)) as pool:
+        scored = list(pool.map(_score_task, jobs, chunksize=8))
+    counts = {"tasks": len(scored),
+              "usable": sum(1 for u, _ in scored if u),
+              "proven": sum(1 for _, pr in scored if pr),
+              "undec_supported": sum(1 for u, pr in scored if u and not pr)}
     n = counts["tasks"]
     counts["usable_pct"] = round(100 * counts["usable"] / n, 1)
     counts["proven_pct"] = round(100 * counts["proven"] / n, 1)
@@ -118,7 +141,6 @@ def main():
     ap.add_argument("--run", default="sweep")
     args = ap.parse_args()
 
-    by_name = {t.name: t for t in load_regexeval(str(config.require_dataset()))}
     models = sorted(p.stem for p in (config.PREDICTIONS_DIR / args.run).glob("*.jsonl"))
 
     undecided = {}
@@ -131,7 +153,7 @@ def main():
     print(f"{'model':26s} {'undec':>6s} {'usable@3':>9s} {'proven-EQ':>10s} "
           f"{'undec-supported':>16s}")
     for m in models:
-        r = analyse(m, args.run, by_name)
+        r = analyse(m, args.run)
         r["undecided"] = undecided.get(m)
         out["models"][m] = r
         print(f"{m:26s} {str(r['undecided']):>6s} {r['usable_pct']:8.1f}% "

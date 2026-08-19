@@ -1,0 +1,50 @@
+{
+  "Re(gEx|DoS)Eval": {
+    "depth": {
+      "mean": 0.94,
+      "median": 1,
+      "p90": 2
+    },
+    "length": {
+      "mean": 43.98,
+      "median": 28,
+      "p90": 91
+    },
+    "n": 5269,
+    "quantified_groups": {
+      "mean": 0.54,
+      "median": 0,
+      "p90": 2
+    },
+    "quantifiers": {
+      "mean": 4.55,
+      "median": 3,
+      "p90": 10
+    },
+    "with_quantified_group_pct": 34.7
+  },
+  "StructuredRegex": {
+    "depth": {
+      "mean": 0.57,
+      "median": 0,
+      "p90": 1
+    },
+    "length": {
+      "mean": 35.43,
+      "median": 33,
+      "p90": 58
+    },
+    "n": 3383,
+    "quantified_groups": {
+      "mean": 0.21,
+      "median": 0,
+      "p90": 1
+    },
+    "quantifiers": {
+      "mean": 4.1,
+      "median": 4,
+      "p90": 7
+    },
+    "with_quantified_group_pct": 18.5
+  }
+}

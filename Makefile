@@ -1,5 +1,5 @@
 # regexleaderboard -- everything runs from a clean clone with `make`.
-.PHONY: setup setup-corpora pin detector calibrate score persample analysis check tables crosscorpus collect clean help
+.PHONY: setup setup-corpora pin detector calibrate score persample analysis check tables figures crosscorpus collect clean help
 
 PY ?= python3
 RUN ?= preview
@@ -65,6 +65,9 @@ calibrate: detector
 
 tables:
 	$(PY) paper/make_tables.py
+
+figures:
+	$(PY) paper/make_figures.py
 
 score:
 	$(PY) runner/score.py --run $(RUN)
