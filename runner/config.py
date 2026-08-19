@@ -25,7 +25,7 @@ RESULTS_DIR = REPO / "results"
 # collected, so the Makefile now pins the release rather than the commit --
 # but both are still recorded with every result, because the commit is what
 # the published numbers were actually produced by.
-REGEXBENCH_COMMIT = "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd"
+REGEXBENCH_COMMIT = "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206"
 REGEXBENCH_VERSION = "0.4.0"
 
 # The date each published run was collected. Prose in README/METHODOLOGY says

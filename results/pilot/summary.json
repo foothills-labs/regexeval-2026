@@ -68,7 +68,7 @@
       "CoreWeave"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "deepseek-v4-flash-0731\n12 tasks, 12 answered\n  pass@3               33.3%\n  dfa-eq@3              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@3               0.0%\n  usable@3             33.3%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -151,7 +151,7 @@
       "Alibaba"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "qwen3.6-plus\n12 tasks, 12 answered\n  pass@3               41.7%\n  dfa-eq@3             16.7%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   22.2%  (engine limits excluded \u2014 model only)\n  exact@3              16.7%\n  usable@3             33.3%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -233,7 +233,7 @@
       "Anthropic"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 1,
     "table": "claude-opus-5\n12 tasks, 12 answered\n  pass@3               50.0%\n  dfa-eq@3             16.7%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   22.2%  (engine limits excluded \u2014 model only)\n  exact@3              16.7%\n  usable@3             25.0%\n  vulnerable@3          8.3%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -309,7 +309,7 @@
       "Fireworks"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "kimi-k3\n12 tasks, 12 answered\n  pass@3               25.0%\n  dfa-eq@3              8.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   11.1%  (engine limits excluded \u2014 model only)\n  exact@3               8.3%\n  usable@3             25.0%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -385,7 +385,7 @@
       "Anthropic"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "claude-sonnet-5\n12 tasks, 12 answered\n  pass@3               16.7%\n  dfa-eq@3             16.7%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   22.2%  (engine limits excluded \u2014 model only)\n  exact@3               0.0%\n  usable@3             16.7%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -461,7 +461,7 @@
       "Google AI Studio"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "gemini-3.1-flash-lite\n12 tasks, 12 answered\n  pass@3               25.0%\n  dfa-eq@3             16.7%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   22.2%  (engine limits excluded \u2014 model only)\n  exact@3              16.7%\n  usable@3             16.7%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -540,7 +540,7 @@
       "Novita"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "glm-5.2\n12 tasks, 12 answered\n  pass@3               33.3%\n  dfa-eq@3             16.7%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   22.2%  (engine limits excluded \u2014 model only)\n  exact@3               8.3%\n  usable@3             16.7%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -616,7 +616,7 @@
       "OpenAI"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "gpt-5.6-sol\n12 tasks, 12 answered\n  pass@3               25.0%\n  dfa-eq@3              8.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   12.5%  (engine limits excluded \u2014 model only)\n  exact@3               0.0%\n  usable@3             16.7%\n  vulnerable@3          0.0%  (lower is better)\n  4 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -692,7 +692,7 @@
       "OpenAI"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "gpt-5.6-terra\n12 tasks, 12 answered\n  pass@3               25.0%\n  dfa-eq@3              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@3               0.0%\n  usable@3              8.3%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -768,7 +768,7 @@
       "Alibaba"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "qwen3.6-max-preview\n12 tasks, 12 answered\n  pass@3               25.0%\n  dfa-eq@3              8.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   11.1%  (engine limits excluded \u2014 model only)\n  exact@3               8.3%\n  usable@3              8.3%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
@@ -844,7 +844,7 @@
       "OpenAI"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "gpt-5.6-luna\n12 tasks, 12 answered\n  pass@3               16.7%\n  dfa-eq@3              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@3               0.0%\n  usable@3              0.0%\n  vulnerable@3          8.3%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",

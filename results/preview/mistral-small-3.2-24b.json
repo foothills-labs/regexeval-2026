@@ -100,7 +100,7 @@
   },
   "providers_resolved": [],
   "python_version": "3.11.15",
-  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
   "regexbench_version": "0.4.0",
   "response_failures": 10,
   "table": null,

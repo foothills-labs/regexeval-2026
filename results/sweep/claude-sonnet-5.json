@@ -64,7 +64,7 @@
     "Anthropic"
   ],
   "python_version": "3.11.15",
-  "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+  "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
   "regexbench_version": "0.4.0",
   "response_failures": 0,
   "table": "claude-sonnet-5\n450 tasks, 450 answered\n  pass@3               40.7%\n  dfa-eq@3             10.4%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   13.3%  (engine limits excluded \u2014 model only)\n  exact@3               3.3%\n  usable@3             18.0%\n  vulnerable@3         10.9%  (lower is better)\n  97 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",

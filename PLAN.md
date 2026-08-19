@@ -41,12 +41,12 @@ unchanged from the original.
 > The reasoning below was correct when written and is kept as written.
 
 Not yet published to PyPI (still shows 0.3.0 as latest there) — installed
-from GitHub at commit `05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd`
+from GitHub at commit `412eaa95a3f512b5a7bd3d8de2ae70c003d6a206`
 (`main`, 2026-08-11). **This exact commit, not a version string, is what
 must be pinned and recorded** until a PyPI release exists — `pip install
 regexbench==0.4.0` will silently resolve to nothing or a future differently
 -pinned commit; use `pip install
-"git+https://github.com/foothills-labs/regexbench.git@05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd"`
+"git+https://github.com/foothills-labs/regexbench.git@412eaa95a3f512b5a7bd3d8de2ae70c003d6a206"`
 verbatim in the runner's setup and in METHODOLOGY.md.
 
 What changed, verified against the live package:
