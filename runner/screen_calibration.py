@@ -1,0 +1,402 @@
+"""Is the ReDoS screen equally sensitive across the populations we compare?
+
+The cross-population ordering only means something if the screen misses
+vulnerable patterns at the same rate everywhere. Production patterns are
+longer and structurally different from RegexLib showcase validators, so a
+differential miss rate could generate the entire ordering without any of the
+populations differing in the way we claim.
+
+`vulnerable` being a lower bound is the right caveat for one population and
+is not enough for six. This measures the miss rate per population.
+
+Three verdicts per pattern
+--------------------------
+screen      regexbench's structural + empirical screen: the instrument under
+            test. Covers three of the five families catalogued by Siddiq et
+            al., so its misses are the question.
+
+detector    weideman-RegexStaticAnalysis, from the artifact of Davis et al.
+            (2019) -- the same detector their ecosystem study used. Wholly
+            independent of regexbench: a different analysis (NFA ambiguity
+            over EDA and IDA), a different language, a different author.
+            EDA is exponential, IDA is polynomial.
+
+dynamic     ground truth, and the reason this is a calibration rather than
+            two opinions. When the detector calls a pattern vulnerable it
+            emits an exploit string as (separators, pumps, suffix); we build
+            the input at growing pump counts and *time CPython's own matcher*
+            on it in a subprocess under a hard timeout. A confirmed blow-up is
+            a fact about the engine the paper screens with, not a second
+            static approximation.
+
+What comes out
+--------------
+For each population: the screen's recall against dynamically confirmed
+vulnerability, and its agreement with the detector. Recall is the number that
+has to be stable across populations for the ordering to survive; the report
+also stratifies by pattern length and by quantifier count, since those are
+the covariates on which the populations most obviously differ.
+
+Needs `make setup-corpora` and `make detector`. No API calls. CPU and JVM only.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import random
+import re
+import subprocess
+import sys
+import tempfile
+import warnings
+from collections import Counter, defaultdict
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+import config  # noqa: E402
+import cross_corpus_redos as cc  # noqa: E402
+from openrouter_client import normalize_pattern  # noqa: E402
+
+# Screening a corpus means compiling tens of thousands of patterns people
+# actually wrote, and CPython warns about constructs that are legal today and
+# may not stay so -- `[[a-z]]`, `[a-z--0]`. The warning is about the pattern,
+# not about us, and one per pattern buries the output. The patterns are
+# screened as written either way.
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+from regexbench.safety import screen  # noqa: E402
+
+SEED = 20260819
+PER_STRATUM = 120          # sampled per (population, screen verdict)
+BATCH = 40                 # patterns per JVM launch
+DETECTOR_TIMEOUT = 600     # seconds per batch
+PUMPS = (25, 50, 100, 200, 400, 800, 1600)
+DYNAMIC_TIMEOUT = 2.0      # seconds per (pattern, input)
+
+DETECTOR = (config.LINGUA_FRANCA_DIR / "analysis" / "performance" / "vuln-regex-detector" /
+            "src" / "detect" / "src" / "detectors" / "weideman-RegexStaticAnalysis")
+
+# Characters an ordinary pattern does not accept, appended so that `search` has
+# to fail rather than succeed early. The detector's own suffix assumes the
+# pattern is matched against the whole input; the screen uses search semantics,
+# and under search a suffix that lets the match succeed measures nothing.
+# Nothing is unmatched by every pattern -- `.` takes anything -- so this is a
+# heuristic, and the fullmatch form is what covers the patterns it misses.
+POISON = "￿!"
+
+_BLOCK = re.compile(r'^\d+\. pattern = ".*"$')
+_EXPLOIT = re.compile(r"(EDA|IDA) exploit string as JSON:\s+(\{.*\})")
+
+
+def detector_verdicts(patterns: list[str]) -> dict[str, dict]:
+    """Run the independent detector over a batch, one JVM for the batch.
+
+    A batch that crashes or times out is retried one pattern at a time, so a
+    single pathological input costs its own verdict and not the batch's.
+    """
+    if not patterns:
+        return {}
+    with tempfile.NamedTemporaryFile("w", suffix=".regex", delete=False) as fh:
+        # The detector reads one pattern per line, so a pattern containing a
+        # newline cannot be expressed. Those go in with the newline escaped
+        # rather than being silently truncated at it.
+        for p in patterns:
+            fh.write(p.replace("\n", "\\n") + "\n")
+        path = fh.name
+    cmd = ["java", "-cp", f"{DETECTOR}/bin:{DETECTOR}/lib/gson-2.8.2.jar", "driver.Main",
+           f"--if={path}", "--test-eda-exploit-string=false", "--ida=true",
+           "--timeout=0", "--simple"]
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True,
+                             timeout=DETECTOR_TIMEOUT).stdout
+    except subprocess.TimeoutExpired:
+        out = ""
+    finally:
+        Path(path).unlink(missing_ok=True)
+
+    parsed = _parse_detector(out)
+    if len(parsed) == len(patterns) or len(patterns) == 1:
+        return {p: parsed.get(i + 1, {"verdict": "UNKNOWN", "exploits": []})
+                for i, p in enumerate(patterns)}
+    merged: dict[str, dict] = {}
+    for p in patterns:
+        merged.update(detector_verdicts([p]))
+    return merged
+
+
+def _parse_detector(out: str) -> dict[int, dict]:
+    """Per-pattern verdicts out of the detector's numbered report."""
+    verdicts: dict[int, dict] = {}
+    index = None
+    for line in out.splitlines():
+        if _BLOCK.match(line.strip()):
+            index = len(verdicts) + 1
+            verdicts[index] = {"verdict": "SAFE", "exploits": []}
+            continue
+        if index is None:
+            continue
+        found = _EXPLOIT.search(line)
+        if found:
+            kind, blob = found.group(1), found.group(2)
+            try:
+                verdicts[index]["exploits"].append(json.loads(blob))
+            except Exception:
+                continue
+            # EDA is the stronger claim and wins if both fire.
+            if verdicts[index]["verdict"] != "EDA":
+                verdicts[index]["verdict"] = kind
+        elif "SKIPPED" in line:
+            verdicts[index]["verdict"] = "SKIPPED"
+    return verdicts
+
+
+def attack_inputs(exploit: dict, pumps: int) -> list[tuple[str, str]]:
+    """The detector's evil input at a given pump count, as (text, method).
+
+    Two forms, because the two match methods fail differently: the detector's
+    own suffix, matched whole; and a poisoned suffix, searched. A pattern only
+    has to blow up under one of them to be vulnerable in practice.
+    """
+    separators = exploit.get("separators") or []
+    pump_strings = exploit.get("pumps") or []
+    if not pump_strings or len(separators) != len(pump_strings):
+        return []
+    core = "".join(s + p * pumps for s, p in zip(separators, pump_strings))
+    return [(core + (exploit.get("suffix") or ""), "fullmatch"), (core + POISON, "search")]
+
+
+# The probe reads its arguments as JSON on stdin rather than from argv.
+# Patterns and attack inputs contain newlines and, occasionally, NUL, and argv
+# carries neither -- passing them there raises before the pattern is ever run,
+# which would silently score a pathological pattern as safe.
+_PROBE = r"""
+import json, re, sys, time
+job = json.loads(sys.stdin.read())
+compiled = re.compile(job["pattern"])
+start = time.process_time()
+getattr(compiled, job["method"])(job["text"])
+sys.stdout.write(str(time.process_time() - start))
+"""
+
+
+def blows_up(pattern: str, exploits: list[dict]) -> dict:
+    """Time CPython on the evil input, in a child so a hang can be killed.
+
+    Two ways to be confirmed vulnerable, because the two complexity classes
+    show themselves differently at input sizes we can actually run:
+
+    * **Exponential.** Matching does not finish inside the timeout at a pump
+      count small enough that a linear matcher would be instant. Nothing more
+      is needed -- the hang is the evidence.
+    * **Polynomial.** A quadratic matcher needs inputs in the hundreds of
+      thousands of characters before it takes seconds, which is not a
+      practical thing to run over thousands of patterns. So instead of waiting
+      for a hang we *measure the growth*: fit log(time) against log(input
+      length) over the pump ladder and confirm when the slope is clearly above
+      linear. `\s*\s*x` comes out at a slope near 2 in milliseconds, where
+      waiting for it to time out would take minutes.
+
+    Timings come from `process_time` inside the child rather than wall clock,
+    so a loaded machine cannot manufacture a vulnerability.
+    """
+    # Below this the measurement is timer noise rather than matching cost, and
+    # fitting a slope through noise produces confident nonsense.
+    floor = 1e-3
+    best = {"confirmed": False, "kind": None, "slope": None, "trace": []}
+    for exploit in exploits:
+        trace = []
+        for pumps in PUMPS:
+            for text, method in attack_inputs(exploit, pumps):
+                job = json.dumps({"pattern": pattern, "text": text, "method": method})
+                try:
+                    done = subprocess.run(
+                        [sys.executable, "-c", _PROBE], input=job,
+                        capture_output=True, text=True, timeout=DYNAMIC_TIMEOUT)
+                except subprocess.TimeoutExpired:
+                    return {"confirmed": True, "kind": "exponential", "slope": None,
+                            "pumps": pumps, "length": len(text), "method": method,
+                            "trace": trace}
+                if done.returncode == 0 and done.stdout.strip():
+                    trace.append([len(text), method, float(done.stdout.strip())])
+        for method in ("fullmatch", "search"):
+            points = [(n, t) for n, m, t in trace if m == method and t > floor]
+            slope = _loglog_slope(points)
+            if slope is not None and slope > (best["slope"] or 0):
+                best = {"confirmed": slope >= 1.5, "kind": "polynomial" if slope >= 1.5 else None,
+                        "slope": round(slope, 2), "method": method, "trace": trace}
+        if not best["trace"]:
+            best["trace"] = trace
+    return best
+
+
+def _loglog_slope(points: list[tuple[int, float]]) -> float | None:
+    """Least-squares exponent of time against input length.
+
+    A linear matcher gives a slope near 1, quadratic near 2. Three points is
+    the minimum that distinguishes a slope from a pair of measurements.
+    """
+    if len(points) < 3:
+        return None
+    xs = [math.log(n) for n, _ in points]
+    ys = [math.log(t) for _, t in points]
+    n = len(xs)
+    mx, my = sum(xs) / n, sum(ys) / n
+    denominator = sum((x - mx) ** 2 for x in xs)
+    if denominator == 0:
+        return None
+    return sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / denominator
+
+
+def quantifiers(pattern: str) -> int:
+    return len(re.findall(r"[*+?]|\{\d+(?:,\d*)?\}", pattern))
+
+
+def sample_populations() -> dict[str, list[str]]:
+    """The six screened populations plus the model outputs."""
+    prod_pool = cc.production_pool()
+    pops = {
+        "Re(gEx|DoS)Eval gold": cc.regexeval(),
+        "KB13": cc.deep_regex("KB13")[0],
+        "NL-RX-Synth": cc.deep_regex("NL-RX-Synth")[0],
+        "RegexLib": [p for p in cc.internet_pool("regexlib") if cc.compiles(p)],
+        "Stack Overflow": [p for p in cc.internet_pool("stackoverflow") if cc.compiles(p)],
+        "Production code": [p for p, _ in prod_pool if cc.compiles(p)],
+    }
+    models: list[str] = []
+    for path in sorted((config.PREDICTIONS_DIR / "sweep").glob("*.jsonl")):
+        seen: set[str] = set()
+        for line in path.read_text().splitlines():
+            if not line.strip():
+                continue
+            r = json.loads(line)
+            if (r["task_name"].startswith("control/") or r["status"] != "ok"
+                    or not r.get("pattern") or r["task_name"] in seen):
+                continue
+            seen.add(r["task_name"])
+            models.append(normalize_pattern(r["pattern"])[0])
+    pops["Model outputs"] = models
+    return pops
+
+
+def stratified(patterns: list[str], rng) -> list[tuple[str, str]]:
+    """Sample within each screen verdict, so both error directions are estimable.
+
+    An unstratified draw from a population that screens at 5% would spend the
+    whole budget establishing specificity and almost none of it on recall,
+    which is the quantity in question.
+    """
+    unique = list(dict.fromkeys(patterns))
+    rng.shuffle(unique)
+    buckets: dict[str, list[str]] = defaultdict(list)
+    examined = 0
+    for p in unique:
+        if examined >= 40 * PER_STRATUM:
+            break
+        examined += 1
+        try:
+            risk = screen(p, empirical=True).risk.name
+        except Exception:
+            continue
+        key = "SAFE" if risk == "SAFE" else "VULNERABLE"
+        if len(buckets[key]) < PER_STRATUM:
+            buckets[key].append(p)
+        if all(len(buckets[k]) >= PER_STRATUM for k in ("SAFE", "VULNERABLE")):
+            break
+    return [(p, k) for k, ps in buckets.items() for p in ps]
+
+
+def _band(value: int, key: str) -> str:
+    edges = (20, 40, 80, 160) if key == "length" else (1, 2, 4, 8)
+    for e in edges:
+        if value <= e:
+            return f"<={e}"
+    return f">{edges[-1]}"
+
+
+def _strata(confirmed: list[dict], key: str) -> dict:
+    """Recall inside covariate bands, to see whether a miss is a miss anywhere.
+
+    If the screen's recall falls with pattern length, and the populations
+    differ in length, then part of the ordering is an artifact and the bands
+    say how much.
+    """
+    total: Counter = Counter()
+    caught: Counter = Counter()
+    for r in confirmed:
+        band = _band(r[key], key)
+        total[band] += 1
+        caught[band] += r["screen"] == "VULNERABLE"
+    return {b: {"confirmed": total[b], "caught": caught[b],
+                "recall_pct": round(100 * caught[b] / total[b], 1)}
+            for b in sorted(total)}
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--out", default=None)
+    ap.add_argument("--only", default=None, help="comma-separated population names")
+    args = ap.parse_args()
+    config.require_corpora()
+    if not (DETECTOR / "bin").exists():
+        raise SystemExit(f"Independent detector not built at {DETECTOR}\nRun:  make detector")
+
+    rng = random.Random(SEED)
+    report = {"seed": SEED, "per_stratum": PER_STRATUM, "populations": {}}
+    wanted = {s.strip() for s in args.only.split(",")} if args.only else None
+
+    for name, patterns in sample_populations().items():
+        if wanted and name not in wanted:
+            continue
+        sample = stratified(patterns, rng)
+        verdicts: dict[str, dict] = {}
+        for i in range(0, len(sample), BATCH):
+            verdicts.update(detector_verdicts([p for p, _ in sample[i:i + BATCH]]))
+
+        rows = []
+        for pattern, screen_verdict in sample:
+            det = verdicts.get(pattern, {"verdict": "UNKNOWN", "exploits": []})
+            dyn = blows_up(pattern, det["exploits"]) if det.get("exploits") else None
+            rows.append({"screen": screen_verdict, "detector": det["verdict"],
+                         "confirmed": bool(dyn and dyn["confirmed"]),
+                         "length": len(pattern), "quantifiers": quantifiers(pattern)})
+
+        confirmed = [r for r in rows if r["confirmed"]]
+        caught = [r for r in confirmed if r["screen"] == "VULNERABLE"]
+        agree = sum(1 for r in rows
+                    if (r["screen"] == "VULNERABLE") == (r["detector"] in ("EDA", "IDA")))
+        lengths = sorted(r["length"] for r in rows)
+        quants = sorted(r["quantifiers"] for r in rows)
+        block = {
+            "sampled": len(rows),
+            "screen_vulnerable": sum(1 for r in rows if r["screen"] == "VULNERABLE"),
+            "detector_vulnerable": sum(1 for r in rows if r["detector"] in ("EDA", "IDA")),
+            "detector_unanalysable": sum(1 for r in rows
+                                         if r["detector"] in ("SKIPPED", "UNKNOWN")),
+            "dynamically_confirmed": len(confirmed),
+            "confirmed_and_caught": len(caught),
+            "recall_pct": round(100 * len(caught) / len(confirmed), 1) if confirmed else None,
+            "agreement_pct": round(100 * agree / len(rows), 1) if rows else None,
+            "median_length": lengths[len(lengths) // 2] if lengths else None,
+            "median_quantifiers": quants[len(quants) // 2] if quants else None,
+            "missed_by_length": _strata(confirmed, "length"),
+            "missed_by_quantifiers": _strata(confirmed, "quantifiers"),
+        }
+        report["populations"][name] = block
+        print(f"{name:24s} sampled {block['sampled']:4d}  confirmed {len(confirmed):4d}  "
+              f"recall {block['recall_pct']}%  agreement {block['agreement_pct']}%  "
+              f"median len {block['median_length']}", flush=True)
+
+    recalls = [b["recall_pct"] for b in report["populations"].values()
+               if b["recall_pct"] is not None]
+    if recalls:
+        report["recall_range_pct"] = [min(recalls), max(recalls)]
+        print(f"\nrecall across populations: {min(recalls)}% to {max(recalls)}%")
+
+    path = Path(args.out) if args.out else config.RESULTS_DIR / "screen_calibration.json"
+    path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    print(f"wrote {path}")
+
+
+if __name__ == "__main__":
+    sys.exit(main())

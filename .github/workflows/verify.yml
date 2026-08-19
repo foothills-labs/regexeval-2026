@@ -26,3 +26,8 @@ jobs:
 
       - name: Recompute scores and compare against what is committed
         run: make check
+
+      - name: Rebuild every table and fail if any differs from what is committed
+        run: |
+          make tables
+          git diff --exit-code -- paper/

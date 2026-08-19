@@ -61,11 +61,43 @@ def pct(xs, p):
     return s[max(0, min(len(s) - 1, int(p * len(s))))]
 
 
+def emit_intervals(run: str) -> dict:
+    """Paired-bootstrap intervals for every model on every headline metric.
+
+    The main results table used to carry no intervals at all, which is an odd
+    silence in a paper arguing for inferential care. It cannot carry
+    independent binomial ones either -- that is the estimator this section
+    exists to reject. These are the intervals the same bootstrap produces for
+    a single model's score: resample tasks, rescore, take the percentiles.
+    Task difficulty still varies across resamples here (it only cancels in a
+    *difference*), so these are wider than a binomial interval would be, which
+    is the honest width for a score estimated on 450 shared items.
+    """
+    out: dict = {"run": run, "iterations": ITERATIONS, "seed": SEED, "models": {}}
+    for metric in ("usable", "pass", "vulnerable"):
+        models, data, tasks = load(run, metric)
+        _, draws, _ = bootstrap(models, data, tasks)
+        for m in models:
+            out["models"].setdefault(m, {})[metric] = [pct(draws[m], 0.025),
+                                                       pct(draws[m], 0.975)]
+        out.setdefault("tasks", {})[metric] = len(tasks)
+    path = config.RESULTS_DIR / run / "paired_intervals.json"
+    path.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
+    print(f"wrote {path}")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--run", default="sweep")
     ap.add_argument("--metric", default="usable", choices=["usable", "pass", "vulnerable"])
+    ap.add_argument("--emit-intervals", action="store_true",
+                    help="write per-model intervals for the paper's tables and exit")
     args = ap.parse_args()
+
+    if args.emit_intervals:
+        emit_intervals(args.run)
+        return
 
     models, data, tasks = load(args.run, args.metric)
     point, draws, diffs = bootstrap(models, data, tasks)
