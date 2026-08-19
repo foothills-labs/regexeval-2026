@@ -433,8 +433,8 @@ falsifiable by inspection.
 
 Equivalence is decidable only on the regular subset. Backreferences make the
 language non-regular, and equivalence then has no algorithmic answer at all.
-Those cases return \textsc{undec}. Between 82 and 133 of 450 tasks per model
-land there.
+Those cases return \textsc{undec}. Between 78 and 133 of each model's
+scored tasks land there.
 We therefore report two figures:
 \[
 \dfaeq{} = \Pr[\textsc{eq}], \qquad
@@ -894,6 +894,17 @@ can have, whatever their shape, so screening them as though they ran under a
 backtracking engine is a category error. We report the production rate with
 them excluded.
 
+\paragraph{Neither correction moves the number.} Normalisation recovers
+\recovered{} of the \proddropped{} dropped production patterns, roughly
+two-thirds, and the rest carry \texttt{\textbackslash G} or a Unicode
+property and stay out. Screening the recovered population takes anchored
+production from \anchoredprod{}\% to \robnorm{}\%; dropping the linear-engine
+registries takes it to \robbt{}\%; doing both gives \robboth{}\%. The whole
+range is \robrange{}\%, well inside the interval on any one of them, and the
+models at \anchoredmodels{}\% remain indistinguishable from every variant.
+The dialect filter and the engine mismatch are real defects in the
+instrument, and they are not what produces the result.
+
 \paragraph{Recall, measured per population.} Agreement between two static
 approximations is not calibration, so we pair an independent detector with a
 dynamic oracle. The detector is
@@ -1273,9 +1284,8 @@ defensible alone --- one is a lower bound that cannot flatter, the other
 isolates the model from the engine's reach --- but together they create an
 incentive. Equivalence is undecidable exactly when a pattern uses
 backreferences, so a model that reaches for one is scored \emph{more} usable
-for having put its answer beyond checking. Between 82 and 133 of 450 tasks per
-model land there, and the spread across models is 51 tasks, which is large
-enough to matter.
+for having put its answer beyond checking. Between 78 and 133 tasks per model
+land there, a spread of 55, which is large enough to matter.
 
 The obvious test is to correlate a model's \textsc{undec} count against its
 \usable{}@3. That returns nothing (Pearson $-0.07$), and it returns nothing

@@ -100,5 +100,156 @@
       "rate_pct": 8.9,
       "ci95_pct": 0.9
     }
+  },
+  "drops": {
+    "Production code": {
+      "population": "Production code",
+      "pool": 537804,
+      "compiled": 510904,
+      "dropped": 26900,
+      "dropped_pct": 5.0
+    },
+    "Stack Overflow": {
+      "population": "Stack Overflow",
+      "pool": 495135,
+      "compiled": 438563,
+      "dropped": 56572,
+      "dropped_pct": 11.4
+    },
+    "RegexLib": {
+      "population": "RegexLib",
+      "pool": 3838,
+      "compiled": 3446,
+      "dropped": 392,
+      "dropped_pct": 10.2
+    },
+    "by_registry": {
+      "cpan": {
+        "patterns": 142776,
+        "dropped": 10992,
+        "dropped_pct": 7.7,
+        "linear_engine": false
+      },
+      "crates.io": {
+        "patterns": 2024,
+        "dropped": 123,
+        "dropped_pct": 6.1,
+        "linear_engine": true
+      },
+      "godoc": {
+        "patterns": 22104,
+        "dropped": 774,
+        "dropped_pct": 3.5,
+        "linear_engine": true
+      },
+      "maven": {
+        "patterns": 19331,
+        "dropped": 1030,
+        "dropped_pct": 5.3,
+        "linear_engine": false
+      },
+      "npm": {
+        "patterns": 150921,
+        "dropped": 1181,
+        "dropped_pct": 0.8,
+        "linear_engine": false
+      },
+      "packagist": {
+        "patterns": 44235,
+        "dropped": 1646,
+        "dropped_pct": 3.7,
+        "linear_engine": false
+      },
+      "pypi": {
+        "patterns": 43895,
+        "dropped": 134,
+        "dropped_pct": 0.3,
+        "linear_engine": false
+      },
+      "rubygems": {
+        "patterns": 153334,
+        "dropped": 11437,
+        "dropped_pct": 7.5,
+        "linear_engine": false
+      }
+    },
+    "KB13": {
+      "raw": 824,
+      "unique": 732,
+      "dsl_excluded": 200,
+      "screened": 532
+    },
+    "NL-RX-Synth": {
+      "raw": 10000,
+      "unique": 9648,
+      "dsl_excluded": 3808,
+      "screened": 5840
+    }
+  },
+  "robustness": {
+    "production, normalised": {
+      "all": {
+        "n": 5000,
+        "errors": 0,
+        "exponential": 89,
+        "polynomial": 197,
+        "vulnerable": 286,
+        "rate_pct": 5.7,
+        "ci95_pct": 0.6
+      },
+      "anchored": {
+        "n": 4000,
+        "errors": 0,
+        "exponential": 101,
+        "polynomial": 263,
+        "vulnerable": 364,
+        "rate_pct": 9.1,
+        "ci95_pct": 0.9
+      },
+      "pool": 528055
+    },
+    "production, backtracking registries only": {
+      "all": {
+        "n": 5000,
+        "errors": 0,
+        "exponential": 85,
+        "polynomial": 174,
+        "vulnerable": 259,
+        "rate_pct": 5.2,
+        "ci95_pct": 0.6
+      },
+      "anchored": {
+        "n": 4000,
+        "errors": 0,
+        "exponential": 89,
+        "polynomial": 244,
+        "vulnerable": 333,
+        "rate_pct": 8.3,
+        "ci95_pct": 0.9
+      },
+      "pool": 491110
+    },
+    "production, normalised + backtracking only": {
+      "all": {
+        "n": 5000,
+        "errors": 0,
+        "exponential": 75,
+        "polynomial": 188,
+        "vulnerable": 263,
+        "rate_pct": 5.3,
+        "ci95_pct": 0.6
+      },
+      "anchored": {
+        "n": 4000,
+        "errors": 0,
+        "exponential": 90,
+        "polynomial": 236,
+        "vulnerable": 326,
+        "rate_pct": 8.2,
+        "ci95_pct": 0.8
+      },
+      "pool": 508131
+    },
+    "recovered_by_normalisation": 17151
   }
 }

@@ -63,11 +63,17 @@ def rebuild_summary(run_name: str) -> list[dict]:
     merged run and a single run produce the same summary.
     """
     result_dir = config.RESULTS_DIR / run_name
-    entries = [
-        json.loads(f.read_text())
-        for f in sorted(result_dir.glob("*.json"))
-        if f.name != "summary.json"
-    ]
+    # Selected by content rather than by name. This directory also holds
+    # analysis outputs -- paired intervals, McNemar, the adjudicated
+    # disagreement sample -- and an exclusion list by filename silently breaks
+    # the next time one is added, which is exactly how it broke.
+    entries = []
+    for f in sorted(result_dir.glob("*.json")):
+        if f.name == "summary.json":
+            continue
+        blob = json.loads(f.read_text())
+        if isinstance(blob, dict) and "metrics" in blob and "model" in blob:
+            entries.append(blob)
     entries.sort(key=lambda e: (-(headline(e, "usable")
                                  if headline(e, "usable") is not None else -1), e["model"]))
     (result_dir / "summary.json").write_text(json.dumps(entries, indent=2, sort_keys=True))
