@@ -1,5 +1,17 @@
 """Generate the /benchmarks/ page for foothills-labs.com from results.
 
+DO NOT PUBLISH THIS PAGE AS IT STANDS. It emits a table ordered one to eleven
+by usable@3, and the study declines to publish a ranking -- see ARTICLE.md,
+"What we are not claiming": "Bands are defensible. A numbered list from one
+to eleven is not." 62% of tasks give every model the identical result, and
+only 167 of 450 separate them at all. The scores it reads are also inflated
+by the pass_at_k short-task defect in REVISION-PLAN.md part 2 item 5.
+
+This ran once, to foothills-labs.com, and was reverted the same day. Fix the
+presentation (bands, not a list) and the upstream metric before it runs
+again.
+
+
 The site is hand-written static HTML with no build step, so this emits a
 complete page in the site's own design system -- Blueprint scheme, Archivo,
 the existing .data-table / .eyebrow / .lede components -- rather than
