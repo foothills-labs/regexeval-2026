@@ -72,8 +72,9 @@ from regexbench.safety import screen  # noqa: E402
 
 SEED = 20260819
 PER_STRATUM = 120          # sampled per (population, screen verdict)
-BATCH = 40                 # patterns per JVM launch
-DETECTOR_TIMEOUT = 600     # seconds per batch
+BATCH = 30                 # patterns per JVM launch
+PATTERN_TIMEOUT = 5        # seconds the detector may spend on one pattern
+DETECTOR_TIMEOUT = 400     # seconds per batch, as a backstop
 PUMPS = (25, 50, 100, 200, 400, 800, 1600)
 DYNAMIC_TIMEOUT = 1.0      # seconds per (pattern, input)
 WORKERS = 4
@@ -113,9 +114,15 @@ def detector_verdicts(patterns: list[str]) -> dict[str, dict]:
         for p in patterns:
             fh.write(p.replace("\n", "\\n") + "\n")
         path = fh.name
+    # The detector's own per-pattern timeout, rather than Davis's harness
+    # setting `--timeout=0` and enforcing one itself. Without it a single
+    # pathological pattern stalls its whole batch indefinitely, and the batch
+    # then falls back to one JVM per pattern at the same cost each. A pattern
+    # the analysis cannot finish in PATTERN_TIMEOUT is reported unanalysable,
+    # which is a verdict this already handles.
     cmd = ["java", "-cp", f"{DETECTOR}/bin:{DETECTOR}/lib/gson-2.8.2.jar", "driver.Main",
            f"--if={path}", "--test-eda-exploit-string=false", "--ida=true",
-           "--timeout=0", "--simple"]
+           f"--timeout={PATTERN_TIMEOUT}", "--simple"]
     try:
         out = subprocess.run(cmd, capture_output=True, text=True,
                              timeout=DETECTOR_TIMEOUT).stdout
