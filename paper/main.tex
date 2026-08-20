@@ -117,7 +117,7 @@ replicated.
 \vspace{0.5em}
 \noindent\textbf{Artifacts.} All model outputs, scoring code, per-case
 adjudications and analysis scripts are available at
-\url{https://github.com/foothills-labs/regexleaderboard}~\citep{regexleaderboard}. Every number in
+\url{https://github.com/foothills-labs/regexeval-2026}~\citep{regexeval-2026}. Every number in
 this paper recomputes offline from committed data with no API access.
 
 \section{Introduction}
@@ -1740,8 +1740,8 @@ which needs no API access.
 \section{Reproduction}
 
 \begin{lstlisting}[language=bash]
-git clone https://github.com/foothills-labs/regexleaderboard
-cd regexleaderboard
+git clone https://github.com/foothills-labs/regexeval-2026
+cd regexeval-2026
 make setup      # pinned scorer + corpus download
 make score RUN=sweep
 \end{lstlisting}

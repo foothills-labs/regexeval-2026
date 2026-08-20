@@ -1,4 +1,4 @@
-# regexleaderboard — handoff validation & implementation plan
+# regexeval-2026 — handoff validation & implementation plan
 
 Written 2026-08-07, against [docs/HANDOFF.md](docs/HANDOFF.md) (dated
 2026-08-02). Every claim in the handoff was checked from this environment
@@ -199,10 +199,12 @@ once real Phase 1 numbers replace this estimate.
    egress policy denies it (CONNECT 403 at the gateway). This is the one
    hard blocker; see §3. `lesswrong.com` is also blocked (worked around via
    search; nothing operational needs it).
-4. **Naming**: the repo exists as `regexleaderboard` — neither of the
-   handoff's two candidates, and singular. By the handoff's own rule
-   ("a leaderboard's URL is its identity — don't rename it later") the name
-   is now fixed; noting the deviation for the record, not proposing a rename.
+4. **Naming**: the repo existed as `regexleaderboard` — neither of the
+   handoff's two candidates, and singular. The handoff's rule ("a
+   leaderboard's URL is its identity — don't rename it later") stopped
+   applying when the project stopped being a leaderboard: it was renamed
+   **`regexeval-2026`** on 2026-08-20, the name saying what it is — one
+   dated evaluation study — and GitHub redirects the old URL.
 
 ### 1.4 Smoke test performed (2026-08-07, Python 3.11.15, regexbench 0.3.0)
 

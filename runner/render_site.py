@@ -162,12 +162,12 @@ actually ship? regexbench scored across {len(summary)} models on Re(gEx|DoS)Eval
         disabled so every model faces the same conditions. Scored with
         <code>regexbench</code> 0.4.0. Run {html.escape(run_date)}. Every raw
         response is committed, and the scores recompute from them offline &mdash;
-        <a href="https://github.com/foothills-labs/regexleaderboard">see the
+        <a href="https://github.com/foothills-labs/regexeval-2026">see the
         repository</a> for the method, the limitations, and a re-run command.
       </p>
 
       <div class="cta-row">
-        <a class="btn btn-primary" href="https://github.com/foothills-labs/regexleaderboard">Results and method</a>
+        <a class="btn btn-primary" href="https://github.com/foothills-labs/regexeval-2026">Results and method</a>
         <a class="btn btn-ghost" href="https://github.com/foothills-labs/regexbench">regexbench</a>
         <a class="btn btn-ghost" href="/">&larr; Back to the lab</a>
       </div>

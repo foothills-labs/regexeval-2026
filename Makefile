@@ -1,4 +1,4 @@
-# regexleaderboard -- everything runs from a clean clone with `make`.
+# regexeval-2026 -- everything runs from a clean clone with `make`.
 .PHONY: setup setup-corpora pin detector calibrate score persample analysis check docs tables figures crosscorpus collect clean help
 
 PY ?= python3
