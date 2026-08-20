@@ -1,4 +1,24 @@
 {
+  "common_tasks": {
+    "pass": 421,
+    "usable": 421,
+    "vulnerable": 421
+  },
+  "discriminative_tasks": {
+    "pass": 186,
+    "usable": 162,
+    "vulnerable": 94
+  },
+  "identical_pct": {
+    "pass": 56,
+    "usable": 62,
+    "vulnerable": 78
+  },
+  "identical_tasks": {
+    "pass": 235,
+    "usable": 259,
+    "vulnerable": 327
+  },
   "iterations": 10000,
   "models": {
     "claude-opus-5": {
@@ -155,6 +175,12 @@
         0.12666666666666668
       ]
     }
+  },
+  "pairs": 55,
+  "resolved_at_95": {
+    "pass": 16,
+    "usable": 9,
+    "vulnerable": 9
   },
   "run": "sweep",
   "seed": 20260812,

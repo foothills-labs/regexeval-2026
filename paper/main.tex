@@ -70,8 +70,9 @@ finds roughly half of correct backends exploitable. SecureAgentBench reports
 15.2\% correct-and-secure for its best agent. The regex domain does \emph{not}
 reproduce that pattern, and we report the difference rather than the
 similarity. Separately, models are safer than the corpus's own human-written
-reference patterns --- 9.0\% pooled against 13.6\%, and eight of the eleven
-separate under an exact McNemar test on the paired tasks. We initially read
+reference patterns --- 9.0\% pooled against 13.6\%, and \holmcount{} of the
+eleven separate under an exact McNemar test on the paired tasks after a
+Holm correction for eleven comparisons. We initially read
 that as evidence that ReDoS is endemic to human practice. Extending the
 identical screen to five further populations, including half a million
 regular expressions extracted from shipped packages, refutes it and replaces
@@ -82,8 +83,9 @@ answers 17.3\%, this corpus's reference answers \anchoredgold{}\%), while those
 \emph{executed} in shipped packages sit at \anchoredprod{}\%, statistically
 indistinguishable from the models at \anchoredmodels{}\%. \emph{Vulnerability tracks
 whether a pattern was ever run, not whether a human or a model wrote it.} We
-calibrate the screen against an independent detector and a dynamic oracle to
-show the ordering is not an artifact of differential miss rates.
+calibrate the screen against an independent detector and a dynamic oracle,
+and find the differential miss rates real but far too small to produce the
+ordering.
 
 The audit behind this is the paper's methodological contribution. Metrics
 that compare generated output against a human answer key inherit that key's
@@ -185,7 +187,7 @@ on itself.
   \citet{siddiq2024regexeval} evaluate T5, Phi-1.5 and GPT-3.5-Turbo. We
   evaluate eleven models released in the intervening period under pinned
   serving providers (\cref{sec:serving}), and find the population compressed
-  into an eight-point band that a hundredfold price range does not order.
+  into a \bandwidth{}-point band that a hundredfold price range does not order.
 
   \item \textbf{A second-corpus replication} (\cref{sec:replication}). We
   re-run the two reference-independent criteria on
@@ -433,8 +435,13 @@ falsifiable by inspection.
 
 Equivalence is decidable only on the regular subset. Backreferences make the
 language non-regular, and equivalence then has no algorithmic answer at all.
-Those cases return \textsc{undec}. Between 78 and 133 of each model's
-scored tasks land there.
+Those cases return \textsc{undec}. A pattern the engine declines for another
+reason returns \textsc{unsup}, and both are reported together in this paper's
+\emph{undec.} column and in \cref{sec:undec}: \usable{} gives them the same
+free credit, so the accounting has to include both, but they are different
+claims --- one is a theorem about backreferences, the other is this engine's
+reach. Between 78 and 133 of each model's scored tasks land in the pair, split
+\undecsplit{}.
 We therefore report two figures:
 \[
 \dfaeq{} = \Pr[\textsc{eq}], \qquad
@@ -545,12 +552,16 @@ entering the @3 estimate) and \emph{undec.} (tasks whose equivalence is
 undecidable). Tasks that returned fewer than three samples are excluded from
 the estimate rather than scored on what arrived (\cref{sec:metrics}), which is
 why $n$ varies; failed requests are itemised in \cref{app:failures}. The
-interval is a paired bootstrap over tasks (\cref{sec:paired}), not an
-independent binomial one: every model answers the same items, and a binomial
-interval here would be the estimator this paper spends \cref{sec:paired}
-arguing against. Ordering is by \usable{}@3 and should be read as a banding,
-not a ranking (\cref{sec:power}) --- the intervals overlap almost everywhere,
-which is the point.}
+interval is a task-level bootstrap of each model's own score. It is
+\emph{not} the paired procedure of \cref{sec:paired} and carries none of its
+benefit: pairing is a property of a comparison, not of a score, so a marginal
+interval here lands within a twentieth of a point of the binomial one it might
+be mistaken for. \textbf{Do not read overlap between these intervals as a
+difference that does not resolve.} That inference is the error
+\cref{sec:paired} exists to correct --- \resolvedusable{} pairs separate at
+95\% under the paired test while every interval in this column overlaps. Ordering is by
+\usable{}@3 and should be read as a banding, not a ranking
+(\cref{sec:power}).}
 \label{tab:main}
 \end{table}
 
@@ -629,7 +640,7 @@ one in fourteen either way, not one in two. (An earlier draft reported a count
 of 135 here that we can no longer reproduce from our own released data, and
 did not state which denominator the \vulngivencorrect{}\% used.)
 
-$\exact{}@3$, string identity with the reference, runs from 2.0\% to 6.3\%.
+$\exact{}@3$, string identity with the reference, runs from \exactlo{}\% to \exacthi{}\%.
 String-comparison scoring would therefore misrank essentially every system,
 which is what justifies the automata-theoretic treatment.
 
@@ -677,14 +688,19 @@ any-of-three statistic of \cref{tab:main}.
 \small
 \input{tab_vuln}
 \caption{ReDoS screening of model outputs against the corpus's own
-human-written reference patterns, one pattern per task in all cases. The final
+human-written reference patterns, one pattern per task in all cases --- the
+first sample, not a mean over the three. The human side has one answer per
+task, so a mean would compare an average of three attempts against a single
+attempt; \cref{tab:at1} reports the three-sample estimators separately, which
+is why its $\vuln{}@1$ column differs from this table's rate. The final
 column is the exact McNemar test against the reference set on the same tasks;
 see below for why an independent interval would be the wrong instrument here.}
 \label{tab:vuln}
 \end{table}
 
-Every model screens safer than the reference set, and eight of the eleven do
-so distinguishably. That second clause is the one that needs the work, and an
+Every model screens safer than the reference set, and \holmcount{} of the
+eleven do so distinguishably once the eleven tests are corrected for
+multiplicity. That second clause is the one that needs the work, and an
 earlier draft did not do it: it read the ordering off eleven independent
 binomial intervals over a pooled 4{,}941 patterns. That is the wrong estimator
 twice over, and both errors are ones this paper criticises elsewhere. The
@@ -705,6 +721,14 @@ where the model is safe on 39 tasks and safe where the model is vulnerable on
 --- \texttt{kimi-k3}, \texttt{claude-opus-5} and \texttt{glm-5.2} --- are the
 three with the highest vulnerability rates, which is what one would expect and
 is not what an eleven-way ordering of point estimates would have told us.
+
+Eleven tests need a multiplicity correction, which we owe the reader in a
+paper arguing that people reach for the wrong inferential tool.
+Holm--Bonferroni at $\alpha = 0.05$ stops at the seventh ordered $p$-value and
+resolves \holmcount{} of eleven; Benjamini--Hochberg, controlling the false
+discovery rate instead, resolves \bhcount{}. We quote the Holm figure in the
+abstract and the conclusion because it is the conservative one; readers who
+prefer FDR should read \bhcount{}.
 
 So: models are safer than this corpus's answer key, on most of the field,
 under the right test. Read alone, that invites a strong reading: ReDoS
@@ -743,13 +767,14 @@ survives it is not an ordering of humans against machines.}
 \small
 \input{tab_crosscorpus}
 \caption{The identical ReDoS screen applied to six populations, plus this
-paper's models under the identical restriction. Intervals are 95\% binomial,
-which is the right form here and not in \cref{tab:main}: these populations
-are genuinely independent --- different corpora, no shared items --- where
-the models answer shared tasks and need a paired procedure. The anchored
-block is the comparison to read: the unanchored figures are dominated by task
-mix, which is why Stack Overflow moves from 5.9\% to 17.3\% between the two
-blocks.}
+paper's models under the identical restriction. Intervals are 95\% binomial
+for the wild populations, whose patterns are genuinely independent draws.
+\emph{The model row is not}: its \anchoredmodelsn{} patterns are eleven models
+answering the same 330 anchored tasks, so it carries a bootstrap resampled
+over tasks, which is 2.4 times wider than the binomial interval the same
+counts would give. The anchored block is the comparison to read: the
+unanchored figures are dominated by task mix, which is why Stack Overflow
+moves from 5.9\% to 17.3\% between the two blocks.}
 \label{tab:crosscorpus}
 \end{table}
 
@@ -785,9 +810,23 @@ provenance --- which is \anchoredmodels{}\% $\pm$ \anchoredmodelsci{} over
 Correcting it moves the models \emph{toward} the answer key and away from
 production code, by about eight tenths of a point, and the conclusion survives
 anyway: \anchoredmodels{}\% against production code's \anchoredprod{}\% is not
-a resolvable difference ($z = 1.27$, $p = \anchoredp{}$), while both sit far
-below every population written to be read. We report the direction of the
-correction because it cost us something.
+a resolvable difference. We report the direction of the correction because it
+cost us something.
+
+That comparison needs the right interval, and the obvious one is wrong. The
+\anchoredmodelsn{} anchored model patterns are eleven systems answering the
+same 330 tasks, so a binomial interval over them treats shared task difficulty
+as independent draws --- the error this paper corrects in \cref{sec:paired}
+and then, in an earlier draft, committed here. Resampled over tasks the
+interval is $[\modelclusterlo{}, \modelclusterhi{}]$ rather than $\pm$1.0.
+Against production code that changes nothing, because a wider interval only
+strengthens ``indistinguishable''. Against the nearest read population it
+changes the claim: the anchored gold set's $13.4\% \pm 2.9$ spans
+$[10.5, 16.3]$, which the models' interval now touches, so
+\emph{models against gold does not resolve at this matching either}. That is
+what we already concede for the stricter matchings below, and it should be
+said uniformly rather than left as the one comparison that separates because
+it used the looser estimator.
 
 Two stricter matchings are available here that are not available for the wild
 populations, because we know which \emph{task} each model pattern answers.
@@ -954,30 +993,56 @@ overlap almost everywhere: dynamically confirmed vulnerabilities are scarce in
 a sample of a few hundred, and KB13 yields three. So this does not resolve a
 fine ordering of sensitivities, and we do not claim one.
 
-What it does resolve is the direction, which is the part that mattered. If the
-ordering were manufactured by the screen being blinder in production code than
-in showcase validators, recall would have to be \emph{lower} in production.
-It is not. The two populations where the screen is most sensitive are
-\texttt{regexlib.com} at 91.7\% and Stack Overflow at 92.6\% --- the two with
-the highest measured vulnerability --- while production code sits at 80.0\%
-and this corpus's gold answers at 86.4\%. The differential runs the opposite
-way to the one that would explain away the result.
+What it does resolve is magnitude, and it is worth being exact about the
+direction first, because the differential runs \emph{towards} the explanation
+that would deflate this section rather than away from it. If the ordering were
+manufactured by the screen being blinder in production code than in showcase
+validators, recall would have to be lower in production. It is: production
+code sits at 80.0\% against \texttt{regexlib.com}'s 91.7\% and Stack
+Overflow's 92.6\%. The hypothesis makes a correct prediction about the sign.
 
-Dividing each measured rate by the recall behind it gives a first-order
-sensitivity check. On the anchored populations that turns 20.1\%, 17.3\%,
-\anchoredgold{}\%, \anchoredmodels{}\% and \anchoredprod{}\% into
-\corrlib{}\%, \corrso{}\%, \corrgold{}\%, \corrmodels{}\% and \corrprod{}\%.
-Every rate rises, because the screen is a lower bound everywhere; the
-\emph{ordering is unchanged}; and the read-against-run gap is not closed. We
-would not put those corrected numbers in a table --- recall here is measured
-against what one detector finds, so it is relative rather than absolute, and
-the counts behind it are small --- but the check is the one a reader should
-want, and it does not overturn anything.
+It is wrong about the size, which is what settles it. Dividing each measured
+rate by the recall behind it gives a first-order correction. On the anchored
+populations that turns 20.1\%, 17.3\%, \anchoredgold{}\%, \anchoredmodels{}\%
+and \anchoredprod{}\% into \corrlib{}\%, \corrso{}\%, \corrgold{}\%,
+\corrmodels{}\% and \corrprod{}\%. Every rate rises, because the screen is a
+lower bound everywhere. The gap between the most vulnerable read population
+and production code narrows from \gapraw{} points to \gapcorr{} --- the
+differential eats \gapclosed{} of a \gapraw{}-point gap --- and the ordering
+does not change. A miss rate that would have to close eleven points closes
+four tenths of one.
 
-Two limitations belong with it. The independent detector could not analyse
-between 46 and 110 of each 240-pattern sample, and those are neither evidence
-for nor against; ground truth therefore covers the patterns two tools can both
-reason about, which is not all of them. And agreement between our screen and
+\paragraph{The same correction moves the models off production code.} It also
+costs us the other half of the pairing, and by more than the anchoring
+correction did. Model outputs have the second-lowest recall in
+\cref{tab:calibration} at 73.3\%, so correcting them moves them further than
+it moves production: \anchoredmodels{}\% to \corrmodels{}\% against
+\anchoredprod{}\% to \corrprod{}\%. The distance between the two goes from
+\modelprodraw{} points to \modelprodcorr{}, and the models land nearer the
+corrected gold set at \corrgold{}\% than the corrected production code they
+are paired with in \cref{tab:crosscorpus}.
+
+We do not think that breaks the pairing, because the interval on the models'
+73.3\% recall is $[48, 89]$ and a correction that noisy cannot carry a
+2-point conclusion. But it is the same kind of disclosure as the eight tenths
+of a point the anchoring correction cost, it is larger, and a reader should
+not have to compute it from two adjacent paragraphs. We would not put the
+corrected figures in a table --- recall here is measured against what one
+detector finds, so it is relative rather than absolute, and the counts behind
+it are small --- but they belong in the text.
+
+Three limitations belong with it. Recall is conditioned on what the
+independent detector flags, so it estimates the screen's sensitivity without
+bias only if the \emph{detector's} sensitivity is itself
+population-independent --- a version of the assumption this section exists to
+test, moved up one level. The timing oracle keeps this from being a
+two-detector agreement study, since a confirmation is a measured fact about
+CPython rather than a second opinion, but it does not remove the conditioning.
+Relatedly, the detector could not analyse between 46 and 110 of each
+240-pattern sample, and those are neither evidence for nor against; ground
+truth therefore covers the patterns two tools can both reason about, and two
+shape-based analyses share blind spots, so what both miss is structurally
+invisible here. And agreement between our screen and
 the detector runs 53--74\%, far below either one's recall, because the
 detector flags a good deal that does not blow up in CPython ---
 \lstinline!^[a-z]+[a-z]*$! is quadratic in principle and instant in practice.
@@ -1068,14 +1133,35 @@ solutions have less structural room for catastrophic backtracking.
 \end{enumerate}
 
 The third is the one that would deflate the finding, and it is the one we can
-test, because we have a second corpus that is twenty points easier. If the
-correct subset is safe because it is simple, then StructuredRegex's correct
-patterns should be simpler still and therefore safer. They are neither. On the
-structural measures, StructuredRegex's correct patterns are \emph{longer}
-(median 33 characters against 28) and carry \emph{more} quantifiers (median 4
-against 3), while being twice as ReDoS-prone.
-\cref{sec:replication} takes this further, because the direction of the
-difference turns out to be informative about which shape is doing the damage.
+test. The cross-corpus form of the test is available first: if the correct
+subset is safe because it is simple, StructuredRegex's correct patterns should
+be simpler still, being twenty points easier, and therefore safer. They are
+neither --- they are \emph{longer} (median 33 characters against 28) and carry
+\emph{more} quantifiers (median 4 against 3) while being twice as ReDoS-prone,
+and \cref{sec:replication} takes that further.
+
+But that test compares two corpora whose targets were authored by completely
+different processes, and \cref{sec:replication} then argues at length that the
+difference in authorship is what drives the vulnerability gap. It therefore
+cannot separate ``the correct subset is biased toward simple tasks'' from
+``the two corpora differ''. The within-corpus form can, because authorship is
+held fixed. We stratify this corpus's tasks by how many of the eleven models
+solved them --- the corpus's own measure of how easy a task turned out to be
+--- and measure vulnerability among correct patterns inside each stratum.
+
+The selection story survives this, weakly, and against us. On tasks that six
+or more models solved, \easyvuln{}\% of correct patterns are vulnerable; on
+tasks only one to five solved, \hardvuln{}\%. The point estimate runs the
+direction the hypothesis predicts, so part of our headline rate does look like
+a selection effect. Resampled over tasks the difference is
+\easyhard{} points with a 95\% interval of $[\easyhardlo{},
+\easyhardhi{}]$, which crosses zero, so this corpus cannot establish it.
+
+What the stratification does establish is a bound, and that is the useful
+part. Even on the tasks only one to five models could solve, vulnerability
+among the patterns they did get right is \hardvuln{}\% --- not the roughly
+50\% that BaxBench reports for backend code. The difficulty ceiling is real
+enough to be worth stating and far too small to be the explanation.
 
 The first two we cannot separate here. Both predict that the regex domain
 looks safer than backend code, and neither predicts anything about the gap
@@ -1201,10 +1287,14 @@ over 1{,}350 requests gives the \$3.39 total.}
 \label{tab:cost}
 \end{table}
 
-The extremes differ by a factor of 98 in price and 1.1 percentage points in
-\usable{}@3 --- and in the direction that favours the cheaper model, which
-scores 19.8\% against 20.8\%. That difference is well inside what we can
-resolve (\cref{sec:paired}), which is to say the two are indistinguishable.
+The extremes differ by a factor of 98 in price and \costgap{} percentage
+points in \usable{}@3, in favour of the more expensive model:
+\texttt{deepseek-v4-flash-0731} scores \cheapusable{}\% and
+\texttt{claude-opus-5} \dearusable{}\%. Before the estimator fix of
+\cref{app:hazards} the gap was 3.2 points in the same direction, so the
+correction shrinks it rather than inverting it, and \costgap{} points is well
+inside what we can resolve (\cref{sec:paired}) --- which is to say the two are
+indistinguishable, not that the cheaper one wins.
 This observation is about this task only. It is not a general claim about
 model capability.
 
@@ -1291,10 +1381,25 @@ practically the same thing.
 
 Because the adjudicated 14 were drawn from the ASCII-witness cases only, none
 of them is among those 19, and the two effects compose without
-double-counting: the model is at fault in 3 of 14 ASCII-witness cases, and
-41 of the 60 sampled cases have an ASCII witness, so the model is clearly at
-fault in $(41/60) \times (3/14) = 14.6\%$ of \textsc{diff} verdicts. Call it
-roughly \textbf{15\%}. The verdict labels in \cref{tab:adjudication} map to
+double-counting. The model is at fault in 3 of 14 ASCII-witness cases, and 41
+of the 60 sampled cases have an ASCII witness. What follows depends on how the
+non-ASCII cases are treated, and the two defensible readings differ by six
+points, so we give both rather than pick one silently:
+
+\begin{itemize}
+\item Counting them as \textsc{diff} verdicts on which the model is
+\emph{not} at fault --- the \texttt{\textbackslash d}-versus-\texttt{[0-9]}
+distinction is Python's, not the model's --- gives
+$(41/60) \times (3/14) = 14.6\%$.
+\item Treating them as not real disagreements at all, so that they leave the
+denominator, gives $3/14 = 21\%$.
+\end{itemize}
+
+\noindent We quote the first, roughly \textbf{15\%}, because a formally
+distinct language is a real \textsc{diff} verdict and dropping it would
+flatter us. A reader who disagrees should read 21\%. Neither number changes
+the conclusion, which is that the majority of \textsc{diff} verdicts are not
+model errors. The verdict labels in \cref{tab:adjudication} map to
 the released adjudications as \texttt{model\_right} $\to$ reference
 incorrect, \texttt{ambiguous} $\to$ description underspecifies,
 \texttt{gold\_right} $\to$ model incorrect.
@@ -1378,8 +1483,9 @@ rather than on demonstrated equivalence, and the share tracks \textsc{undec}
 count closely across models ($r = +0.82$) even though the composite itself
 does not. Removing the credit reorders the field. \texttt{gpt-5.6-sol} has the
 most undecidable comparisons of any model at 133; it has the third-highest
-\usable{}@3 and one of the three lowest proven-equivalence rates, and it falls
-seven places.
+\usable{}@3 and, on proven equivalence, ties for third-lowest --- a drop of
+six places, or seven depending on how the tie with
+\texttt{gemini-3.1-flash-lite} at 8.7\% is broken.
 
 We are not proposing the stricter rule --- it would charge a model for a
 theorem, which is the objection to \dfaeq{} --- and we are not claiming any
@@ -1407,23 +1513,14 @@ resamples and a fixed seed:
 \begin{table}[htbp]
 \centering
 \small
-\begin{tabular}{lr}
-\toprule
-Procedure & pairs resolved at 95\% (of 55) \\
-\midrule
-Independent binomial intervals & 1 \\
-Paired bootstrap, \usable{}@3 & 9 \\
-Paired bootstrap, \pass{}@3 & 15 \\
-Paired bootstrap, \vuln{}@3 & 15 \\
-\bottomrule
-\end{tabular}
+\input{tab_paired}
 \caption{Resolvable pairwise comparisons under independent versus paired
 inference on identical data.}
 \label{tab:paired}
 \end{table}
 
 The correction is not marginal. It changes the number of defensible
-comparisons ninefold. We flag it because independent
+comparisons on \usable{}@3 \resolvedusable{}-fold. We flag it because independent
 intervals look like the default in adjacent evaluation work, and the design
 they are applied to, all systems answering all items, is close to universal.
 
@@ -1434,10 +1531,11 @@ $+0.7\%$ with a 95\% interval of $[-2.9\%, +4.3\%]$.
 \subsection{Discriminative power of the corpus}
 \label{sec:power}
 
-There is a structural reason behind this. On \usable{}@3, \textbf{62\% of
-tasks produce the same outcome for all eleven models}. On \pass{}@3 it is
-56\%, on \vuln{}@3, 77\%. Only 167 of 450 tasks carry any
-discriminative signal at all.
+There is a structural reason behind this. Over the \commontasks{} tasks every
+model answered, \textbf{\identicalusable{}\% produce the same \usable{}@3
+outcome for all eleven}. On \pass{}@3 it is \identicalpass{}\%, on
+\vuln{}@3, \identicalvuln{}\%. Only \discriminative{} of \commontasks{} tasks
+carry any \usable{}@3 signal at all.
 
 For calibration: resolving a 3-percentage-point difference at $p \approx 0.2$
 with independent intervals requires roughly 2{,}800 items---more than the
@@ -1568,9 +1666,9 @@ small.
 
 Two findings survive that correction intact, both resting only on criteria
 that never consult a human answer key. Models are safer than the
-human-written reference patterns against which they are scored --- on eight of
-eleven under a paired test, not on all eleven, which is what we would have
-claimed from the point estimates --- and indistinguishable from the regular
+human-written reference patterns against which they are scored --- on
+\holmcount{} of eleven under a paired, multiplicity-corrected test, not on all
+eleven, which is what we would have claimed from the point estimates --- and indistinguishable from the regular
 expressions in shipped packages once both are restricted the same way. Across
 six populations, ReDoS prevalence tracks whether a pattern is ever executed
 rather than whether a human or a model wrote it, which locates the anomaly in
