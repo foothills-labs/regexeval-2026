@@ -46,9 +46,11 @@ import json
 import math
 import random
 import re
+import signal
 import subprocess
 import sys
 import tempfile
+import time
 import warnings
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor
@@ -73,8 +75,12 @@ PER_STRATUM = 120          # sampled per (population, screen verdict)
 BATCH = 40                 # patterns per JVM launch
 DETECTOR_TIMEOUT = 600     # seconds per batch
 PUMPS = (25, 50, 100, 200, 400, 800, 1600)
-DYNAMIC_TIMEOUT = 2.0      # seconds per (pattern, input)
+DYNAMIC_TIMEOUT = 1.0      # seconds per (pattern, input)
 WORKERS = 4
+# Above this input length a hang no longer distinguishes exponential from
+# merely quadratic: 2,000 characters is 4 million steps for a quadratic
+# matcher, which is already seconds.
+EXPONENTIAL_LENGTH = 400
 SLICE = 600                # candidates screened per round when filling a stratum
 
 DETECTOR = (config.LINGUA_FRANCA_DIR / "analysis" / "performance" / "vuln-regex-detector" /
@@ -173,68 +179,104 @@ def attack_inputs(exploit: dict, pumps: int) -> list[tuple[str, str]]:
 # Patterns and attack inputs contain newlines and, occasionally, NUL, and argv
 # carries neither -- passing them there raises before the pattern is ever run,
 # which would silently score a pathological pattern as safe.
-_PROBE = r"""
-import json, re, sys, time
-job = json.loads(sys.stdin.read())
-compiled = re.compile(job["pattern"])
-start = time.process_time()
-getattr(compiled, job["method"])(job["text"])
-sys.stdout.write(str(time.process_time() - start))
-"""
+class _MatchTimeout(Exception):
+    pass
+
+
+def _on_alarm(signum, frame):
+    raise _MatchTimeout()
+
+
+def _time_match(pattern: str, text: str, method: str, timeout: float):
+    """Seconds CPython spends matching, or None if it did not finish.
+
+    Timed in this process rather than in a child. CPython's matching engine
+    checks for signals, so `setitimer` interrupts even a catastrophic match,
+    and a per-probe subprocess costs more than the measurement: the ladder
+    runs a dozen probes per pattern and process startup dominated everything.
+    `process_time` rather than wall clock, so a loaded machine cannot
+    manufacture a vulnerability.
+    """
+    try:
+        compiled = re.compile(pattern)
+    except Exception:
+        return None
+    previous = signal.signal(signal.SIGALRM, _on_alarm)
+    signal.setitimer(signal.ITIMER_REAL, timeout)
+    start = time.process_time()
+    try:
+        getattr(compiled, method)(text)
+        return time.process_time() - start
+    except _MatchTimeout:
+        return None
+    except Exception:
+        return None
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous)
 
 
 def blows_up(pattern: str, exploits: list[dict]) -> dict:
-    """Time CPython on the evil input, in a child so a hang can be killed.
+    """Does the detector's evil input actually blow up under CPython?
 
-    Two ways to be confirmed vulnerable, because the two complexity classes
-    show themselves differently at input sizes we can actually run:
+    Two ways to be confirmed, because the two complexity classes show
+    themselves differently at input sizes we can run:
 
     * **Exponential.** Matching does not finish inside the timeout at a pump
-      count small enough that a linear matcher would be instant. Nothing more
-      is needed -- the hang is the evidence.
+      count small enough that a linear matcher would be instant. The hang is
+      the evidence.
     * **Polynomial.** A quadratic matcher needs inputs in the hundreds of
-      thousands of characters before it takes seconds, which is not a
-      practical thing to run over thousands of patterns. So instead of waiting
-      for a hang we *measure the growth*: fit log(time) against log(input
-      length) over the pump ladder and confirm when the slope is clearly above
-      linear. `\s*\s*x` comes out at a slope near 2 in milliseconds, where
-      waiting for it to time out would take minutes.
+      thousands of characters before it takes seconds, which is not practical
+      over thousands of patterns. So instead of waiting for a hang we measure
+      the growth: fit log(time) against log(input length) across the ladder
+      and confirm when the slope is clearly above linear. `\\s*\\s*x` comes out
+      near 2 in milliseconds, where waiting for it to time out would take
+      minutes.
 
-    Timings come from `process_time` inside the child rather than wall clock,
-    so a loaded machine cannot manufacture a vulnerability.
+    The ladder stops as soon as it has an answer: a timeout settles it, and so
+    does a pattern still running in microseconds at the largest input, which
+    is not going to be super-linear at any size worth defending against.
     """
-    # Below this the measurement is timer noise rather than matching cost, and
-    # fitting a slope through noise produces confident nonsense.
     floor = 1e-3
     best = {"confirmed": False, "kind": None, "slope": None, "trace": []}
     for exploit in exploits:
         trace = []
         for pumps in PUMPS:
+            measured = []
             for text, method in attack_inputs(exploit, pumps):
-                job = json.dumps({"pattern": pattern, "text": text, "method": method})
-                try:
-                    done = subprocess.run(
-                        [sys.executable, "-c", _PROBE], input=job,
-                        capture_output=True, text=True, timeout=DYNAMIC_TIMEOUT)
-                except subprocess.TimeoutExpired:
-                    return {"confirmed": True, "kind": "exponential", "slope": None,
+                seconds = _time_match(pattern, text, method, DYNAMIC_TIMEOUT)
+                if seconds is None:
+                    # A timeout confirms the pattern; it does not by itself
+                    # establish a degree. Calling every hang exponential is
+                    # the threshold-for-measurement substitution this paper
+                    # criticises in its own screen, so: a hang on an input a
+                    # linear or even quadratic matcher would finish in
+                    # microseconds is exponential, and a hang that needs a
+                    # large input is super-linear of unestablished degree.
+                    kind = ("exponential" if len(text) <= EXPONENTIAL_LENGTH
+                            else "super-linear")
+                    return {"confirmed": True, "kind": kind, "slope": None,
                             "pumps": pumps, "length": len(text), "method": method,
                             "trace": trace}
-                if done.returncode == 0 and done.stdout.strip():
-                    trace.append([len(text), method, float(done.stdout.strip())])
+                trace.append([len(text), method, seconds])
+                measured.append(seconds)
+            # Still in the noise at the top of the ladder: nothing to fit.
+            if pumps == PUMPS[-1] and max(measured, default=0) < floor:
+                break
         for method in ("fullmatch", "search"):
             points = [(n, t) for n, m, t in trace if m == method and t > floor]
             slope = _loglog_slope(points)
             if slope is not None and slope > (best["slope"] or 0):
-                best = {"confirmed": slope >= 1.5, "kind": "polynomial" if slope >= 1.5 else None,
+                best = {"confirmed": slope >= 1.5,
+                        "kind": "polynomial" if slope >= 1.5 else None,
                         "slope": round(slope, 2), "method": method, "trace": trace}
         if not best["trace"]:
             best["trace"] = trace
     return best
 
 
-def _loglog_slope(points: list[tuple[int, float]]) -> float | None:
-    """Least-squares exponent of time against input length.
+def _loglog_slope(points):
+    """Least-squares exponent of match time against input length.
 
     A linear matcher gives a slope near 1, quadratic near 2. Three points is
     the minimum that distinguishes a slope from a pair of measurements.
@@ -249,6 +291,11 @@ def _loglog_slope(points: list[tuple[int, float]]) -> float | None:
     if denominator == 0:
         return None
     return sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / denominator
+
+
+def _confirm(job):
+    pattern, exploits = job
+    return blows_up(pattern, exploits)
 
 
 def quantifiers(pattern: str) -> int:
@@ -360,10 +407,12 @@ def main():
         for i in range(0, len(sample), BATCH):
             verdicts.update(detector_verdicts([p for p, _ in sample[i:i + BATCH]]))
 
+        jobs = [(p, verdicts.get(p, {}).get("exploits") or []) for p, _ in sample]
+        with ProcessPoolExecutor(max_workers=WORKERS) as pool:
+            dynamics = list(pool.map(_confirm, jobs, chunksize=4))
         rows = []
-        for pattern, screen_verdict in sample:
+        for (pattern, screen_verdict), dyn in zip(sample, dynamics):
             det = verdicts.get(pattern, {"verdict": "UNKNOWN", "exploits": []})
-            dyn = blows_up(pattern, det["exploits"]) if det.get("exploits") else None
             rows.append({"screen": screen_verdict, "detector": det["verdict"],
                          "confirmed": bool(dyn and dyn["confirmed"]),
                          "length": len(pattern), "quantifiers": quantifiers(pattern)})
