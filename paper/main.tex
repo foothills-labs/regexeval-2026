@@ -893,12 +893,15 @@ previous match and has no Python equivalent; \texttt{\textbackslash
 p\{\ldots\}} would have to be approximated), and report the recovered
 population as a robustness row alongside the original.
 
-\paragraph{Two registries cannot backtrack at all.} \linearregistries{}
-(\linearpatterns{} patterns) target RE2 and the Rust \texttt{regex} crate,
-which are linear-time by construction. ReDoS is not a property their patterns
-can have, whatever their shape, so screening them as though they ran under a
-backtracking engine is a category error. We report the production rate with
-them excluded.
+\paragraph{Two registries cannot backtrack at all.} \linearregistries{} target
+RE2 and the Rust \texttt{regex} crate, which are linear-time by construction.
+ReDoS is not a property their patterns can have, whatever their shape, so
+screening them as though they ran under a backtracking engine is a category
+error. \linearpatterns{} patterns appear in one of the two; of those,
+\linearonly{} appear in no backtracking registry at all, and those are the
+ones the robustness run excludes. (A pattern can be published to several
+registries, so this is a count of distinct patterns rather than the sum of the
+two registry columns.)
 
 \paragraph{Neither correction moves the number.} Normalisation recovers
 \recovered{} of the \proddropped{} dropped production patterns

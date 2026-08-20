@@ -131,6 +131,12 @@ def _report():
     perl_anchored = re.compile(r"^\\A.*\\[zZ]$", re.S)
     causes = Counter()
     kept = dropped = kept_anchored = dropped_anchored = recovered = 0
+    # Registry counts overlap -- a pattern can appear in several -- so the
+    # number of patterns targeting a linear-time engine is not the sum of the
+    # two registry totals. What the backtracking-only robustness run actually
+    # removes is the patterns that appear in *no* backtracking registry.
+    linear = {"godoc", "crates.io"}
+    linear_any = linear_only = 0
 
     path = config.LINGUA_FRANCA_DIR / "data" / "production-regexes" / "uniq-regexes-8.json"
     with path.open() as fh:
@@ -144,6 +150,10 @@ def _report():
                 continue
             if not isinstance(pattern, str) or not pattern:
                 continue
+            registries = set(json.loads(line).get("useCount_registry_to_nModules") or {})
+            if registries & linear:
+                linear_any += 1
+                linear_only += not (registries - linear)
             try:
                 re.compile(pattern)
                 kept += 1
@@ -173,6 +183,8 @@ def _report():
         "recovered": recovered,
         "recovered_pct": round(100 * recovered / dropped, 1),
         "unrecovered_by_cause": dict(causes.most_common()),
+        "linear_engine_any": linear_any,
+        "linear_engine_only": linear_only,
     }
     target = config.RESULTS_DIR / "dialect_drop.json"
     target.write_text(json.dumps(out, indent=2) + "\n")

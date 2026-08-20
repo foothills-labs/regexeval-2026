@@ -356,12 +356,24 @@ for _pop, _key in (("Production code", "prod"), ("Stack Overflow", "so"),
         _MACROS[_key + "dropped"] = f"{drops[_pop]['dropped']:,}".replace(",", "{,}")
         _MACROS[_key + "droppedpct"] = f"{drops[_pop]['dropped_pct']:.1f}"
         _MACROS[_key + "pool"] = f"{drops[_pop]['pool']:,}".replace(",", "{,}")
+_dd = optional(RESULTS / "dialect_drop.json")
+if _dd:
+    _MACROS["dropanchoredpct"] = f"{_dd['dropped_anchored_pct']:.1f}"
+    _MACROS["keptanchoredpct"] = f"{_dd['kept_anchored_pct']:.1f}"
+    _MACROS["recoveredpct"] = f"{_dd['recovered_pct']:.0f}"
+    _top = next(iter(_dd["unrecovered_by_cause"]))
+    _MACROS["topunrecovered"] = _top.replace("\\", "\\texttt{\\textbackslash ") + ("}" if _top.startswith("\\") else "")
+    _MACROS["topunrecoveredn"] = f"{_dd['unrecovered_by_cause'][_top]:,}".replace(",", "{,}")
+
 by_reg = drops.get("by_registry", {})
 if by_reg:
     linear = [r for r, d in by_reg.items() if d["linear_engine"]]
     _MACROS["linearregistries"] = " and ".join(f"\\texttt{{{r}}}" for r in sorted(linear))
-    _MACROS["linearpatterns"] = "{:,}".format(
-        sum(by_reg[r]["patterns"] for r in linear)).replace(",", "{,}")
+    # Distinct patterns, not the sum of the registry columns: 187 appear in
+    # both linear-engine registries, and summing counts those twice.
+    if _dd and "linear_engine_any" in _dd:
+        _MACROS["linearpatterns"] = f"{_dd['linear_engine_any']:,}".replace(",", "{,}")
+        _MACROS["linearonly"] = f"{_dd['linear_engine_only']:,}".replace(",", "{,}")
     rates = {r: d["dropped_pct"] for r, d in by_reg.items()}
     lo, hi = min(rates, key=rates.get), max(rates, key=rates.get)
     _MACROS["droprange"] = (f"\\texttt{{{hi}}} at {rates[hi]:.1f}\\% down to "
@@ -383,15 +395,6 @@ if _cx:
         "readjacentpct": f"{_re['shapes']['share_of_vulnerable_pct']['adjacent quantifiers']:.0f}",
         "sradjacentpct": f"{_sr['shapes']['share_of_vulnerable_pct']['adjacent quantifiers']:.0f}",
     })
-
-_dd = optional(RESULTS / "dialect_drop.json")
-if _dd:
-    _MACROS["dropanchoredpct"] = f"{_dd['dropped_anchored_pct']:.1f}"
-    _MACROS["keptanchoredpct"] = f"{_dd['kept_anchored_pct']:.1f}"
-    _MACROS["recoveredpct"] = f"{_dd['recovered_pct']:.0f}"
-    _top = next(iter(_dd["unrecovered_by_cause"]))
-    _MACROS["topunrecovered"] = _top.replace("\\", "\\texttt{\\textbackslash ") + ("}" if _top.startswith("\\") else "")
-    _MACROS["topunrecoveredn"] = f"{_dd['unrecovered_by_cause'][_top]:,}".replace(",", "{,}")
 
 _rob = cc.get("robustness", {})
 if _rob:
