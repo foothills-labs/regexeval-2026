@@ -83,18 +83,19 @@ boot = optional(RESULTS / "sweep/paired_intervals.json")
 
 
 def ci(model, metric):
+    """Paired-bootstrap interval, or an em dash if it has not been computed."""
     if not boot or model not in boot.get("models", {}):
-        return ""
+        return "---"
     lo, hi = boot["models"][model][metric]
-    return f" \\tiny[{lo*100:.1f}, {hi*100:.1f}]"
+    return f"[{lo*100:.1f}, {hi*100:.1f}]"
 
 
-write("tab_main.tex", "lrrrrrrrrr",
-      r"Model & $n$ & \pass{}@3 & \usable{}@3 & \vuln{}@3 & \dfaeq{}@3 & "
-      r"\dfaeq{}$_{\text{dec}}$ & \exact{}@3 & undec. & fail \\", [
+write("tab_main.tex", "lrrrcrrrrr",
+      r"Model & $n$ & \pass{}@3 & \usable{}@3 & 95\% CI & \vuln{}@3 & \dfaeq{}@3 & "
+      r"\dfaeq{}$_{\text{dec}}$ & \exact{}@3 & undec. \\", [
     f"\\texttt{{{esc(r['model'])}}} & {r['scored']} & {r['p']*100:.1f} & {r['u']*100:.1f} & "
-    f"{r['v']*100:.1f} & {r['dfa']*100:.1f} & {r['dfad']*100:.1f} & {r['ex']*100:.1f} & "
-    f"{r['und']} & {r['fail']} \\\\"
+    f"{ci(r['model'], 'usable')} & {r['v']*100:.1f} & {r['dfa']*100:.1f} & "
+    f"{r['dfad']*100:.1f} & {r['ex']*100:.1f} & {r['und']} \\\\"
     for r in rows])
 
 write("tab_cost.tex", "lrrr",
@@ -271,6 +272,7 @@ sr = load(RESULTS / "structuredregex_scores.json",
 common = {m: d["common_subset"] for m, d in sr["models"].items()}
 order = sorted(common, key=lambda m: -common[m]["correct_and_secure_at_1"])
 body = [f"\\texttt{{{esc(m):<28}}} & {common[m]['pass_at_1']:.1f} & "
+        f"[{common[m]['pass_ci95'][0]:.1f}, {common[m]['pass_ci95'][1]:.1f}] & "
         f"{common[m]['vulnerable_at_1']:.1f} & {common[m]['correct_and_secure_at_1']:.1f} & "
         f"{common[m]['vuln_given_correct']:.1f} \\\\" for m in order]
 tot = {k: sum(common[m]["_counts"][k] for m in common)
@@ -278,12 +280,12 @@ tot = {k: sum(common[m]["_counts"][k] for m in common)
 n_tasks = sr["common_subset_size"] * len(common)
 sr_vgc = (tot["passed"] - tot["correct_secure"]) / tot["passed"] * 100
 body += [r"\midrule",
-         f"\\textit{{Pooled}} & {tot['passed']/n_tasks*100:.1f} & "
+         f"\\textit{{Pooled}} & {tot['passed']/n_tasks*100:.1f} & --- & "
          f"{tot['vulnerable']/n_tasks*100:.1f} & {tot['correct_secure']/n_tasks*100:.1f} & "
          f"\\textbf{{{sr_vgc:.1f}}} \\\\"]
-write("tab_sr_common.tex", "lrrrr",
-      r"Model & $\pass{}@1$ & $\vuln{}@1$ & correct-and-secure & $\vuln{}\mid$correct \\",
-      body)
+write("tab_sr_common.tex", "lrcrrr",
+      r"Model & $\pass{}@1$ & 95\% CI & $\vuln{}@1$ & correct-and-secure & "
+      r"$\vuln{}\mid$correct \\", body)
 
 p1 = [_at(ps[m], "pass", 1)[0] * 100 for m in ps]
 v1 = [_at(ps[m], "vulnerable", 1)[0] * 100 for m in ps]

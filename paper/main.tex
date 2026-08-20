@@ -541,12 +541,16 @@ models.
 \setlength{\tabcolsep}{3pt}
 \input{tab_main}
 \caption{Primary results, $n=k=3$. All figures percentages except $n$ (tasks
-entering the @3 estimate), \emph{undec.} (count of tasks with undecidable
-equivalence) and \emph{fail} (count of failed requests, of 1{,}350). Tasks
-that returned fewer than three samples are excluded from the estimate rather
-than scored on what arrived (\cref{sec:metrics}), which is why $n$ varies.
-Ordering is by \usable{}@3 and should be read as a banding, not a ranking
-(\cref{sec:power}).}
+entering the @3 estimate) and \emph{undec.} (tasks whose equivalence is
+undecidable). Tasks that returned fewer than three samples are excluded from
+the estimate rather than scored on what arrived (\cref{sec:metrics}), which is
+why $n$ varies; failed requests are itemised in \cref{app:failures}. The
+interval is a paired bootstrap over tasks (\cref{sec:paired}), not an
+independent binomial one: every model answers the same items, and a binomial
+interval here would be the estimator this paper spends \cref{sec:paired}
+arguing against. Ordering is by \usable{}@3 and should be read as a banding,
+not a ranking (\cref{sec:power}) --- the intervals overlap almost everywhere,
+which is the point.}
 \label{tab:main}
 \end{table}
 
@@ -1072,9 +1076,12 @@ negative strings, leaving $\pass{}@k$ undefined), for \$3.67.
 \small
 \input{tab_sr_common}
 \caption{StructuredRegex, one sample per task, on the 513 instances answered
-by all eleven models. Percentages. The last column is the share of
-functionally correct patterns that are ReDoS-vulnerable, the same quantity
-this paper reports as 7.4\% on Re(gEx$|$DoS)Eval.}
+by all eleven models. Percentages. Intervals are Wilson binomial, which is
+appropriate here in a way it is not in \cref{tab:main}: this is one sample per
+task, so there is no within-task resampling for a bootstrap to exploit. The
+last column is the share of functionally correct patterns that are
+ReDoS-vulnerable, the same quantity this paper reports as
+\vulngivencorrect{}\% on Re(gEx$|$DoS)Eval.}
 \label{tab:srcommon}
 \end{table}
 
