@@ -15,7 +15,7 @@ Foothills Labs · 2026-08-20
 > and the models sit with it at 9.8%. **7.4% of the patterns that work are
 > exploitable**, which is a tenth of what the equivalent benchmarks for
 > backend code report, so the correctness-to-security penalty is a fact about
-> a domain rather than about models. And **that 7.4% came back as 16.5% on a
+> a domain rather than about models. Then **that 7.4% came back as 16.5% on a
 > second benchmark**, so it is a fact about a corpus too.
 
 Claude Opus 5 produced the following pattern for a domain-name validation
@@ -363,7 +363,7 @@ ours it takes off a sliver. We have explanations for that and no way to
 separate them with this data. A regex is one expression with one failure
 mode while a backend has many independently exploitable parts. ReDoS is a
 structural anti-pattern, plausibly better represented in training data than
-CWE-classified defects are. And our functional pass rate is low enough that
+CWE-classified defects are. Our functional pass rate is also low enough that
 the correct subset may skew toward simple tasks with less room for
 catastrophic backtracking.
 
@@ -512,7 +512,7 @@ place."** The human answer made the commas optional, so it accepts
 `0,000000`, defeating the only thing it was for. The model enforced comma
 placement and was scored as different.
 
-And in a further 43% of cases neither answer was wrong, because the question
+In a further 43% of cases neither answer was wrong, because the question
 did not have one right answer. *"Matches any single upper- or lower-case
 letter"*: does that mean the whole string is one letter, or that a letter
 appears somewhere? The sentence does not say. The benchmark assumes the
