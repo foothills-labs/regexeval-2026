@@ -57,11 +57,11 @@ the corpus's own metric suite and then had to abandon. A composite requiring cor
 safety and semantic equivalence appears to show that ``passing is twice as
 easy as shipping'': models pass 38.0--46.5\% of tasks but satisfy all three
 criteria on only 17.1--23.8\%. Decomposing that gap shows that
-\textbf{87\% of it is contributed by the semantic-equivalence term}, and a
+\textbf{\equivshare{}\% of it is contributed by the semantic-equivalence term}, and a
 manual audit shows that term is itself dominated by reference-set error and
 task underspecification rather than model behaviour. Using only the two
 criteria that never consult a human answer key, the gap is
-\textbf{2.9 percentage points}: just 7.4\% of functionally correct patterns
+\textbf{\safetyloss{} percentage points}: just \vulngivencorrect{}\% of functionally correct patterns
 are ReDoS-vulnerable.
 
 That figure is itself informative by contrast. Joint correctness-and-security
@@ -78,9 +78,9 @@ regular expressions extracted from shipped packages, refutes it and replaces
 it with a sharper ordering. Controlling for task mix by restricting every
 population, models included, to anchored patterns: those \emph{written to be
 read} are ReDoS-prone (reusable library entries 20.1\%, Stack Overflow
-answers 17.3\%, this corpus's reference answers 13.4\%), while those
-\emph{executed} in shipped packages sit at 8.9\%, statistically
-indistinguishable from the models at 9.8\%. \emph{Vulnerability tracks
+answers 17.3\%, this corpus's reference answers \anchoredgold{}\%), while those
+\emph{executed} in shipped packages sit at \anchoredprod{}\%, statistically
+indistinguishable from the models at \anchoredmodels{}\%. \emph{Vulnerability tracks
 whether a pattern was ever run, not whether a human or a model wrote it.} We
 calibrate the screen against an independent detector and a dynamic oracle to
 show the ordering is not an artifact of differential miss rates.
@@ -94,7 +94,7 @@ test yet was scored as semantically different, the model was clearly at fault
 in roughly 15\% of cases. The rest split between demonstrably incorrect
 reference patterns (including a reference character class containing
 a literal \texttt{|}) and prompts that never specified the property in
-dispute. Because that unreliable term supplies 87\% of our composite's
+dispute. Because that unreliable term supplies \equivshare{}\% of our composite's
 headline gap, the composite was measuring its own weakest component. We also show that independent binomial intervals, the default in this
 literature, are the wrong inferential tool when all systems answer identical
 items, and that a paired bootstrap resolves nine times as
@@ -102,8 +102,8 @@ many pairwise comparisons on the same data.
 
 Replicating the two reference-independent criteria on a second corpus
 \citep{ye2020structuredregex} shows the qualitative finding holds and the
-number does not: the same eleven models leave \textbf{16.5\%} of their
-correct patterns ReDoS-vulnerable there against 7.4\% here, on tasks twenty
+number does not: the same eleven models leave \textbf{\srvulngivencorrect{}\%} of their
+correct patterns ReDoS-vulnerable there against \vulngivencorrect{}\% here, on tasks twenty
 points \emph{easier}. The correctness-to-security penalty is a property of
 the corpus, not of the models.
 
@@ -155,7 +155,7 @@ on itself.
   (\cref{sec:decomp}). The composite is the natural way to report
   correctness and security together and it is what the joint-benchmark
   literature reports (\cref{sec:jointprior}). We show that on this corpus the
-  composite is dominated by its equivalence term, which supplies 87\% of the
+  composite is dominated by its equivalence term, which supplies \equivshare{}\% of the
   headline gap, and that the term is the least trustworthy of the three. The
   contribution is the finding that the aggregate is uninformative here, not
   the aggregate.
@@ -190,8 +190,8 @@ on itself.
   \item \textbf{A second-corpus replication} (\cref{sec:replication}). We
   re-run the two reference-independent criteria on
   StructuredRegex~\citep{ye2020structuredregex} with the same models and
-  configuration. The finding replicates in kind and not in size: 16.5\%
-  against 7.4\%, on easier tasks, with the model ordering not preserved. This
+  configuration. The finding replicates in kind and not in size: \srvulngivencorrect{}\%
+  against \vulngivencorrect{}\%, on easier tasks, with the model ordering not preserved. This
   is the direct test of \cref{sec:crossbench}'s domain-dependence claim,
   which otherwise rests on comparison across languages and vulnerability
   classes.
@@ -616,7 +616,7 @@ required computing correct-and-secure without the equivalence term, and the
 answer changed the paper.
 
 Restricting attention to the two reference-independent criteria, the finding
-is far more modest and far better supported: \textbf{7.4\% of functionally
+is far more modest and far better supported: \textbf{\vulngivencorrect{}\% of functionally
 correct regular expressions are ReDoS-vulnerable} (range 5.6--10.0\%).
 
 The denominator matters, so: of the \correctsamples{} generations that
@@ -627,7 +627,7 @@ the single-sample figures in \cref{tab:srcompare}. At the task level the
 corresponding count is 144 of 2{,}051 tasks on which some sample passed. About
 one in fourteen either way, not one in two. (An earlier draft reported a count
 of 135 here that we can no longer reproduce from our own released data, and
-did not state which denominator the 7.4\% used.)
+did not state which denominator the \vulngivencorrect{}\% used.)
 
 $\exact{}@3$, string identity with the reference, runs from 2.0\% to 6.3\%.
 String-comparison scoring would therefore misrank essentially every system,
@@ -822,7 +822,7 @@ and flag the decomposition as open.
 It also explains why this corpus's answers are ReDoS-prone without appeal to
 authorial carelessness. Re(gEx$|$DoS)Eval was assembled from real user posts,
 and forum posts screen at 17.3\%. That the gold set is safer than its own
-source population (13.4\%) suggests its authors curated, which is to their
+source population (\anchoredgold{}\%) suggests its authors curated, which is to their
 credit and does not close the gap to executed code.
 
 \paragraph{The control is the clearest case of the mechanism.} NL-RX-Synth
@@ -1002,7 +1002,7 @@ functional correctness. \citet{patir2025dualgauge} report secure-pass@1 below
 12\% while functional pass@1 exceeds 50\%. In each case the security criterion removes a large
 majority of functionally correct output.
 
-In our setting it removes 7.4\%.
+In our setting it removes \vulngivencorrect{}\%.
 
 The one prior correct-and-secure figure on \emph{this} corpus is
 \citet{siddiq2024regexeval}'s, over T5, Phi-1.5 and GPT-3.5-Turbo. We do not
@@ -1057,7 +1057,7 @@ not.
 \subsection{Replication on a second corpus}
 \label{sec:replication}
 
-Every figure above comes from one corpus, so the 7.4\% is a property of
+Every figure above comes from one corpus, so the \vulngivencorrect{}\% is a property of
 Re(gEx$|$DoS)Eval until shown otherwise. The two criteria that never consult
 a reference can be computed anywhere that supplies test strings, and
 StructuredRegex~\citep{ye2020structuredregex} supplies them: each instance
@@ -1471,7 +1471,7 @@ composite that spans the partition.} Metrics evaluated by execution against
 inputs (\pass{}, \vuln{}) are unaffected by reference-set defects. Metrics
 evaluated against a human answer key inherit its error rate. A composite
 conjoining both can report a large gap that is almost entirely attributable to
-the unreliable term---in our case 87\% of it (\cref{sec:decomp})---while
+the unreliable term---in our case \equivshare{}\% of it (\cref{sec:decomp})---while
 appearing to be a statement about the reliable ones.
 
 \item \textbf{Sample and adjudicate disagreements.} It costs hours. In our
@@ -1493,7 +1493,7 @@ fail (\cref{sec:metrics}).
 decision without buying the inference again.
 
 \item \textbf{Treat an effect size as corpus-local until replicated.} Our
-reference-independent gap is 7.4\% on one corpus and 16.5\% on another under
+reference-independent gap is \vulngivencorrect{}\% on one corpus and \srvulngivencorrect{}\% on another under
 an identical screen (\cref{sec:replication}). Reference-independence buys
 freedom from answer-key error. It does not buy generality.
 
@@ -1523,8 +1523,8 @@ several (\cref{sec:calibration}).
 
 We set out to measure a gap between correct and shippable regular
 expressions. We built a composite metric, it showed a large gap, and
-decomposition showed that 87\% of that gap came from the one term we had
-already shown to be unreliable. What survives is much smaller. 7.4\% of
+decomposition showed that \equivshare{}\% of that gap came from the one term we had
+already shown to be unreliable. What survives is much smaller. \vulngivencorrect{}\% of
 functionally correct patterns carry a ReDoS vulnerability, against roughly
 50\% of functionally correct backends in comparable work. The
 correctness-to-security penalty depends on the domain, and in ours it is
@@ -1542,8 +1542,8 @@ the answer key rather than in generation or in human practice. And the entire
 eleven-model field lies within seven percentage points across a $98\times$
 range in inference cost.
 
-A third check went the same way. The 7.4\% that survived the first two
-corrections is 16.5\% on a second corpus under the same screen and the same
+A third check went the same way. The \vulngivencorrect{}\% that survived the first two
+corrections is \srvulngivencorrect{}\% on a second corpus under the same screen and the same
 models (\cref{sec:replication}), so the number we were left defending is
 corpus-local too.
 
