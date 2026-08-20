@@ -55,8 +55,8 @@ it is vulnerable to regular-expression denial of service (ReDoS).
 Our headline result is a negative one about a composite metric we built from
 the corpus's own metric suite and then had to abandon. A composite requiring correctness,
 safety and semantic equivalence appears to show that ``passing is twice as
-easy as shipping'': models pass 38.0--47.5\% of tasks but satisfy all three
-criteria on only 17.1--24.8\%. Decomposing that gap shows that
+easy as shipping'': models pass 38.0--46.5\% of tasks but satisfy all three
+criteria on only 17.1--23.8\%. Decomposing that gap shows that
 \textbf{87\% of it is contributed by the semantic-equivalence term}, and a
 manual audit shows that term is itself dominated by reference-set error and
 task underspecification rather than model behaviour. Using only the two
@@ -551,7 +551,7 @@ Ordering is by \usable{}@3 and should be read as a banding, not a ranking
 \end{table}
 
 The apparent headline in \cref{tab:main} is the gap between $\pass{}@3$
-(38.0--47.5\%) and $\usable{}@3$ (17.1--24.8\%): approximately half of all
+(38.0--46.5\%) and $\usable{}@3$ (17.1--23.8\%): approximately half of all
 test-passing generations fail at least one of the remaining two criteria, and
 the ratio is stable across the entire price range.
 
@@ -953,15 +953,22 @@ exponential 253 to 105, while this corpus's gold answers are near even at 34
 to 38.
 
 That comparison is weaker than it looks and we would rather say so than let it
-be read as a finding. Our exponential-versus-polynomial split is only
-partly a claim about growth order. The structural pass assigns it from the
-shape it matched, which is principled; the empirical pass assigns it from
-\emph{which probe length first timed out}, which is a threshold, not a
-measurement. Patterns flagged only empirically therefore carry a degree label
-our instrument did not really establish. The subcategory counts are also
-small. We report the discrepancy with prior work as an observation that wants
-a replication under a detector that measures growth order directly, and draw
-nothing from it.
+be read as a finding. Our exponential-versus-polynomial split is only partly a
+claim about growth order. The structural pass assigns it from the shape it
+matched, which is principled; the empirical pass assigns it from \emph{which
+probe length first timed out}, which is a threshold, not a measurement.
+Patterns flagged only empirically therefore carry a degree label our
+instrument did not really establish.
+
+How much of the split that affects, we can say for one population. Among the
+generations that satisfied every test, on both corpora, \emph{every} vulnerable
+verdict came from the structural pass and none from the empirical one, so for
+those the degree is shape-derived rather than threshold-derived. We have not
+established the same for the reference sets or for the wild populations, where
+patterns are longer and more of them fall outside the structural pass's
+grammar. The subcategory counts are also small. We report the discrepancy with
+prior work as an observation that wants a replication under a detector that
+measures growth order directly, and draw nothing from it.
 
 \subsection{Comparison against joint benchmarks in other domains}
 \label{sec:crossbench}
@@ -1151,10 +1158,12 @@ over 1{,}350 requests gives the \$3.39 total.}
 \label{tab:cost}
 \end{table}
 
-The extremes differ by a factor of 98 in price and 3.2 percentage
-points in \usable{}@3, which is at the boundary of what we can resolve
-(\cref{sec:paired}). This observation is about this task only. It is not a
-general claim about model capability.
+The extremes differ by a factor of 98 in price and 1.1 percentage points in
+\usable{}@3 --- and in the direction that favours the cheaper model, which
+scores 19.8\% against 20.8\%. That difference is well inside what we can
+resolve (\cref{sec:paired}), which is to say the two are indistinguishable.
+This observation is about this task only. It is not a general claim about
+model capability.
 
 \subsection{Refusals}
 
@@ -1522,8 +1531,9 @@ claimed from the point estimates --- and indistinguishable from the regular
 expressions in shipped packages once both are restricted the same way. Across
 six populations, ReDoS prevalence tracks whether a pattern is ever executed
 rather than whether a human or a model wrote it, which locates the anomaly in
-the answer key rather than in generation or in human practice. And the entire eleven-model field lies within eight percentage
-points across a $98\times$ range in inference cost.
+the answer key rather than in generation or in human practice. And the entire
+eleven-model field lies within seven percentage points across a $98\times$
+range in inference cost.
 
 A third check went the same way. The 7.4\% that survived the first two
 corrections is 16.5\% on a second corpus under the same screen and the same
