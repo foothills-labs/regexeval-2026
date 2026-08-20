@@ -219,7 +219,10 @@ than score, because a row without provenance is not reproducible.
   bound is, separately for each population above, by pairing an independent
   detector with a dynamic timing oracle (`make calibrate`), because a screen
   that is blinder in one population than another would produce an ordering by
-  itself.
+  itself. Recall runs 67–93% across the seven populations, and — crucially —
+  is not lower in production code (80%) than in the showcase validators it is
+  being compared against (92%). Correcting each rate for its own recall leaves
+  the ordering unchanged.
 - **The corpus is old enough to be in training data**, so scores may partly
   measure memorisation. A private task set to measure that gap is not yet
   built.

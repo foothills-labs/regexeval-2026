@@ -94,8 +94,39 @@ independent detector — `weideman-RegexStaticAnalysis`, from Davis et al.'s own
 artifact — with a dynamic oracle: we take the detector's exploit string, build
 it at growing pump counts, and time CPython's matcher on it. Confirmation is a
 measured hang or a fitted super-linear growth exponent, not a second static
-opinion. Recall is reported per population in a new table, which is the
-quantity that has to be stable for the ordering to survive.
+opinion.
+
+| population | caught/confirmed | recall | 95% CI |
+| --- | ---: | ---: | ---: |
+| Stack Overflow | 25/27 | 92.6% | [77, 98] |
+| RegexLib | 33/36 | 91.7% | [78, 97] |
+| Re(gEx\|DoS)Eval gold | 19/22 | 86.4% | [67, 95] |
+| Production code | 16/20 | 80.0% | [58, 92] |
+| NL-RX-Synth | 16/21 | 76.2% | [55, 89] |
+| Model outputs | 11/15 | 73.3% | [48, 89] |
+| KB13 | 2/3 | 66.7% | [21, 94] |
+
+The intervals overlap almost everywhere, so this does not resolve a fine
+ordering of sensitivities and we do not claim one. It resolves the direction,
+which is what your objection turned on. For differential blindness to
+manufacture the result, recall would have to be **lower** in production code
+than in showcase validators. It is the other way round: the two populations
+where the screen is most sensitive are RegexLib and Stack Overflow — the two
+with the highest measured vulnerability — while production sits at 80.0%.
+
+Dividing each anchored rate by its recall turns 20.1 / 17.3 / 13.4 / 9.8 /
+8.9% into 21.9 / 18.7 / 15.5 / 13.4 / 11.1%. Every rate rises, because the
+screen is a lower bound everywhere; the ordering is unchanged; the
+read-against-run gap does not close. We do not put those in a table — recall
+is relative to one detector's findings and the counts are small — but the
+check is the one a reader should want.
+
+Two limitations are stated with it. The detector could not analyse between 46
+and 110 of each 240-pattern sample, so ground truth covers the patterns two
+tools can both reason about. And screen/detector agreement runs 53–74%, far
+below either one's recall, because the detector flags plenty that does not
+actually blow up under CPython — which is why a timing measurement, not a
+second opinion, is the arbiter here.
 
 Building that also caught us repeating the mistake we criticise: the oracle
 initially labelled every timeout exponential, and a quadratic pattern reaching

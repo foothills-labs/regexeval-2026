@@ -949,10 +949,40 @@ at the precision the counts support.}
 \label{tab:calibration}
 \end{table}
 
-Recall across the six populations and the model outputs runs
-\recallrange{}\%, which is the number that has to be stable for the ordering to
-survive, and the strata in \cref{tab:calibration} show what it varies with.
-The screen is a lower bound everywhere and we have now bounded the bound.
+Recall runs \recallrange{}\% across the seven populations, and the intervals
+overlap almost everywhere: dynamically confirmed vulnerabilities are scarce in
+a sample of a few hundred, and KB13 yields three. So this does not resolve a
+fine ordering of sensitivities, and we do not claim one.
+
+What it does resolve is the direction, which is the part that mattered. If the
+ordering were manufactured by the screen being blinder in production code than
+in showcase validators, recall would have to be \emph{lower} in production.
+It is not. The two populations where the screen is most sensitive are
+\texttt{regexlib.com} at 91.7\% and Stack Overflow at 92.6\% --- the two with
+the highest measured vulnerability --- while production code sits at 80.0\%
+and this corpus's gold answers at 86.4\%. The differential runs the opposite
+way to the one that would explain away the result.
+
+Dividing each measured rate by the recall behind it gives a first-order
+sensitivity check. On the anchored populations that turns 20.1\%, 17.3\%,
+\anchoredgold{}\%, \anchoredmodels{}\% and \anchoredprod{}\% into
+\corrlib{}\%, \corrso{}\%, \corrgold{}\%, \corrmodels{}\% and \corrprod{}\%.
+Every rate rises, because the screen is a lower bound everywhere; the
+\emph{ordering is unchanged}; and the read-against-run gap is not closed. We
+would not put those corrected numbers in a table --- recall here is measured
+against what one detector finds, so it is relative rather than absolute, and
+the counts behind it are small --- but the check is the one a reader should
+want, and it does not overturn anything.
+
+Two limitations belong with it. The independent detector could not analyse
+between 46 and 110 of each 240-pattern sample, and those are neither evidence
+for nor against; ground truth therefore covers the patterns two tools can both
+reason about, which is not all of them. And agreement between our screen and
+the detector runs 53--74\%, far below either one's recall, because the
+detector flags a good deal that does not blow up in CPython ---
+\lstinline!^[a-z]+[a-z]*$! is quadratic in principle and instant in practice.
+That gap is the reason this section uses a timing measurement as the arbiter
+rather than a second opinion.
 
 \paragraph{Relation to prior work, and a caveat on the split.}
 \citet{siddiq2024redos} report that LLM-generated regexes skew toward

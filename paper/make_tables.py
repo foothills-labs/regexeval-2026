@@ -433,6 +433,25 @@ if _rob:
 if cal and cal.get("recall_range_pct"):
     lo, hi = cal["recall_range_pct"]
     _MACROS["recallrange"] = f"{lo:.0f}--{hi:.0f}"
+    # A first-order sensitivity check: divide each population's measured rate
+    # by the screen's recall there. Not an estimate of the true rate -- the
+    # detector has blind spots of its own, so recall is relative to what it
+    # finds -- but it says whether the ordering could be an artifact of the
+    # screen being differently blind in different populations.
+    _pops = cal["populations"]
+    _pairs = [
+        ("corrlib", cc["anchored"]["RegexLib, anchored"]["rate_pct"], "RegexLib"),
+        ("corrso", cc["anchored"]["Stack Overflow, anchored"]["rate_pct"], "Stack Overflow"),
+        ("corrgold", cc["anchored"]["RegexEval gold, anchored"]["rate_pct"],
+         "Re(gEx|DoS)Eval gold"),
+        ("corrmodels", anch["pooled"]["outputs"]["rate_pct"], "Model outputs"),
+        ("corrprod", cc["anchored"]["Production code, anchored"]["rate_pct"],
+         "Production code"),
+    ]
+    for name, rate, population in _pairs:
+        recall = _pops.get(population, {}).get("recall_pct")
+        if recall:
+            _MACROS[name] = f"{rate / (recall / 100):.1f}"
 if undec:
     _MACROS["undecshare"] = f"{undec['pooled']['undec_supported_share_pct']:.0f}"
     _MACROS["undecsupported"] = f"{undec['pooled']['undec_supported']}"
