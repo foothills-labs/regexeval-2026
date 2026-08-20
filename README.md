@@ -1,4 +1,4 @@
-# regexleaderboard
+# regexeval-2026
 
 > ### Status, 2026-08-20 — the figures below are the corrected ones
 >
@@ -205,8 +205,8 @@ from those files and nothing else, so you can recheck the arithmetic
 without an API key, without spending anything, and without trusting us:
 
 ```bash
-git clone https://github.com/foothills-labs/regexleaderboard
-cd regexleaderboard
+git clone https://github.com/foothills-labs/regexeval-2026
+cd regexeval-2026
 make setup    # installs the pinned scorer, downloads the corpus
 make score RUN=sweep
 ```

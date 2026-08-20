@@ -642,8 +642,8 @@ Every model response is committed. Scores compute from those files and
 nothing else — no API key, no cost, no need to trust us:
 
 ```bash
-git clone https://github.com/foothills-labs/regexleaderboard
-cd regexleaderboard
+git clone https://github.com/foothills-labs/regexeval-2026
+cd regexeval-2026
 make setup
 make score RUN=sweep
 ```
