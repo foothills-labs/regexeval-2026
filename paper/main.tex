@@ -1091,23 +1091,32 @@ twenty points of $\pass{}@1$.
 \paragraph{Which shape, and why a grammar produces it.} The structure of the
 correct patterns says where the extra vulnerability comes from, and it is not
 where one would guess. StructuredRegex's correct patterns are longer (median
-33 characters against 28) and carry more quantifiers (median 4 against 3), but
-they are \emph{less} nested: a quantifier applied to a group --- the
-\texttt{(a+)+} shape everyone pictures when they hear ReDoS --- appears in
-18.5\% of them against 34.7\% on Re(gEx$|$DoS)Eval, and their median group
-nesting depth is zero. The corpus with fewer of the canonical exponential
-shapes is the corpus with twice the vulnerability rate.
+\srlen{} characters against \relen{}) and carry more quantifiers (median
+\srquant{} against \requant{}), but they are \emph{less} nested: a quantifier
+applied to a group --- the \texttt{(a+)+} shape everyone pictures when they
+hear ReDoS --- appears in \srqgrouppct{}\% of them against \reqgrouppct{}\% on
+Re(gEx$|$DoS)Eval, and their median group nesting depth is zero. The corpus
+with fewer of the canonical exponential shapes is the corpus with twice the
+vulnerability rate.
 
-What it has instead is repetition in \emph{sequence}. Its targets are built
-from a grammar over repetition, optionality and concatenation, and
-concatenating repeated elements over overlapping character sets is the
-polynomial family: \texttt{\textbackslash s*\textbackslash s*},
-\texttt{[a-z]+[a-z0-9]*}. That is the same mechanism \cref{sec:crosscorpus}
-found in NL-RX-Synth, the other grammar-built corpus here, where 891 of 2{,}057
-vulnerable targets are flagged for exactly that shape and the population
-screens at 35.2\%. Two grammar-generated corpora, built by different authors
-for different purposes, produce the same over-representation of the same
-family.
+What it has instead is repetition in \emph{sequence}, and the screen's own
+reasons say so. Of the vulnerable correct patterns on Re(gEx$|$DoS)Eval,
+\renested{} are flagged for a quantifier wrapping a quantified group and
+\readjacent{} for two quantifiers in sequence over overlapping character sets
+--- \readjacentpct{}\% adjacent. On StructuredRegex the shares invert:
+\srnested{} nested against \sradjacent{} adjacent, \sradjacentpct{}\%
+adjacent. In absolute terms the nested count barely moves between corpora
+while the adjacent count more than doubles. The extra vulnerability is
+entirely the polynomial family: \texttt{\textbackslash s*\textbackslash s*},
+\texttt{[a-z]+[a-z0-9]*}.
+
+Which is what its targets are built out of. A grammar over repetition,
+optionality and concatenation produces adjacency by construction, and
+\cref{sec:crosscorpus} found the identical signature in NL-RX-Synth, the
+other grammar-built corpus here: 891 of its 2{,}057 vulnerable targets are
+flagged for that same shape, and the population screens at 35.2\%. Two
+grammar-generated corpora, built by different authors for different purposes,
+over-represent the same family.
 
 We think the reading is this. A grammar samples compositions uniformly and has
 no reason to avoid adjacency, because nothing downstream of it runs the

@@ -364,6 +364,24 @@ if by_reg:
     lo, hi = min(rates, key=rates.get), max(rates, key=rates.get)
     _MACROS["droprange"] = (f"\\texttt{{{hi}}} at {rates[hi]:.1f}\\% down to "
                             f"\\texttt{{{lo}}} at {rates[lo]:.1f}\\%")
+_cx = optional(RESULTS / "complexity_compare.json")
+if _cx:
+    _re, _sr = _cx["Re(gEx|DoS)Eval"], _cx["StructuredRegex"]
+    _MACROS.update({
+        "relen": f"{_re['length']['median']:.0f}",
+        "srlen": f"{_sr['length']['median']:.0f}",
+        "requant": f"{_re['quantifiers']['median']:.0f}",
+        "srquant": f"{_sr['quantifiers']['median']:.0f}",
+        "reqgrouppct": f"{_re['with_quantified_group_pct']:.1f}",
+        "srqgrouppct": f"{_sr['with_quantified_group_pct']:.1f}",
+        "readjacent": f"{_re['shapes']['counts']['adjacent quantifiers']}",
+        "sradjacent": f"{_sr['shapes']['counts']['adjacent quantifiers']}",
+        "renested": f"{_re['shapes']['counts']['nested quantifier']}",
+        "srnested": f"{_sr['shapes']['counts']['nested quantifier']}",
+        "readjacentpct": f"{_re['shapes']['share_of_vulnerable_pct']['adjacent quantifiers']:.0f}",
+        "sradjacentpct": f"{_sr['shapes']['share_of_vulnerable_pct']['adjacent quantifiers']:.0f}",
+    })
+
 _dd = optional(RESULTS / "dialect_drop.json")
 if _dd:
     _MACROS["dropanchoredpct"] = f"{_dd['dropped_anchored_pct']:.1f}"
