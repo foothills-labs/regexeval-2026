@@ -220,6 +220,8 @@ _MACROS = {
     "cheapusable": f"{_costs[0]['u']*100:.1f}",
     "dearusable": f"{_costs[-1]['u']*100:.1f}",
     "costgap": f"{abs(_costs[-1]['u'] - _costs[0]['u'])*100:.1f}",
+    "passlo": f"{min(r['p'] for r in rows)*100:.1f}",
+    "passhi": f"{max(r['p'] for r in rows)*100:.1f}",
     "correctsamples": f"{corr_total:,}".replace(",", "{,}"),
     "correctvulnsamples": f"{corr_total - cs_total}",
     "vulngivencorrect": f"{pooled_vgc*100:.1f}",
@@ -457,6 +459,12 @@ for _pop, _key in (("Production code", "prod"), ("Stack Overflow", "so"),
         _MACROS[_key + "dropped"] = f"{drops[_pop]['dropped']:,}".replace(",", "{,}")
         _MACROS[_key + "droppedpct"] = f"{drops[_pop]['dropped_pct']:.1f}"
         _MACROS[_key + "pool"] = f"{drops[_pop]['pool']:,}".replace(",", "{,}")
+_MACROS["vgclo"] = f"{min(cond)*100:.1f}"
+_MACROS["vgchi"] = f"{max(cond)*100:.1f}"
+# The complement of the audit's model-fault rate, kept beside it so the two
+# cannot drift apart when the adjudication sample changes.
+_MACROS["auditcomplement"] = f"{100 - 14.6:.0f}"
+
 _dd = optional(RESULTS / "dialect_drop.json")
 if _dd:
     _MACROS["dropanchoredpct"] = f"{_dd['dropped_anchored_pct']:.1f}"

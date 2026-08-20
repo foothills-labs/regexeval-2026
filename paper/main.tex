@@ -435,13 +435,14 @@ falsifiable by inspection.
 
 Equivalence is decidable only on the regular subset. Backreferences make the
 language non-regular, and equivalence then has no algorithmic answer at all.
-Those cases return \textsc{undec}. A pattern the engine declines for another
-reason returns \textsc{unsup}, and both are reported together in this paper's
-\emph{undec.} column and in \cref{sec:undec}: \usable{} gives them the same
-free credit, so the accounting has to include both, but they are different
-claims --- one is a theorem about backreferences, the other is this engine's
-reach. Between 78 and 133 of each model's scored tasks land in the pair, split
-\undecsplit{}.
+Those cases return \textsc{undec}. A pattern the engine declines for any other
+reason --- a lookahead containing an anchor, an inline flag group, an automaton
+over a state budget --- returns \textsc{unsup}. Both are reported together in
+this paper's \emph{undec.} column, because \usable{} gives them the same free
+credit and the accounting has to include both, but they are different claims:
+one is a theorem about backreferences, the other is this engine's reach.
+Between 78 and 133 of each model's scored tasks land in the pair, and
+\cref{sec:undec} shows the split is not the one we assumed.
 We therefore report two figures:
 \[
 \dfaeq{} = \Pr[\textsc{eq}], \qquad
@@ -615,7 +616,7 @@ objection to a sequential decomposition is that it is order-dependent, and
 here the dependence runs against us.
 
 That would be unremarkable if the equivalence term were sound. It is not.
-\cref{sec:goldstandard} shows, from an independent audit, that roughly 85\% of
+\cref{sec:goldstandard} shows, from an independent audit, that roughly \auditcomplement{}\% of
 what it counts against a model is reference-set error or an underspecified
 prompt. Our composite was mostly reporting its own weakest component back to
 us.
@@ -628,7 +629,7 @@ answer changed the paper.
 
 Restricting attention to the two reference-independent criteria, the finding
 is far more modest and far better supported: \textbf{\vulngivencorrect{}\% of functionally
-correct regular expressions are ReDoS-vulnerable} (range 5.6--10.0\%).
+correct regular expressions are ReDoS-vulnerable} (range \vgclo{}--\vgchi{}\%).
 
 The denominator matters, so: of the \correctsamples{} generations that
 satisfied every test, \correctvulnsamples{} were simultaneously screened as
@@ -1128,7 +1129,7 @@ pattern, plausibly well represented in training data as a recognised
 anti-pattern. CWE-classified defects in application code are more diverse and
 more context-dependent.
 \item \textbf{Task difficulty ceiling.} Our functional pass rate is itself low
-(38--47\%), so the correct subset may be biased toward simpler tasks whose
+(\passlo{}--\passhi{}\%), so the correct subset may be biased toward simpler tasks whose
 solutions have less structural room for catastrophic backtracking.
 \end{enumerate}
 
@@ -1449,49 +1450,65 @@ and because the direction is what changes how the composite should be read.
 \subsection{The composite rewards putting an answer beyond checking}
 \label{sec:undec}
 
-\dfaeq{} counts an \textsc{undec} verdict as a failure. \usable{} does the
-opposite: its third conjunct excludes only a \emph{proven} \textsc{diff}, so a
-comparison the engine cannot answer is scored as a pass. Each convention is
-defensible alone --- one is a lower bound that cannot flatter, the other
-isolates the model from the engine's reach --- but together they create an
-incentive. Equivalence is undecidable exactly when a pattern uses
-backreferences, so a model that reaches for one is scored \emph{more} usable
-for having put its answer beyond checking. Between 78 and 133 tasks per model
-land there, a spread of 55, which is large enough to matter.
+\dfaeq{} counts a verdict the engine could not settle as a failure. \usable{}
+does the opposite: its third conjunct excludes only a \emph{proven}
+\textsc{diff}, so any comparison the engine cannot answer is scored as a pass.
+Each convention is defensible alone --- one is a lower bound that cannot
+flatter, the other isolates the model from the engine's reach --- but together
+they hand out credit for being unanswerable, and between 78 and 133 of each
+model's scored tasks are unanswerable.
 
-The obvious test is to correlate a model's \textsc{undec} count against its
-\usable{}@3. That returns nothing (Pearson $-0.13$), and it returns nothing
-misleadingly: undecidability credit and equivalence skill push the composite
-in opposite directions, and a correlation on the sum nets them out. So we
-decompose instead. \cref{tab:undec} recomputes \usable{}@3 under the stricter
-rule that the verdict must be \emph{proven} \textsc{eq}.
+We expected the mechanism to be backreferences. Equivalence really is
+undecidable on them, so a model reaching for one would be scored \emph{more}
+usable for having put its answer beyond checking, and that is a tidy story
+about model behaviour. It is also almost entirely wrong. Of the
+\undecsupported{} task-credits that rest on an unsettled verdict, the split is
+\undecsplit{}: the undecidability theorem accounts for twenty of them, and the
+other 450 are \textsc{unsup} --- our engine declining a construct.
+
+That is worse, not better. The constructs are ordinary: a lookahead
+containing an anchor (\lstinline!^(?=.{1,253}$)...!), \texttt{\textbackslash
+A} where the corpus expects \texttt{\^{}}, an inline flag group, a pattern
+whose automaton exceeds a state budget. None is exotic and none says anything
+about the model. Worse still, the declined side is sometimes the
+\emph{reference}: when the answer key uses a construct the engine will not
+take, every model is credited on that task no matter what it wrote. The
+composite's leniency tracks the coverage of our equivalence engine, and a
+reader would reasonably have assumed it tracked the models.
+
+The obvious test misses this entirely. Correlating a model's unsettled count
+against its \usable{}@3 returns nothing (Pearson $-0.15$), because
+unsettled credit and genuine equivalence skill push the composite in opposite
+directions and a correlation on the sum nets them out. So we decompose.
+\cref{tab:undec} recomputes \usable{}@3 under the stricter rule that the
+verdict must be \emph{proven} \textsc{eq}.
 
 \begin{table}[htbp]
 \centering
 \small
 \input{tab_undec}
-\caption{What the undecidability convention is worth. ``Proven-\textsc{eq}
+\caption{What the unsettled-verdict convention is worth. ``Proven-\textsc{eq}
 only'' requires a demonstrated equivalence rather than the absence of a
 demonstrated difference; the final columns are the tasks that separate the
-two.}
+two. Denominators are \cref{tab:main}'s, so the two tables agree.}
 \label{tab:undec}
 \end{table}
 
 \undecshare{}\% of all \usable{}@3 credit --- \undecsupported{} of
-\undecusable{} task-credits --- rests on a verdict the engine could not reach
-rather than on demonstrated equivalence, and the share tracks \textsc{undec}
-count closely across models ($r = +0.82$) even though the composite itself
-does not. Removing the credit reorders the field. \texttt{gpt-5.6-sol} has the
-most undecidable comparisons of any model at 133; it has the third-highest
-\usable{}@3 and, on proven equivalence, ties for third-lowest --- a drop of
-six places, or seven depending on how the tie with
+\undecusable{} task-credits --- rests on a verdict the engine never reached,
+and the share tracks the unsettled count closely across models ($r = +0.82$)
+even though the composite itself does not. Removing the credit reorders the
+field. \texttt{gpt-5.6-sol} has the most unsettled comparisons of any model at
+133; it has the third-highest \usable{}@3 and, on proven equivalence, ties for
+third-lowest --- a drop of six places, or seven depending on how the tie with
 \texttt{gemini-3.1-flash-lite} at 8.7\% is broken.
 
-We are not proposing the stricter rule --- it would charge a model for a
-theorem, which is the objection to \dfaeq{} --- and we are not claiming any
-model games this deliberately. The point is narrower and it is a third
-independent reason to distrust the composite: nearly half of what
-\usable{} certifies, it certifies by default.
+We are not proposing the stricter rule: it would charge a model for a theorem
+in twenty cases and for our parser's limits in 450, which is worse than what
+we have. The point is narrower and it is a third independent reason to
+distrust the composite. Nearly half of what \usable{} certifies, it certifies
+by default, and the default fires on a property of the measuring instrument
+rather than of the thing measured.
 
 \subsection{Paired inference}
 \label{sec:paired}

@@ -11,6 +11,13 @@
 > 7.4% of the patterns that work are exploitable. ReDoS prevalence depends on
 > whether a pattern was ever executed rather than on whether a human or a
 > model wrote it. And on a second benchmark, that 7.4% came back as 16.5%.
+>
+> Then we spent a second pass attacking those three. We calibrated our own
+> safety screen and found it is worse at the population our headline depends
+> on. We found a bug in our own scorer that had been flattering the two models
+> at the top of the table. And we found that half of what our composite metric
+> certified, it certified because nobody could check. All three survived, two
+> of them smaller than they started.
 
 Claude Opus 5 produced the following pattern for a domain-name validation
 task. It passes every test the benchmark supplies.
@@ -235,9 +242,18 @@ The models range from 7.3% to 10.7%. Pooled across all eleven, 9.0%.
 | Worst model (`kimi-k3`) | 10.7% |
 | All models pooled | 9.0% |
 
-Every single model is safer than the answer key. As far as we can tell this
-comparison had not been run before, and it is only possible because this
-corpus ships human answers. The general-code benchmarks execute tests and
+Every model screens safer than the answer key, though how many of them do so
+*provably* is a smaller number and we got it wrong at first. Our first pass
+compared eleven independent confidence intervals, which is the wrong test:
+every model answered the same 450 tasks, so the comparison is paired and an
+unpaired interval throws away the pairing. The right test here is McNemar's,
+run on the tasks where a model and the answer key disagree. Correcting for
+having run eleven of them, **six of the eleven separate at 95%**, not all
+eleven. The three that do not are the three most vulnerable models, which is
+what you would expect and is not what a row of point estimates told us.
+
+As far as we can tell this comparison had not been run before, and it is only
+possible because this corpus ships human answers. The general-code benchmarks execute tests and
 exploits instead of comparing against a gold artifact, so they have nothing
 to point the screen at.
 
@@ -314,6 +330,58 @@ The practical implication survives with a better reason behind it. Safe
 regular expressions require screening at the point of use. Neither a pattern
 copied from the internet nor one just produced by a model has been run in
 anger.
+
+---
+
+## Then we asked whether our own instrument could see
+
+Everything above rests on one screen deciding which patterns are dangerous.
+If that screen is blinder in shipped code than it is in showcase validators,
+the ordering we just published is an artifact of the tool rather than a fact
+about the world. Calling the screen "a lower bound" is a fair caveat for one
+population. Across six it is an excuse.
+
+So we measured its blind spot, separately in each population. We took a
+second, independent detector — the one Davis and colleagues used for their
+own ecosystem study, written by different people in a different language on a
+different theory — and where it flagged a pattern, we took the attack string
+it produced, fed it to Python at growing sizes, and timed the match. A
+pattern counts as genuinely dangerous when the matcher measurably fails to
+keep up. Not a second opinion. A stopwatch.
+
+| Population | our screen caught | recall |
+| --- | ---: | ---: |
+| Stack Overflow | 25 of 27 | 92.6% |
+| regexlib.com | 33 of 36 | 91.7% |
+| Re(gEx\|DoS)Eval gold | 19 of 22 | 86.4% |
+| production code | 16 of 20 | 80.0% |
+| NL-RX-Synth | 16 of 21 | 76.2% |
+| our models | 11 of 15 | 73.3% |
+| KB13 | 2 of 3 | 66.7% |
+
+Read that column carefully, because it does not say what we wanted it to say.
+Our screen is *worse* at production code, 80%, than at the showcase
+populations we compare production code against, 92%. That is precisely the
+direction in which a blind instrument would manufacture our result. We drafted
+a sentence claiming the opposite, and it was wrong.
+
+What rescues the finding is not the direction but the size. Correct each
+population by its own recall and the gap between the most vulnerable
+read-only population and shipped code goes from 11.2 points to 10.8. The
+instrument's bias is real and it eats four tenths of an eleven-point gap. A
+differential that would have to close eleven points closes less than one.
+
+The same correction costs us something else, and it is worth saying out loud
+because it is the kind of thing that is easy to leave for a reader to notice.
+Our models have the second-worst recall in that table. Correcting everything
+by its own recall moves the models from 9.8% to 13.4% and production code
+from 8.9% to 11.1%, so the distance between them roughly doubles — the two
+populations we described as sitting together move apart, and the models land
+nearer the corrected answer key. We do not think that overturns the pairing,
+because the interval on that 73.3% runs from 48% to 89% and a correction that
+noisy cannot carry a two-point conclusion. But it is the second time in this
+project that a check moved a headline in the direction that cost us, and both
+times the honest thing was to print it.
 
 ---
 
@@ -470,6 +538,78 @@ judgement is written down in the repository so it can be argued with.
 
 ---
 
+## Two more things we found in our own work
+
+The audit above was about the benchmark's answer key. Two later checks were
+about us.
+
+**Half of what the composite certifies, it certifies by default.** The
+equivalence check can answer "same", "different", or "I cannot tell", and our
+composite counts "I cannot tell" as a pass. We assumed the mechanism was
+backreferences, where equivalence is genuinely undecidable — a tidy story in
+which a model is rewarded for putting its answer beyond checking.
+
+That story is wrong. Of the 470 task-credits resting on an unsettled verdict,
+backreferences account for **twenty**. The other 450 are our own equivalence
+engine declining to parse something: a lookahead with an anchor inside it,
+`\A` where the corpus expects `^`, an automaton that got too big. Nothing
+exotic, and nothing to do with the model. Sometimes the side it declines is
+the *answer key*, in which case every model is credited on that task whatever
+it wrote.
+
+We nearly missed it. The obvious test — correlate how often a model lands in
+the unsettled bucket against its score — returns nothing, because unsettled
+credit and genuine equivalence skill push the score in opposite directions and
+correlating the sum cancels them. Decomposing instead: recompute the metric
+requiring equivalence to be actually *demonstrated*, and **48% of the credit
+disappears**. Nearly half of what our headline metric certified, it certified
+because our own parser gave up.
+
+**We found a bug in our own scorer, and it had been flattering the two models
+at the top of our table.** The standard estimator for "did any of k attempts
+succeed" has a shortcut: if fewer than k attempts failed, some attempt must
+have succeeded, so return 1. That is true whenever you have at least k
+attempts, which is the only case the estimator is defined for. We had tasks
+with fewer — a refusal here, an exhausted budget there — and for those the
+shortcut fires no matter what happened. A task nobody answered correctly
+scored as a success.
+
+It affected only the four models that lost samples, and it inflated most the
+two that lost the most, which were the two leading the table. Fixing it moves
+`claude-opus-5` from second to fourth and makes `kimi-k3`, not
+`claude-opus-5`, the highest scorer on passing tests. We found it because two
+of our own tables disagreed by 1.3 points and we went looking for why.
+
+Neither of these changes a claim in this piece — we do not publish a ranking,
+and the band does not separate anyway. Both change how much the composite
+deserves to be believed, which was already the point.
+
+---
+
+## The difficulty objection, tested rather than conceded
+
+There is an obvious deflationary reading of our 7.4%: maybe the patterns
+models get *right* are the easy ones, and easy patterns have less room to
+go wrong. If so the number is a selection effect, not a finding.
+
+We can test that inside one corpus, which is better than comparing two
+corpora written by different processes. Sort the tasks by how many of the
+eleven models solved them — the benchmark's own measure of difficulty — and
+look at vulnerability inside each band. On tasks six or more models solved,
+7.1% of correct patterns are dangerous. On tasks only one to five solved,
+10.7%.
+
+The objection survives, weakly and against us: the number moves in the
+direction the objection predicts. Resampled, the difference is −3.6 points
+with an interval running from −12.2 to +3.8, so this corpus cannot actually
+establish it. What the exercise does establish is a ceiling. Even on the
+hardest tasks any model solved, vulnerability among the answers they got
+right is 10.7% — not the roughly 50% that BaxBench reports for backend code.
+The difficulty effect is real enough to mention and far too small to be the
+explanation.
+
+---
+
 ## What we are not claiming
 
 We started out building a leaderboard. We are not publishing one.
@@ -515,14 +655,26 @@ The two questions that never look at the human answer key, *does it work* and
 *is it safe*, held up. They run a real regex engine against real strings, and
 no defect in an answer key can corrupt them.
 
-The question that compares against a human did not. In our sample it was 85%
-noise from bad answer keys and ambiguous prompts.
+The question that compares against a human did not, and it failed twice over.
+In our sample it was 85% noise from bad answer keys and ambiguous prompts. And
+of the credit it *awarded*, 48% went to patterns nobody could check, because
+the comparison was formally undecidable and we had chosen to score that as a
+pass.
 
 > **The metrics that consult a human answer key behaved differently from the
 > metrics that do not, and only the second kind survived scrutiny.**
 
-Reading the disagreements is what exposed it. Most of what that metric
-counted was not the thing it was meant to measure.
+Reading the disagreements is what exposed the first failure. Decomposing the
+metric instead of correlating against it exposed the second. Most of what that
+metric counted was not the thing it was meant to measure, and half of what it
+credited it credited by default.
+
+The two surviving metrics are not unconditionally clean either — we spent the
+second pass establishing how dirty they are. The safety screen misses between
+7% and 33% of what is genuinely dangerous, and misses unevenly across the
+populations we compare. That is a real limitation, quantified, and it is small
+enough not to move the ordering. Knowing the size of a limitation is a
+different thing from having caveated it.
 
 ---
 
@@ -543,6 +695,17 @@ We verified this by wiping to a clean checkout, reinstalling everything,
 re-downloading the corpus and re-scoring from scratch. Every number came out
 identical. A version of that check runs automatically on every change, so
 what is published cannot drift away from the evidence behind it.
+
+That guarantee used to stop at the repository's edge. Reviewers of the first
+draft found nine arithmetic inconsistencies, and a second round found five
+more; almost every one was a sentence quoting a table, or a table maintained
+by hand, drifting when the underlying number moved. Being right about the
+data and wrong in the write-up is still being wrong. So the write-up is
+generated too: every table in the paper is emitted from committed results,
+every figure the prose quotes comes from a generated macro, and a check
+refuses the build if a percentage appears in the text that no script
+produced. Running that check on ourselves immediately found two stale numbers
+neither reviewer had caught.
 
 Every request was pinned to one named provider and refused substitution,
 because the router that sits in front of these models will otherwise serve
