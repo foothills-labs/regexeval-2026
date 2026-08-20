@@ -21,8 +21,11 @@ help:
 	@echo "make calibrate      measure the screen's recall per population (builds a detector)"
 	@echo "make collect        query models via OpenRouter -- needs OPENROUTER_KEY, costs money"
 
+# matplotlib is here rather than left implicit because `make figures` and
+# `make -C paper all` need it, and an undeclared import is the same class of
+# problem as an ungenerated table: it works on the machine that wrote it.
 setup:
-	$(PY) -m pip install --quiet --upgrade "$(REGEXBENCH_PIN)"
+	$(PY) -m pip install --quiet --upgrade "$(REGEXBENCH_PIN)" matplotlib
 	@mkdir -p data
 	@test -f data/RegexEval.json || curl -fsSL -o data/RegexEval.json \
 	  https://raw.githubusercontent.com/s2e-lab/RegexEval/master/DatasetCollection/RegexEval.json

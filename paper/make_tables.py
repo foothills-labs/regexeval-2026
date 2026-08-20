@@ -33,6 +33,35 @@ def esc(s):
     return s.replace("_", r"\_")
 
 
+# Every required input, with the command that rebuilds it. Checked together
+# before a single table is written.
+#
+# Failing halfway is worse than failing: it leaves paper/ with some tables
+# regenerated and others stale, which is invisible in the built PDF and is
+# exactly the class of drift this file exists to prevent. An earlier version
+# of this script died on one missing input after writing six tables, and the
+# ones it had already written looked fine.
+REQUIRED = [
+    (RESULTS / "sweep", "make score RUN=sweep"),
+    (RESULTS / "sweep/per_sample", "make persample RUN=sweep"),
+    (RESULTS / "sweep/correct_secure", "make persample RUN=sweep"),
+    (RESULTS / "anchored_models.json", "python3 runner/anchored_models.py --run sweep"),
+    (RESULTS / "cross_corpus_redos.json", "make setup-corpora && make crosscorpus"),
+    (RESULTS / "structuredregex_scores.json", "python3 runner/score_structuredregex.py"),
+]
+
+
+def preflight():
+    missing = [(p, how) for p, how in REQUIRED if not p.exists()]
+    if missing:
+        lines = ["cannot regenerate the paper's tables; missing input(s):"]
+        for p, how in missing:
+            lines.append(f"  {p.relative_to(REPO)}\n    regenerate with: {how}")
+        lines.append("\nNothing was written. paper/ is untouched, so the committed "
+                     "tables stay internally consistent.")
+        raise SystemExit("\n".join(lines))
+
+
 def load(path, what):
     """Read a required input, or say which command regenerates it."""
     p = pathlib.Path(path)
@@ -56,6 +85,8 @@ def write(name, colspec, header, body):
 def pct(x, places=1):
     return "---" if x is None else f"{x:.{places}f}"
 
+
+preflight()
 
 # --- per-model scores --------------------------------------------------------
 rows = []

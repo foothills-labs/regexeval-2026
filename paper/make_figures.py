@@ -14,7 +14,12 @@ import json
 import pathlib
 import sys
 
-import matplotlib
+try:
+    import matplotlib
+except ModuleNotFoundError:  # pragma: no cover - a setup problem, not a code path
+    raise SystemExit(
+        "matplotlib is not installed, so the figure cannot be rebuilt.\n"
+        "  install it with: make setup")
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
