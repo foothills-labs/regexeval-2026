@@ -1,33 +1,35 @@
 # regexleaderboard
 
-> ### Status, 2026-08-19 — read this before quoting anything below
+> ### Status, 2026-08-20 — the figures below are the corrected ones
 >
-> **The name is wrong and the framing below is superseded.** This is a study,
-> not a leaderboard. [`ARTICLE.md`](ARTICLE.md) is the current statement of
-> what this work claims, and its "What we are not claiming" section is
-> explicit: *"We started out building a leaderboard. We are not publishing
-> one. [...] Bands are defensible. A numbered list from one to eleven is
-> not."* 62% of the tasks give every model the identical result; only 167 of
-> 450 separate them at all.
+> **The name is wrong: this is a study, not a leaderboard.**
+> [`ARTICLE.md`](ARTICLE.md) is the current statement of what this work
+> claims, and its "What we are not claiming" section is explicit: *"We
+> started out building a leaderboard. We are not publishing one. [...] Bands
+> are defensible. A numbered list from one to eleven is not."* 62% of the
+> tasks give every model the identical result; only 167 of 450 separate them
+> at all. **Read the table below as a banding, not a ranking.**
 >
-> **The table below is ordered by a metric the article no longer uses**, and
-> the figures in it carry three known defects, all catalogued in
-> [`REVISION-PLAN.md`](REVISION-PLAN.md):
+> The three defects the 2026-08-19 note listed have been fixed, and the
+> figures here are regenerated from the corrected scores:
 >
-> 1. `regexbench.harness.pass_at_k` scores any task with **fewer than `k`
+> 1. `regexbench.harness.pass_at_k` scored any task with **fewer than `k`
 >    samples** as a full pass ([regexbench#8](https://github.com/foothills-labs/regexbench/issues/8)).
->    It inflates exactly the two models at the top: `kimi-k3` `usable@3`
->    24.8 → 23.5, `claude-opus-5` 23.0 → 20.7, which moves opus from second
->    to fourth.
+>    Short-sample tasks are now excluded from the `@k` estimate. `kimi-k3`
+>    `usable@3` 24.8 → 23.8, `claude-opus-5` 23.0 → 20.8, moving opus from
+>    second to fourth. **The fix is local to `runner/score.py`; the upstream
+>    issue is still open**, and `REGEXBENCH_COMMIT` still records the
+>    unpatched engine.
 > 2. **48.3%** of `usable` credits rest on an **UNDECIDABLE** equivalence
->    verdict rather than demonstrated equivalence. Removing that credit
->    roughly halves the metric and reorders the table again.
-> 3. **"135 such patterns" below is not reproducible** from the released
->    data. The candidate counts are 390, 144, 180 and 196; none is 135.
+>    verdict rather than demonstrated equivalence. Measured, reported per
+>    model, and given its own section in the paper — it is a reason to
+>    distrust the composite, not a defect in these figures.
+> 3. **"135 such patterns" is withdrawn.** The reproducible figure is 390 of
+>    5,269 correct samples (7.4%), or 144 of 2,051 model-task pairs.
 >
-> The paper is in revision after expert review. Until that lands, treat this
-> file as a description of *how the run was done*, and `ARTICLE.md` as the
-> statement of *what it found*. Nothing here has been published to the site.
+> Every table in this file is generated from `results/` by
+> `runner/render_docs.py`, and `make check` fails if they drift. Nothing here
+> has been published to the site.
 
 **How good are language models at writing regular expressions you could
 actually ship?**
@@ -41,26 +43,27 @@ your server.
 
 ---
 
-## The run, as originally written up
+## The run
 
-**Superseded — see the status note at the top.** Kept because the shape of
-the finding survives even though the figures move: every model passes
-roughly **40%** of tasks and produces something shippable on far fewer, and
-that gap is the point. The exact numbers below are the uncorrected ones.
+Every model passes roughly **40%** of tasks. Every model produces something
+shippable on roughly **20%**. That gap is the finding, and it survives every
+correction below.
 
-| Model | usable@3 | pass@3 | vulnerable@3 | failed | $/task |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `moonshotai/kimi-k3` | **24.8%** | 47.2% | 14.1% | 16/1350 | $0.001328 |
-| `anthropic/claude-opus-5` | **23.0%** | 47.5% | 15.5% | 36/1350 | $0.002514 |
-| `qwen/qwen3.6-max-preview` | **21.6%** | 42.4% | 9.1% | 0/1350 | $0.000388 |
-| `openai/gpt-5.6-sol` | **21.1%** | 42.2% | 10.2% | 1/1350 | $0.002108 |
-| `deepseek/deepseek-v4-flash-0731` | **19.8%** | 38.0% | 12.0% | 0/1350 | $0.000026 |
-| `qwen/qwen3.6-plus` | **19.8%** | 39.8% | 9.8% | 0/1350 | $0.000121 |
-| `z-ai/glm-5.2` | **18.7%** | 42.4% | 14.2% | 0/1350 | $0.000158 |
-| `openai/gpt-5.6-luna` | **18.7%** | 39.3% | 11.8% | 1/1350 | $0.000043 |
-| `openai/gpt-5.6-terra` | **18.7%** | 42.2% | 12.0% | 0/1350 | $0.000406 |
-| `anthropic/claude-sonnet-5` | **18.0%** | 40.7% | 10.9% | 0/1350 | $0.000932 |
-| `google/gemini-3.1-flash-lite` | **17.1%** | 38.7% | 12.0% | 0/1350 | $0.000090 |
+<!-- generated: leaderboard -->
+| Model | usable@3 | pass@3 | vulnerable@3 | tasks | failed | $/request |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `moonshotai/kimi-k3` | **23.8%** | 46.5% | 12.9% | 441 | 16/1350 | $0.001328 |
+| `qwen/qwen3.6-max-preview` | **21.6%** | 42.4% | 9.1% | 450 | 0/1350 | $0.000388 |
+| `openai/gpt-5.6-sol` | **20.9%** | 42.1% | 10.0% | 449 | 1/1350 | $0.002108 |
+| `anthropic/claude-opus-5` | **20.8%** | 46.1% | 13.2% | 432 | 36/1350 | $0.002514 |
+| `deepseek/deepseek-v4-flash-0731` | **19.8%** | 38.0% | 12.0% | 450 | 0/1350 | $0.000026 |
+| `qwen/qwen3.6-plus` | **19.8%** | 39.8% | 9.8% | 450 | 0/1350 | $0.000121 |
+| `z-ai/glm-5.2` | **18.7%** | 42.4% | 14.2% | 450 | 0/1350 | $0.000158 |
+| `openai/gpt-5.6-terra` | **18.7%** | 42.2% | 12.0% | 450 | 0/1350 | $0.000406 |
+| `openai/gpt-5.6-luna` | **18.5%** | 39.2% | 11.6% | 449 | 1/1350 | $0.000043 |
+| `anthropic/claude-sonnet-5` | **18.0%** | 40.7% | 10.9% | 450 | 0/1350 | $0.000932 |
+| `google/gemini-3.1-flash-lite` | **17.1%** | 38.7% | 12.0% | 450 | 0/1350 | $0.000090 |
+<!-- /generated -->
 
 **Three numbers, one story.** `pass@3` is what other benchmarks report —
 did it satisfy the examples. `vulnerable@3` is how many answers can be
@@ -70,16 +73,58 @@ reference.
 
 Two things worth noticing more than the ranking:
 
-- **The spread is narrow — 17.1% to 24.8%.** Eleven models across a 100×
-  price range land within eight points of each other.
-- **`deepseek-v4-flash-0731` costs $0.000026 per task and scores 19.8%.
-  `claude-opus-5` costs $0.002514 — 97× more — and scores 23.0%.** Three
-  points for two orders of magnitude.
+- **The spread is narrow — 17.1% to 23.8%.** Eleven models across a 100×
+  price range land within seven points of each other.
+- **`deepseek-v4-flash-0731` costs $0.000026 per request and scores 19.8%.
+  `claude-opus-5` costs $0.002514 — 97× more — and scores 20.8%.** One point
+  for two orders of magnitude.
+
+The `tasks` column is the number entering each model's `@3` estimate. Tasks
+that came back with fewer than three samples — after a refusal or a spending
+limit — are excluded rather than scored on what arrived, because the `pass@k`
+estimator is only defined for `n ≥ k`. Getting that wrong credited every short
+task to whichever model lost it; see [the hazards
+appendix](paper/main.tex).
 
 *More metrics — semantic equivalence, exact match, the decidable subset —
 are in [APPENDIX.md](APPENDIX.md).*
 
 ---
+
+## The finding that survived
+
+We screened the same ReDoS check across six populations of regular
+expressions — this corpus's own answer key, two other benchmark gold sets, a
+grammar-generated control, Stack Overflow, the reusable patterns on
+regexlib.com, and half a million regexes extracted from shipped packages.
+
+<!-- generated: populations -->
+| Population | written to be | n | vulnerable |
+| --- | --- | ---: | ---: |
+| NL-RX-Synth (grammar-generated control) | — | 5,840 | 35.2% ± 1.2 |
+| RegexLib, published for reuse | read | 3,446 | 17.2% ± 1.3 |
+| KB13 gold answers | read | 532 | 16.7% ± 3.2 |
+| Re(gEx\|DoS)Eval gold answers | read | 755 | 13.1% ± 2.4 |
+| Stack Overflow posts | read | 5,000 | 5.9% ± 0.7 |
+| Production code | run | 5,000 | 4.9% ± 0.6 |
+| | | | |
+| **Anchored `^...$` only** | | | |
+| RegexLib, published for reuse | read | 1,684 | 20.1% ± 1.9 |
+| Stack Overflow posts | read | 4,000 | 17.3% ± 1.2 |
+| Re(gEx\|DoS)Eval gold answers | read | 538 | 13.4% ± 2.9 |
+| **This work, 11 models pooled** | — | 3,613 | 9.8% ± 1.0 |
+| **Production code** | **run** | 4,000 | 8.9% ± 0.9 |
+<!-- /generated -->
+
+The dividing line is not human against machine. It is whether the pattern was
+ever **run**. Everything written to be *read* — library entries, forum
+answers, benchmark reference answers — is ReDoS-prone. The one population that
+has been executed under real traffic sits at 8.9%, and the models sit with it.
+
+The second block restricts *every* population to anchored `^...$` patterns,
+models included, because this corpus is unusually rich in validators and
+that's the shape that backtracks. That restriction is the comparison to read;
+without it the numbers are mostly a fact about task mix.
 
 ## Why "passes the tests" isn't enough
 
@@ -199,15 +244,19 @@ than score, because a row without provenance is not reproducible.
 
 - **Coverage is not perfectly uniform.** Nine models cover all 450 tasks.
   `kimi-k3` covers 447 — the budget ran out mid-collection. `claude-opus-5`
-  covers **444** (this said 445; 444 tasks have at least one scored sample),
-  from the content-filter refusals. Under 1% of tasks, but the denominators
-  differ — and the `pass_at_k` defect above means those short tasks were
-  scored as passes, so this gap is not as harmless as the original wording
-  claimed.
+  covers 444, from content-filter refusals and one truncation. Under 2%, no ranking
+  changes, but the denominators differ.
 - **The reference answers contain errors** (see above), so `dfa-eq`
   understates model correctness by an unmeasured amount.
 - **"Not vulnerable" is a screening result, not a proof** — no known-bad
-  shape and no blow-up on the attack strings tried.
+  shape and no blow-up on the attack strings tried. We measured how loose that
+  bound is, separately for each population above, by pairing an independent
+  detector with a dynamic timing oracle (`make calibrate`), because a screen
+  that is blinder in one population than another would produce an ordering by
+  itself. Recall runs 67–93% across the seven populations, and — crucially —
+  is not lower in production code (80%) than in the showcase validators it is
+  being compared against (92%). Correcting each rate for its own recall leaves
+  the ordering unchanged.
 - **The corpus is old enough to be in training data**, so scores may partly
   measure memorisation. A private task set to measure that gap is not yet
   built.

@@ -214,15 +214,15 @@ That difference turns out to matter enormously.
 
 | Model | pass@3 | usable@3 | vulnerable@3 |
 | --- | ---: | ---: | ---: |
-| `kimi-k3` | 47.2% | 24.8% | 14.1% |
-| `claude-opus-5` | 47.5% | 23.0% | 15.5% |
+| `kimi-k3` | 46.5% | 23.8% | 12.9% |
 | `qwen3.6-max-preview` | 42.4% | 21.6% | 9.1% |
-| `gpt-5.6-sol` | 42.2% | 21.1% | 10.2% |
+| `gpt-5.6-sol` | 42.1% | 20.9% | 10.0% |
+| `claude-opus-5` | 46.1% | 20.8% | 13.2% |
 | `deepseek-v4-flash-0731` | 38.0% | 19.8% | 12.0% |
 | `qwen3.6-plus` | 39.8% | 19.8% | 9.8% |
 | `glm-5.2` | 42.4% | 18.7% | 14.2% |
-| `gpt-5.6-luna` | 39.3% | 18.7% | 11.8% |
 | `gpt-5.6-terra` | 42.2% | 18.7% | 12.0% |
+| `gpt-5.6-luna` | 39.2% | 18.5% | 11.6% |
 | `claude-sonnet-5` | 40.7% | 18.0% | 10.9% |
 | `gemini-3.1-flash-lite` | 38.7% | 17.1% | 12.0% |
 
@@ -266,8 +266,12 @@ passing every test:
 ^\s*[A-Za-z]+(?:,?\s+[A-Za-z]+)*\s*$                               ← name list
 ```
 
-We found **135 of these** across the run, counted as model-task pairs where
-the answer passed every test *and* screened as unsafe.
+We found **390 of these** across the run: generations that passed every test
+and screened as unsafe, out of 5,269 that passed — 7.4%. At the task level
+that is 144 of the 2,051 model-task pairs where any sample passed. (An
+earlier version of this document reported 135, a count we can no longer
+reproduce from our own released data. The per-sample and per-task figures
+above are both regenerable with `make persample`.)
 
 ## 3.3 The humans were just as unsafe — and this is the real story
 
@@ -315,23 +319,23 @@ on the difference.
 
 ## 3.4 Paying 98× more buys about three points
 
-| Model | usable@3 | cost per task | total for 450 tasks |
+| Model | usable@3 | cost per request | total (1,350 requests) |
 | --- | ---: | ---: | ---: |
 | `deepseek-v4-flash-0731` | 19.8% | **$0.000026** | $0.03 |
-| `gpt-5.6-luna` | 18.7% | $0.000043 | $0.06 |
+| `gpt-5.6-luna` | 18.5% | $0.000043 | $0.06 |
 | `gemini-3.1-flash-lite` | 17.1% | $0.000090 | $0.12 |
 | `qwen3.6-plus` | 19.8% | $0.000121 | $0.16 |
 | `glm-5.2` | 18.7% | $0.000158 | $0.21 |
 | `qwen3.6-max-preview` | 21.6% | $0.000388 | $0.52 |
 | `gpt-5.6-terra` | 18.7% | $0.000406 | $0.55 |
 | `claude-sonnet-5` | 18.0% | $0.000932 | $1.26 |
-| `kimi-k3` | 24.8% | $0.001328 | $1.79 |
-| `gpt-5.6-sol` | 21.1% | $0.002108 | $2.85 |
-| `claude-opus-5` | 23.0% | $0.002514 | $3.39 |
+| `kimi-k3` | 23.8% | $0.001328 | $1.79 |
+| `gpt-5.6-sol` | 20.9% | $0.002108 | $2.85 |
+| `claude-opus-5` | 20.8% | $0.002514 | $3.39 |
 
-DeepSeek's model costs **98× less** than Claude Opus 5 and scores about
-three points lower — a gap at the very edge of what our data can resolve.
-The entire field fits inside eight points.
+DeepSeek's model costs **98× less** than Claude Opus 5 and scores about a
+point *higher* — well inside what our data can resolve, which is to say the
+two are indistinguishable. The entire field fits inside seven points.
 
 For regex generation specifically, model choice is close to a rounding
 error and cost is not.
@@ -681,8 +685,7 @@ a row without provenance isn't reproducible.
 
 **Coverage is therefore not perfectly uniform.** Nine models cover all 450
 tasks. `kimi-k3` covers 447 — the budget ran out during its collection.
-`claude-opus-5` covers 444, from the refusals (this said 445; 444 tasks
-have at least one scored sample). The gap is under 1% and
+`claude-opus-5` covers 444, from the refusals and one truncation. The gap is under 2% and
 moves no conclusion, but the denominators genuinely differ and we'd rather
 say so.
 

@@ -18,23 +18,54 @@ leaderboard.
 
 ## Full results — 450 tasks, k=3, 2026-08-12
 
-| Model | dfa-eq@3 | dfa-eq@3 (decided) | exact@3 | undecidable | wrapped |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `kimi-k3` | 15.2% | 17.5% | 6.3% | 82 | 18 |
-| `claude-opus-5` | 14.0% | 17.0% | 5.4% | 109 | 9 |
-| `qwen3.6-max-preview` | 13.8% | 17.4% | 3.8% | 94 | 11 |
-| `qwen3.6-plus` | 11.6% | 14.8% | 3.8% | 99 | 9 |
-| `deepseek-v4-flash-0731` | 11.3% | 14.3% | 3.3% | 93 | 16 |
-| `glm-5.2` | 10.4% | 12.9% | 3.8% | 86 | 18 |
-| `claude-sonnet-5` | 10.4% | 13.3% | 3.3% | 97 | 9 |
-| `gpt-5.6-terra` | 10.2% | 13.1% | 2.0% | 100 | 11 |
-| `gpt-5.6-sol` | 9.6% | 13.6% | 2.0% | 133 | 7 |
-| `gpt-5.6-luna` | 9.3% | 12.2% | 2.0% | 113 | 9 |
-| `gemini-3.1-flash-lite` | 9.3% | 11.8% | 3.1% | 95 | 16 |
+<!-- generated: full-metrics -->
+| Model | dfa-eq@3 | dfa-eq@3 (decided) | exact@3 | undecidable | tasks | wrapped |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `kimi-k3` | 14.1% | 17.1% | 5.0% | 78 | 441 | 17 |
+| `qwen3.6-max-preview` | 13.8% | 17.4% | 3.8% | 94 | 450 | 11 |
+| `claude-opus-5` | 11.6% | 15.2% | 2.8% | 104 | 432 | 9 |
+| `qwen3.6-plus` | 11.6% | 14.8% | 3.8% | 99 | 450 | 9 |
+| `deepseek-v4-flash-0731` | 11.3% | 14.3% | 3.3% | 93 | 450 | 16 |
+| `glm-5.2` | 10.4% | 12.9% | 3.8% | 86 | 450 | 18 |
+| `claude-sonnet-5` | 10.4% | 13.3% | 3.3% | 97 | 450 | 9 |
+| `gpt-5.6-terra` | 10.2% | 13.1% | 2.0% | 100 | 450 | 11 |
+| `gpt-5.6-sol` | 9.4% | 13.3% | 1.8% | 133 | 449 | 7 |
+| `gemini-3.1-flash-lite` | 9.3% | 11.8% | 3.1% | 95 | 450 | 16 |
+| `gpt-5.6-luna` | 9.1% | 12.2% | 1.8% | 112 | 449 | 9 |
+<!-- /generated -->
 
 Semantic equivalence tops out at **17.5%** where `pass@3` reaches 47%.
 Reproducing the reference *language* is a far harder problem than passing
 its examples — which is the case for measuring both.
+
+### ReDoS: models against the answer key
+
+One pattern per task per model, matching the human side, which has one answer
+each. The final column is an exact McNemar test on the paired tasks — the
+models and the reference set answer the *same* tasks, so an independent
+interval on each would throw the pairing away and resolve nothing.
+
+<!-- generated: human-baseline -->
+| Source | n | vulnerable | exponential | polynomial | McNemar p |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| **Human reference answers** | 450 | 13.6% | 6.4% | 7.1% |  |
+| `kimi-k3` | 447 | 10.7% | 5.4% | 5.4% | 0.1360 |
+| `claude-opus-5` | 444 | 10.6% | 7.4% | 3.2% | 0.0649 |
+| `glm-5.2` | 450 | 10.2% | 5.8% | 4.4% | 0.0581 |
+| `gemini-3.1-flash-lite` | 450 | 9.8% | 5.1% | 4.7% | 0.0331 |
+| `gpt-5.6-sol` | 450 | 9.3% | 5.1% | 4.2% | 0.0183 |
+| `claude-sonnet-5` | 450 | 8.9% | 6.0% | 2.9% | 0.0055 |
+| `gpt-5.6-terra` | 450 | 8.7% | 4.9% | 3.8% | 0.0038 |
+| `qwen3.6-plus` | 450 | 8.4% | 5.1% | 3.3% | 0.0011 |
+| `gpt-5.6-luna` | 450 | 8.0% | 4.0% | 4.0% | 0.0010 |
+| `deepseek-v4-flash-0731` | 450 | 7.3% | 4.4% | 2.9% | 0.0003 |
+| `qwen3.6-max-preview` | 450 | 7.3% | 4.7% | 2.7% | 0.0001 |
+| **All models pooled** | 4941 | 9.0% | 5.3% | 3.8% |  |
+<!-- /generated -->
+
+Eight of the eleven separate from the reference set at 95%. The three that do
+not are the three with the highest vulnerability rates, which is what you
+would expect and is not what a ranking of the point estimates would tell you.
 
 ### Why `dfa-eq` is reported twice
 

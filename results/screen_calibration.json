@@ -1,0 +1,357 @@
+{
+  "per_stratum": 120,
+  "populations": {
+    "KB13": {
+      "agreement_pct": 52.6,
+      "confirmed_and_caught": 2,
+      "detector_unanalysable": 110,
+      "detector_vulnerable": 76,
+      "dynamically_confirmed": 3,
+      "median_length": 15,
+      "median_quantifiers": 3,
+      "missed_by_length": {
+        "<=20": {
+          "caught": 2,
+          "confirmed": 3,
+          "recall_pct": 66.7
+        }
+      },
+      "missed_by_quantifiers": {
+        "<=2": {
+          "caught": 0,
+          "confirmed": 1,
+          "recall_pct": 0.0
+        },
+        "<=4": {
+          "caught": 2,
+          "confirmed": 2,
+          "recall_pct": 100.0
+        }
+      },
+      "recall_pct": 66.7,
+      "sampled": 209,
+      "screen_vulnerable": 89
+    },
+    "Model outputs": {
+      "agreement_pct": 55.4,
+      "confirmed_and_caught": 11,
+      "detector_unanalysable": 64,
+      "detector_vulnerable": 21,
+      "dynamically_confirmed": 15,
+      "median_length": 55,
+      "median_quantifiers": 8,
+      "missed_by_length": {
+        "<=160": {
+          "caught": 2,
+          "confirmed": 3,
+          "recall_pct": 66.7
+        },
+        "<=40": {
+          "caught": 2,
+          "confirmed": 4,
+          "recall_pct": 50.0
+        },
+        "<=80": {
+          "caught": 4,
+          "confirmed": 5,
+          "recall_pct": 80.0
+        },
+        ">160": {
+          "caught": 3,
+          "confirmed": 3,
+          "recall_pct": 100.0
+        }
+      },
+      "missed_by_quantifiers": {
+        "<=4": {
+          "caught": 2,
+          "confirmed": 2,
+          "recall_pct": 100.0
+        },
+        "<=8": {
+          "caught": 2,
+          "confirmed": 5,
+          "recall_pct": 40.0
+        },
+        ">8": {
+          "caught": 7,
+          "confirmed": 8,
+          "recall_pct": 87.5
+        }
+      },
+      "recall_pct": 73.3,
+      "sampled": 240,
+      "screen_vulnerable": 120
+    },
+    "NL-RX-Synth": {
+      "agreement_pct": 62.1,
+      "confirmed_and_caught": 16,
+      "detector_unanalysable": 56,
+      "detector_vulnerable": 171,
+      "dynamically_confirmed": 21,
+      "median_length": 24,
+      "median_quantifiers": 3,
+      "missed_by_length": {
+        "<=20": {
+          "caught": 5,
+          "confirmed": 6,
+          "recall_pct": 83.3
+        },
+        "<=40": {
+          "caught": 11,
+          "confirmed": 15,
+          "recall_pct": 73.3
+        }
+      },
+      "missed_by_quantifiers": {
+        "<=1": {
+          "caught": 4,
+          "confirmed": 6,
+          "recall_pct": 66.7
+        },
+        "<=2": {
+          "caught": 5,
+          "confirmed": 7,
+          "recall_pct": 71.4
+        },
+        "<=4": {
+          "caught": 3,
+          "confirmed": 3,
+          "recall_pct": 100.0
+        },
+        "<=8": {
+          "caught": 4,
+          "confirmed": 5,
+          "recall_pct": 80.0
+        }
+      },
+      "recall_pct": 76.2,
+      "sampled": 240,
+      "screen_vulnerable": 120
+    },
+    "Production code": {
+      "agreement_pct": 74.2,
+      "confirmed_and_caught": 16,
+      "detector_unanalysable": 46,
+      "detector_vulnerable": 76,
+      "dynamically_confirmed": 20,
+      "median_length": 23,
+      "median_quantifiers": 3,
+      "missed_by_length": {
+        "<=20": {
+          "caught": 4,
+          "confirmed": 4,
+          "recall_pct": 100.0
+        },
+        "<=40": {
+          "caught": 8,
+          "confirmed": 10,
+          "recall_pct": 80.0
+        },
+        "<=80": {
+          "caught": 4,
+          "confirmed": 6,
+          "recall_pct": 66.7
+        }
+      },
+      "missed_by_quantifiers": {
+        "<=4": {
+          "caught": 6,
+          "confirmed": 8,
+          "recall_pct": 75.0
+        },
+        "<=8": {
+          "caught": 8,
+          "confirmed": 8,
+          "recall_pct": 100.0
+        },
+        ">8": {
+          "caught": 2,
+          "confirmed": 4,
+          "recall_pct": 50.0
+        }
+      },
+      "recall_pct": 80.0,
+      "sampled": 240,
+      "screen_vulnerable": 120
+    },
+    "Re(gEx|DoS)Eval gold": {
+      "agreement_pct": 65.8,
+      "confirmed_and_caught": 19,
+      "detector_unanalysable": 60,
+      "detector_vulnerable": 32,
+      "dynamically_confirmed": 22,
+      "median_length": 46,
+      "median_quantifiers": 4,
+      "missed_by_length": {
+        "<=160": {
+          "caught": 2,
+          "confirmed": 2,
+          "recall_pct": 100.0
+        },
+        "<=20": {
+          "caught": 3,
+          "confirmed": 4,
+          "recall_pct": 75.0
+        },
+        "<=40": {
+          "caught": 4,
+          "confirmed": 5,
+          "recall_pct": 80.0
+        },
+        "<=80": {
+          "caught": 9,
+          "confirmed": 10,
+          "recall_pct": 90.0
+        },
+        ">160": {
+          "caught": 1,
+          "confirmed": 1,
+          "recall_pct": 100.0
+        }
+      },
+      "missed_by_quantifiers": {
+        "<=4": {
+          "caught": 7,
+          "confirmed": 9,
+          "recall_pct": 77.8
+        },
+        "<=8": {
+          "caught": 7,
+          "confirmed": 7,
+          "recall_pct": 100.0
+        },
+        ">8": {
+          "caught": 5,
+          "confirmed": 6,
+          "recall_pct": 83.3
+        }
+      },
+      "recall_pct": 86.4,
+      "sampled": 219,
+      "screen_vulnerable": 99
+    },
+    "RegexLib": {
+      "agreement_pct": 65.0,
+      "confirmed_and_caught": 33,
+      "detector_unanalysable": 89,
+      "detector_vulnerable": 46,
+      "dynamically_confirmed": 36,
+      "median_length": 67,
+      "median_quantifiers": 6,
+      "missed_by_length": {
+        "<=160": {
+          "caught": 14,
+          "confirmed": 15,
+          "recall_pct": 93.3
+        },
+        "<=20": {
+          "caught": 2,
+          "confirmed": 2,
+          "recall_pct": 100.0
+        },
+        "<=40": {
+          "caught": 4,
+          "confirmed": 4,
+          "recall_pct": 100.0
+        },
+        "<=80": {
+          "caught": 9,
+          "confirmed": 11,
+          "recall_pct": 81.8
+        },
+        ">160": {
+          "caught": 4,
+          "confirmed": 4,
+          "recall_pct": 100.0
+        }
+      },
+      "missed_by_quantifiers": {
+        "<=2": {
+          "caught": 1,
+          "confirmed": 1,
+          "recall_pct": 100.0
+        },
+        "<=4": {
+          "caught": 4,
+          "confirmed": 4,
+          "recall_pct": 100.0
+        },
+        "<=8": {
+          "caught": 10,
+          "confirmed": 10,
+          "recall_pct": 100.0
+        },
+        ">8": {
+          "caught": 18,
+          "confirmed": 21,
+          "recall_pct": 85.7
+        }
+      },
+      "recall_pct": 91.7,
+      "sampled": 240,
+      "screen_vulnerable": 120
+    },
+    "Stack Overflow": {
+      "agreement_pct": 67.9,
+      "confirmed_and_caught": 25,
+      "detector_unanalysable": 80,
+      "detector_vulnerable": 51,
+      "dynamically_confirmed": 27,
+      "median_length": 27,
+      "median_quantifiers": 3,
+      "missed_by_length": {
+        "<=160": {
+          "caught": 4,
+          "confirmed": 4,
+          "recall_pct": 100.0
+        },
+        "<=20": {
+          "caught": 10,
+          "confirmed": 11,
+          "recall_pct": 90.9
+        },
+        "<=40": {
+          "caught": 9,
+          "confirmed": 10,
+          "recall_pct": 90.0
+        },
+        "<=80": {
+          "caught": 2,
+          "confirmed": 2,
+          "recall_pct": 100.0
+        }
+      },
+      "missed_by_quantifiers": {
+        "<=2": {
+          "caught": 6,
+          "confirmed": 7,
+          "recall_pct": 85.7
+        },
+        "<=4": {
+          "caught": 5,
+          "confirmed": 5,
+          "recall_pct": 100.0
+        },
+        "<=8": {
+          "caught": 9,
+          "confirmed": 10,
+          "recall_pct": 90.0
+        },
+        ">8": {
+          "caught": 5,
+          "confirmed": 5,
+          "recall_pct": 100.0
+        }
+      },
+      "recall_pct": 92.6,
+      "sampled": 240,
+      "screen_vulnerable": 120
+    }
+  },
+  "recall_range_pct": [
+    66.7,
+    92.6
+  ],
+  "seed": 20260819
+}

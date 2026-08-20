@@ -116,22 +116,22 @@
     "k": 3,
     "max_tokens": 200,
     "metrics": {
-      "dfa-eq@3": 0.15212527964205816,
-      "dfa-eq@3 (decided)": 0.17534246575342466,
-      "exact@3": 0.06263982102908278,
-      "pass@3": 0.4720357941834452,
-      "undecided": 82,
-      "usable@3": 0.2483221476510067,
-      "vulnerable@3": 0.14093959731543623
+      "dfa-eq@3": 0.14058956916099774,
+      "dfa-eq@3 (decided)": 0.17079889807162535,
+      "exact@3": 0.049886621315192746,
+      "pass@3": 0.46485260770975056,
+      "undecided": 78,
+      "usable@3": 0.23809523809523808,
+      "vulnerable@3": 0.1292517006802721
     },
     "metrics_as_sent": {
-      "dfa-eq@3": 0.15436241610738255,
-      "dfa-eq@3 (decided)": 0.1780821917808219,
-      "exact@3": 0.06263982102908278,
-      "pass@3": 0.4742729306487696,
-      "undecided": 82,
-      "usable@3": 0.2505592841163311,
-      "vulnerable@3": 0.14093959731543623
+      "dfa-eq@3": 0.14285714285714285,
+      "dfa-eq@3 (decided)": 0.17355371900826447,
+      "exact@3": 0.049886621315192746,
+      "pass@3": 0.4671201814058957,
+      "undecided": 78,
+      "usable@3": 0.24036281179138322,
+      "vulnerable@3": 0.1292517006802721
     },
     "model": "kimi-k3",
     "model_requested": "moonshotai/kimi-k3",
@@ -146,12 +146,22 @@
       "Fireworks"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
     "regexbench_version": "0.4.0",
     "response_failures": 16,
-    "table": "kimi-k3\n447 tasks, 447 answered\n  pass@3               47.2%\n  dfa-eq@3             15.2%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.5%  (engine limits excluded \u2014 model only)\n  exact@3               6.3%\n  usable@3             24.8%\n  vulnerable@3         14.1%  (lower is better)\n  82 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "table": "kimi-k3\n441 tasks, 441 answered\n  pass@3               46.5%\n  dfa-eq@3             14.1%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.1%  (engine limits excluded \u2014 model only)\n  exact@3               5.0%\n  usable@3             23.8%\n  vulnerable@3         12.9%  (lower is better)\n  78 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 1334,
     "tasks_attempted": 1350,
+    "tasks_scored": 441,
+    "tasks_short_of_k": 6,
+    "tasks_short_of_k_detail": [
+      "regexeval/1744",
+      "regexeval/1776",
+      "regexeval/1813",
+      "regexeval/1855",
+      "regexeval/2588",
+      "regexeval/4043"
+    ],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/1587": [
@@ -166,12 +176,6 @@
         {
           "as_sent": "\"[^\"]*\"",
           "scored": "[^\"]*"
-        }
-      ],
-      "regexeval/1776": [
-        {
-          "as_sent": "`(?:(?:0[1-9]|[12][0-9]|3[01])(?:[-/. ])(?:0[13578]|1[02])\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|[12][0-9]|30)(?:[-/. ])(?:0[469]|11)\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|1[0-9]|2[0-8])(?:[-/. ])02\\2(?:19\\d{2}|[2-9]\\d{3})|29(?:[-/. ])02\\2(?:(?:19|[2-9]\\d)(?:0[48]|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00))`",
-          "scored": "(?:(?:0[1-9]|[12][0-9]|3[01])(?:[-/. ])(?:0[13578]|1[02])\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|[12][0-9]|30)(?:[-/. ])(?:0[469]|11)\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|1[0-9]|2[0-8])(?:[-/. ])02\\2(?:19\\d{2}|[2-9]\\d{3})|29(?:[-/. ])02\\2(?:(?:19|[2-9]\\d)(?:0[48]|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00))"
         }
       ],
       "regexeval/184": [
@@ -251,7 +255,263 @@
         }
       ]
     },
-    "wrapped_responses": 18
+    "wrapped_responses": 17
+  },
+  {
+    "completion_tokens_total": 61663,
+    "controls": {
+      "control/bad": {
+        "as_expected": true,
+        "base_task": "regexeval/2",
+        "pass@1": 0.0,
+        "pattern": "z{5}",
+        "usable@1": 0.0,
+        "vulnerable@1": 0.0
+      },
+      "control/good": {
+        "as_expected": true,
+        "base_task": "regexeval/1",
+        "pass@1": 1.0,
+        "pattern": "^\\d$",
+        "usable@1": 1.0,
+        "vulnerable@1": 0.0
+      },
+      "control/vulnerable": {
+        "as_expected": true,
+        "base_task": "regexeval/2",
+        "pass@1": 0.0,
+        "pattern": "(a+)+b",
+        "usable@1": 0.0,
+        "vulnerable@1": 1.0
+      }
+    },
+    "controls_all_as_expected": true,
+    "cost_usd_per_task": 0.00038789,
+    "cost_usd_total": 0.523656,
+    "dataset": "Re(gEx|DoS)Eval",
+    "failure_detail": [],
+    "k": 3,
+    "max_tokens": 200,
+    "metrics": {
+      "dfa-eq@3": 0.13777777777777778,
+      "dfa-eq@3 (decided)": 0.17415730337078653,
+      "exact@3": 0.03777777777777778,
+      "pass@3": 0.42444444444444446,
+      "undecided": 94,
+      "usable@3": 0.21555555555555556,
+      "vulnerable@3": 0.09111111111111111
+    },
+    "metrics_as_sent": {
+      "dfa-eq@3": 0.14,
+      "dfa-eq@3 (decided)": 0.17696629213483145,
+      "exact@3": 0.03777777777777778,
+      "pass@3": 0.4288888888888889,
+      "undecided": 94,
+      "usable@3": 0.21777777777777776,
+      "vulnerable@3": 0.09111111111111111
+    },
+    "model": "qwen3.6-max-preview",
+    "model_requested": "qwen/qwen3.6-max-preview",
+    "provider_requested": {
+      "allow_fallbacks": false,
+      "order": [
+        "Alibaba"
+      ],
+      "require_parameters": true
+    },
+    "providers_resolved": [
+      "Alibaba"
+    ],
+    "python_version": "3.11.15",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_version": "0.4.0",
+    "response_failures": 0,
+    "table": "qwen3.6-max-preview\n450 tasks, 450 answered\n  pass@3               42.4%\n  dfa-eq@3             13.8%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.4%  (engine limits excluded \u2014 model only)\n  exact@3               3.8%\n  usable@3             21.6%\n  vulnerable@3          9.1%  (lower is better)\n  94 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "tasks_answered": 1350,
+    "tasks_attempted": 1350,
+    "tasks_scored": 450,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
+    "temperature": 0.0,
+    "wrapped_detail": {
+      "regexeval/1587": [
+        {
+          "as_sent": "\"([^\"]*)\"",
+          "scored": "([^\"]*)"
+        },
+        {
+          "as_sent": "\"[^\"]*\"",
+          "scored": "[^\"]*"
+        },
+        {
+          "as_sent": "\"[^\"]*\"",
+          "scored": "[^\"]*"
+        }
+      ],
+      "regexeval/1906": [
+        {
+          "as_sent": "r'\"[^\"]*\"|\\S+'",
+          "scored": "\"[^\"]*\"|\\S+"
+        }
+      ],
+      "regexeval/1943": [
+        {
+          "as_sent": "r'(?i)\\b(?:p\\.?\\s*o\\.?|post\\s+office)\\s+(?:box|bx)?\\s*(?:#?\\s*\\d+)'",
+          "scored": "(?i)\\b(?:p\\.?\\s*o\\.?|post\\s+office)\\s+(?:box|bx)?\\s*(?:#?\\s*\\d+)"
+        }
+      ],
+      "regexeval/2333": [
+        {
+          "as_sent": "\"([^\"\\\\]|\\\\.)*\"",
+          "scored": "([^\"\\\\]|\\\\.)*"
+        },
+        {
+          "as_sent": "\"([^\"\\\\]|\\\\.)*\"",
+          "scored": "([^\"\\\\]|\\\\.)*"
+        },
+        {
+          "as_sent": "\"(?:[^\"\\\\]|\\\\.)*\"",
+          "scored": "(?:[^\"\\\\]|\\\\.)*"
+        }
+      ],
+      "regexeval/936": [
+        {
+          "as_sent": "\"([^\"]*)\"",
+          "scored": "([^\"]*)"
+        },
+        {
+          "as_sent": "\"([^\"]*)\"",
+          "scored": "([^\"]*)"
+        },
+        {
+          "as_sent": "\"([^\"]*)\"",
+          "scored": "([^\"]*)"
+        }
+      ]
+    },
+    "wrapped_responses": 11
+  },
+  {
+    "completion_tokens_total": 73887,
+    "controls": {
+      "control/bad": {
+        "as_expected": true,
+        "base_task": "regexeval/2",
+        "pass@1": 0.0,
+        "pattern": "z{5}",
+        "usable@1": 0.0,
+        "vulnerable@1": 0.0
+      },
+      "control/good": {
+        "as_expected": true,
+        "base_task": "regexeval/1",
+        "pass@1": 1.0,
+        "pattern": "^\\d$",
+        "usable@1": 1.0,
+        "vulnerable@1": 0.0
+      },
+      "control/vulnerable": {
+        "as_expected": true,
+        "base_task": "regexeval/2",
+        "pass@1": 0.0,
+        "pattern": "(a+)+b",
+        "usable@1": 0.0,
+        "vulnerable@1": 1.0
+      }
+    },
+    "controls_all_as_expected": true,
+    "cost_usd_per_task": 0.00210764,
+    "cost_usd_total": 2.845315,
+    "dataset": "Re(gEx|DoS)Eval",
+    "failure_detail": [
+      {
+        "error": "response had no resolved 'provider' field",
+        "status": "no_provider",
+        "task": "regexeval/41"
+      }
+    ],
+    "k": 3,
+    "max_tokens": 200,
+    "metrics": {
+      "dfa-eq@3": 0.0935412026726058,
+      "dfa-eq@3 (decided)": 0.13291139240506328,
+      "exact@3": 0.017817371937639197,
+      "pass@3": 0.4209354120267261,
+      "undecided": 133,
+      "usable@3": 0.20935412026726058,
+      "vulnerable@3": 0.10022271714922049
+    },
+    "metrics_as_sent": {
+      "dfa-eq@3": 0.0957683741648107,
+      "dfa-eq@3 (decided)": 0.1360759493670886,
+      "exact@3": 0.017817371937639197,
+      "pass@3": 0.42316258351893093,
+      "undecided": 133,
+      "usable@3": 0.21158129175946547,
+      "vulnerable@3": 0.10022271714922049
+    },
+    "model": "gpt-5.6-sol",
+    "model_requested": "openai/gpt-5.6-sol",
+    "provider_requested": {
+      "allow_fallbacks": false,
+      "order": [
+        "OpenAI"
+      ],
+      "require_parameters": true
+    },
+    "providers_resolved": [
+      "OpenAI"
+    ],
+    "python_version": "3.11.15",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_version": "0.4.0",
+    "response_failures": 1,
+    "table": "gpt-5.6-sol\n449 tasks, 449 answered\n  pass@3               42.1%\n  dfa-eq@3              9.4%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   13.3%  (engine limits excluded \u2014 model only)\n  exact@3               1.8%\n  usable@3             20.9%\n  vulnerable@3         10.0%  (lower is better)\n  133 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "tasks_answered": 1349,
+    "tasks_attempted": 1350,
+    "tasks_scored": 449,
+    "tasks_short_of_k": 1,
+    "tasks_short_of_k_detail": [
+      "regexeval/41"
+    ],
+    "temperature": 0.0,
+    "wrapped_detail": {
+      "regexeval/1587": [
+        {
+          "as_sent": "\"[^\"]*\"",
+          "scored": "[^\"]*"
+        },
+        {
+          "as_sent": "\"[^\"]*\"",
+          "scored": "[^\"]*"
+        },
+        {
+          "as_sent": "\"[^\"]*\"",
+          "scored": "[^\"]*"
+        }
+      ],
+      "regexeval/2333": [
+        {
+          "as_sent": "\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"",
+          "scored": "([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)"
+        },
+        {
+          "as_sent": "\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"",
+          "scored": "([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)"
+        },
+        {
+          "as_sent": "\"([^\"\\\\]|\\\\.)*\"",
+          "scored": "([^\"\\\\]|\\\\.)*"
+        }
+      ],
+      "regexeval/977": [
+        {
+          "as_sent": "/\\*(?:[^*]|\\*(?!/))*\\*/",
+          "scored": "\\*(?:[^*]|\\*(?!/))*\\*"
+        }
+      ]
+    },
+    "wrapped_responses": 7
   },
   {
     "completion_tokens_total": 99707,
@@ -470,22 +730,22 @@
     "k": 3,
     "max_tokens": 200,
     "metrics": {
-      "dfa-eq@3": 0.13963963963963963,
-      "dfa-eq@3 (decided)": 0.1701492537313433,
-      "exact@3": 0.05405405405405406,
-      "pass@3": 0.4752252252252252,
-      "undecided": 109,
-      "usable@3": 0.22972972972972974,
-      "vulnerable@3": 0.1554054054054054
+      "dfa-eq@3": 0.11574074074074074,
+      "dfa-eq@3 (decided)": 0.1524390243902439,
+      "exact@3": 0.027777777777777776,
+      "pass@3": 0.46064814814814814,
+      "undecided": 104,
+      "usable@3": 0.20833333333333334,
+      "vulnerable@3": 0.13194444444444445
     },
     "metrics_as_sent": {
-      "dfa-eq@3": 0.14189189189189189,
-      "dfa-eq@3 (decided)": 0.17313432835820897,
-      "exact@3": 0.05405405405405406,
-      "pass@3": 0.4797297297297297,
-      "undecided": 109,
-      "usable@3": 0.22972972972972974,
-      "vulnerable@3": 0.1554054054054054
+      "dfa-eq@3": 0.11805555555555555,
+      "dfa-eq@3 (decided)": 0.15548780487804878,
+      "exact@3": 0.027777777777777776,
+      "pass@3": 0.4652777777777778,
+      "undecided": 104,
+      "usable@3": 0.20833333333333334,
+      "vulnerable@3": 0.13194444444444445
     },
     "model": "claude-opus-5",
     "model_requested": "anthropic/claude-opus-5",
@@ -500,12 +760,28 @@
       "Anthropic"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
     "regexbench_version": "0.4.0",
     "response_failures": 36,
-    "table": "claude-opus-5\n444 tasks, 444 answered\n  pass@3               47.5%\n  dfa-eq@3             14.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.0%  (engine limits excluded \u2014 model only)\n  exact@3               5.4%\n  usable@3             23.0%\n  vulnerable@3         15.5%  (lower is better)\n  109 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "table": "claude-opus-5\n432 tasks, 432 answered\n  pass@3               46.1%\n  dfa-eq@3             11.6%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   15.2%  (engine limits excluded \u2014 model only)\n  exact@3               2.8%\n  usable@3             20.8%\n  vulnerable@3         13.2%  (lower is better)\n  104 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 1314,
     "tasks_attempted": 1350,
+    "tasks_scored": 432,
+    "tasks_short_of_k": 12,
+    "tasks_short_of_k_detail": [
+      "regexeval/1625",
+      "regexeval/1873",
+      "regexeval/1914",
+      "regexeval/1962",
+      "regexeval/2123",
+      "regexeval/2297",
+      "regexeval/251",
+      "regexeval/3483",
+      "regexeval/660",
+      "regexeval/693",
+      "regexeval/742",
+      "regexeval/977"
+    ],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/1587": [
@@ -552,254 +828,6 @@
       ]
     },
     "wrapped_responses": 9
-  },
-  {
-    "completion_tokens_total": 61663,
-    "controls": {
-      "control/bad": {
-        "as_expected": true,
-        "base_task": "regexeval/2",
-        "pass@1": 0.0,
-        "pattern": "z{5}",
-        "usable@1": 0.0,
-        "vulnerable@1": 0.0
-      },
-      "control/good": {
-        "as_expected": true,
-        "base_task": "regexeval/1",
-        "pass@1": 1.0,
-        "pattern": "^\\d$",
-        "usable@1": 1.0,
-        "vulnerable@1": 0.0
-      },
-      "control/vulnerable": {
-        "as_expected": true,
-        "base_task": "regexeval/2",
-        "pass@1": 0.0,
-        "pattern": "(a+)+b",
-        "usable@1": 0.0,
-        "vulnerable@1": 1.0
-      }
-    },
-    "controls_all_as_expected": true,
-    "cost_usd_per_task": 0.00038789,
-    "cost_usd_total": 0.523656,
-    "dataset": "Re(gEx|DoS)Eval",
-    "failure_detail": [],
-    "k": 3,
-    "max_tokens": 200,
-    "metrics": {
-      "dfa-eq@3": 0.13777777777777778,
-      "dfa-eq@3 (decided)": 0.17415730337078653,
-      "exact@3": 0.03777777777777778,
-      "pass@3": 0.42444444444444446,
-      "undecided": 94,
-      "usable@3": 0.21555555555555556,
-      "vulnerable@3": 0.09111111111111111
-    },
-    "metrics_as_sent": {
-      "dfa-eq@3": 0.14,
-      "dfa-eq@3 (decided)": 0.17696629213483145,
-      "exact@3": 0.03777777777777778,
-      "pass@3": 0.4288888888888889,
-      "undecided": 94,
-      "usable@3": 0.21777777777777776,
-      "vulnerable@3": 0.09111111111111111
-    },
-    "model": "qwen3.6-max-preview",
-    "model_requested": "qwen/qwen3.6-max-preview",
-    "provider_requested": {
-      "allow_fallbacks": false,
-      "order": [
-        "Alibaba"
-      ],
-      "require_parameters": true
-    },
-    "providers_resolved": [
-      "Alibaba"
-    ],
-    "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
-    "regexbench_version": "0.4.0",
-    "response_failures": 0,
-    "table": "qwen3.6-max-preview\n450 tasks, 450 answered\n  pass@3               42.4%\n  dfa-eq@3             13.8%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.4%  (engine limits excluded \u2014 model only)\n  exact@3               3.8%\n  usable@3             21.6%\n  vulnerable@3          9.1%  (lower is better)\n  94 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
-    "tasks_answered": 1350,
-    "tasks_attempted": 1350,
-    "temperature": 0.0,
-    "wrapped_detail": {
-      "regexeval/1587": [
-        {
-          "as_sent": "\"([^\"]*)\"",
-          "scored": "([^\"]*)"
-        },
-        {
-          "as_sent": "\"[^\"]*\"",
-          "scored": "[^\"]*"
-        },
-        {
-          "as_sent": "\"[^\"]*\"",
-          "scored": "[^\"]*"
-        }
-      ],
-      "regexeval/1906": [
-        {
-          "as_sent": "r'\"[^\"]*\"|\\S+'",
-          "scored": "\"[^\"]*\"|\\S+"
-        }
-      ],
-      "regexeval/1943": [
-        {
-          "as_sent": "r'(?i)\\b(?:p\\.?\\s*o\\.?|post\\s+office)\\s+(?:box|bx)?\\s*(?:#?\\s*\\d+)'",
-          "scored": "(?i)\\b(?:p\\.?\\s*o\\.?|post\\s+office)\\s+(?:box|bx)?\\s*(?:#?\\s*\\d+)"
-        }
-      ],
-      "regexeval/2333": [
-        {
-          "as_sent": "\"([^\"\\\\]|\\\\.)*\"",
-          "scored": "([^\"\\\\]|\\\\.)*"
-        },
-        {
-          "as_sent": "\"([^\"\\\\]|\\\\.)*\"",
-          "scored": "([^\"\\\\]|\\\\.)*"
-        },
-        {
-          "as_sent": "\"(?:[^\"\\\\]|\\\\.)*\"",
-          "scored": "(?:[^\"\\\\]|\\\\.)*"
-        }
-      ],
-      "regexeval/936": [
-        {
-          "as_sent": "\"([^\"]*)\"",
-          "scored": "([^\"]*)"
-        },
-        {
-          "as_sent": "\"([^\"]*)\"",
-          "scored": "([^\"]*)"
-        },
-        {
-          "as_sent": "\"([^\"]*)\"",
-          "scored": "([^\"]*)"
-        }
-      ]
-    },
-    "wrapped_responses": 11
-  },
-  {
-    "completion_tokens_total": 73887,
-    "controls": {
-      "control/bad": {
-        "as_expected": true,
-        "base_task": "regexeval/2",
-        "pass@1": 0.0,
-        "pattern": "z{5}",
-        "usable@1": 0.0,
-        "vulnerable@1": 0.0
-      },
-      "control/good": {
-        "as_expected": true,
-        "base_task": "regexeval/1",
-        "pass@1": 1.0,
-        "pattern": "^\\d$",
-        "usable@1": 1.0,
-        "vulnerable@1": 0.0
-      },
-      "control/vulnerable": {
-        "as_expected": true,
-        "base_task": "regexeval/2",
-        "pass@1": 0.0,
-        "pattern": "(a+)+b",
-        "usable@1": 0.0,
-        "vulnerable@1": 1.0
-      }
-    },
-    "controls_all_as_expected": true,
-    "cost_usd_per_task": 0.00210764,
-    "cost_usd_total": 2.845315,
-    "dataset": "Re(gEx|DoS)Eval",
-    "failure_detail": [
-      {
-        "error": "response had no resolved 'provider' field",
-        "status": "no_provider",
-        "task": "regexeval/41"
-      }
-    ],
-    "k": 3,
-    "max_tokens": 200,
-    "metrics": {
-      "dfa-eq@3": 0.09555555555555556,
-      "dfa-eq@3 (decided)": 0.13564668769716087,
-      "exact@3": 0.02,
-      "pass@3": 0.4222222222222222,
-      "undecided": 133,
-      "usable@3": 0.2111111111111111,
-      "vulnerable@3": 0.10222222222222223
-    },
-    "metrics_as_sent": {
-      "dfa-eq@3": 0.09777777777777778,
-      "dfa-eq@3 (decided)": 0.138801261829653,
-      "exact@3": 0.02,
-      "pass@3": 0.42444444444444446,
-      "undecided": 133,
-      "usable@3": 0.21333333333333335,
-      "vulnerable@3": 0.10222222222222223
-    },
-    "model": "gpt-5.6-sol",
-    "model_requested": "openai/gpt-5.6-sol",
-    "provider_requested": {
-      "allow_fallbacks": false,
-      "order": [
-        "OpenAI"
-      ],
-      "require_parameters": true
-    },
-    "providers_resolved": [
-      "OpenAI"
-    ],
-    "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
-    "regexbench_version": "0.4.0",
-    "response_failures": 1,
-    "table": "gpt-5.6-sol\n450 tasks, 450 answered\n  pass@3               42.2%\n  dfa-eq@3              9.6%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   13.6%  (engine limits excluded \u2014 model only)\n  exact@3               2.0%\n  usable@3             21.1%\n  vulnerable@3         10.2%  (lower is better)\n  133 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
-    "tasks_answered": 1349,
-    "tasks_attempted": 1350,
-    "temperature": 0.0,
-    "wrapped_detail": {
-      "regexeval/1587": [
-        {
-          "as_sent": "\"[^\"]*\"",
-          "scored": "[^\"]*"
-        },
-        {
-          "as_sent": "\"[^\"]*\"",
-          "scored": "[^\"]*"
-        },
-        {
-          "as_sent": "\"[^\"]*\"",
-          "scored": "[^\"]*"
-        }
-      ],
-      "regexeval/2333": [
-        {
-          "as_sent": "\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"",
-          "scored": "([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)"
-        },
-        {
-          "as_sent": "\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"",
-          "scored": "([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)"
-        },
-        {
-          "as_sent": "\"([^\"\\\\]|\\\\.)*\"",
-          "scored": "([^\"\\\\]|\\\\.)*"
-        }
-      ],
-      "regexeval/977": [
-        {
-          "as_sent": "/\\*(?:[^*]|\\*(?!/))*\\*/",
-          "scored": "\\*(?:[^*]|\\*(?!/))*\\*"
-        }
-      ]
-    },
-    "wrapped_responses": 7
   },
   {
     "completion_tokens_total": 66458,
@@ -870,12 +898,15 @@
       "CoreWeave"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "deepseek-v4-flash-0731\n450 tasks, 450 answered\n  pass@3               38.0%\n  dfa-eq@3             11.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   14.3%  (engine limits excluded \u2014 model only)\n  exact@3               3.3%\n  usable@3             19.8%\n  vulnerable@3         12.0%  (lower is better)\n  93 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 1350,
     "tasks_attempted": 1350,
+    "tasks_scored": 450,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/1587": [
@@ -1027,12 +1058,15 @@
       "Alibaba"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "qwen3.6-plus\n450 tasks, 450 answered\n  pass@3               39.8%\n  dfa-eq@3             11.6%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   14.8%  (engine limits excluded \u2014 model only)\n  exact@3               3.8%\n  usable@3             19.8%\n  vulnerable@3          9.8%  (lower is better)\n  99 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 1350,
     "tasks_attempted": 1350,
+    "tasks_scored": 450,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/1587": [
@@ -1149,12 +1183,15 @@
       "Novita"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "glm-5.2\n450 tasks, 450 answered\n  pass@3               42.4%\n  dfa-eq@3             10.4%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   12.9%  (engine limits excluded \u2014 model only)\n  exact@3               3.8%\n  usable@3             18.7%\n  vulnerable@3         14.2%  (lower is better)\n  86 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 1350,
     "tasks_attempted": 1350,
+    "tasks_scored": 450,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/12": [
@@ -1253,135 +1290,6 @@
     "wrapped_responses": 18
   },
   {
-    "completion_tokens_total": 75621,
-    "controls": {
-      "control/bad": {
-        "as_expected": true,
-        "base_task": "regexeval/2",
-        "pass@1": 0.0,
-        "pattern": "z{5}",
-        "usable@1": 0.0,
-        "vulnerable@1": 0.0
-      },
-      "control/good": {
-        "as_expected": true,
-        "base_task": "regexeval/1",
-        "pass@1": 1.0,
-        "pattern": "^\\d$",
-        "usable@1": 1.0,
-        "vulnerable@1": 0.0
-      },
-      "control/vulnerable": {
-        "as_expected": true,
-        "base_task": "regexeval/2",
-        "pass@1": 0.0,
-        "pattern": "(a+)+b",
-        "usable@1": 0.0,
-        "vulnerable@1": 1.0
-      }
-    },
-    "controls_all_as_expected": true,
-    "cost_usd_per_task": 4.294e-05,
-    "cost_usd_total": 0.0579663,
-    "dataset": "Re(gEx|DoS)Eval",
-    "failure_detail": [
-      {
-        "error": "",
-        "status": "ok",
-        "task": "regexeval/323"
-      }
-    ],
-    "k": 3,
-    "max_tokens": 200,
-    "metrics": {
-      "dfa-eq@3": 0.09333333333333334,
-      "dfa-eq@3 (decided)": 0.12166172106824925,
-      "exact@3": 0.02,
-      "pass@3": 0.3933333333333333,
-      "undecided": 113,
-      "usable@3": 0.18666666666666668,
-      "vulnerable@3": 0.11777777777777777
-    },
-    "metrics_as_sent": {
-      "dfa-eq@3": 0.09555555555555556,
-      "dfa-eq@3 (decided)": 0.1242603550295858,
-      "exact@3": 0.02,
-      "pass@3": 0.39555555555555555,
-      "undecided": 112,
-      "usable@3": 0.18888888888888888,
-      "vulnerable@3": 0.11777777777777777
-    },
-    "model": "gpt-5.6-luna",
-    "model_requested": "openai/gpt-5.6-luna",
-    "provider_requested": {
-      "allow_fallbacks": false,
-      "order": [
-        "OpenAI"
-      ],
-      "require_parameters": true
-    },
-    "providers_resolved": [
-      "OpenAI"
-    ],
-    "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
-    "regexbench_version": "0.4.0",
-    "response_failures": 1,
-    "table": "gpt-5.6-luna\n450 tasks, 450 answered\n  pass@3               39.3%\n  dfa-eq@3              9.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   12.2%  (engine limits excluded \u2014 model only)\n  exact@3               2.0%\n  usable@3             18.7%\n  vulnerable@3         11.8%  (lower is better)\n  113 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
-    "tasks_answered": 1349,
-    "tasks_attempted": 1350,
-    "temperature": 0.0,
-    "wrapped_detail": {
-      "regexeval/1587": [
-        {
-          "as_sent": "\"[^\"]*\"",
-          "scored": "[^\"]*"
-        },
-        {
-          "as_sent": "\"[^\"]*\"",
-          "scored": "[^\"]*"
-        },
-        {
-          "as_sent": "\"[^\"]*\"",
-          "scored": "[^\"]*"
-        }
-      ],
-      "regexeval/2333": [
-        {
-          "as_sent": "\"[^\"\\n]*\"",
-          "scored": "[^\"\\n]*"
-        },
-        {
-          "as_sent": "\"(?:\\\\.|[^\"\\\\])*\"",
-          "scored": "(?:\\\\.|[^\"\\\\])*"
-        },
-        {
-          "as_sent": "\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"",
-          "scored": "[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*"
-        }
-      ],
-      "regexeval/3753": [
-        {
-          "as_sent": "r'(?<!\\d)(?:\\+98|0098|98)?(?:0)?9(?:0[1-5]|1[0-9]|2[0-9]|3[0-9]|9[0-9])\\d{7}(?!\\d)'",
-          "scored": "(?<!\\d)(?:\\+98|0098|98)?(?:0)?9(?:0[1-5]|1[0-9]|2[0-9]|3[0-9]|9[0-9])\\d{7}(?!\\d)"
-        }
-      ],
-      "regexeval/3803": [
-        {
-          "as_sent": "r'\\bQ\\)\\s*[A-Z]{4}/[A-Z]{4}\\s*/\\s*Q\\)\\s*[A-Z]{4}/[A-Z]{4}\\s*/\\s*(\\d{4}[NS])\\s*(\\d{5}[EW])\\s*(\\d{3})\\s*N?M?\\b'",
-          "scored": "\\bQ\\)\\s*[A-Z]{4}/[A-Z]{4}\\s*/\\s*Q\\)\\s*[A-Z]{4}/[A-Z]{4}\\s*/\\s*(\\d{4}[NS])\\s*(\\d{5}[EW])\\s*(\\d{3})\\s*N?M?\\b"
-        }
-      ],
-      "regexeval/936": [
-        {
-          "as_sent": "\"([^\"]*)\"",
-          "scored": "([^\"]*)"
-        }
-      ]
-    },
-    "wrapped_responses": 9
-  },
-  {
     "completion_tokens_total": 70402,
     "controls": {
       "control/bad": {
@@ -1447,12 +1355,15 @@
       "OpenAI"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "gpt-5.6-terra\n450 tasks, 450 answered\n  pass@3               42.2%\n  dfa-eq@3             10.2%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   13.1%  (engine limits excluded \u2014 model only)\n  exact@3               2.0%\n  usable@3             18.7%\n  vulnerable@3         12.0%  (lower is better)\n  100 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 1350,
     "tasks_attempted": 1350,
+    "tasks_scored": 450,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/1587": [
@@ -1509,6 +1420,140 @@
       ]
     },
     "wrapped_responses": 11
+  },
+  {
+    "completion_tokens_total": 75621,
+    "controls": {
+      "control/bad": {
+        "as_expected": true,
+        "base_task": "regexeval/2",
+        "pass@1": 0.0,
+        "pattern": "z{5}",
+        "usable@1": 0.0,
+        "vulnerable@1": 0.0
+      },
+      "control/good": {
+        "as_expected": true,
+        "base_task": "regexeval/1",
+        "pass@1": 1.0,
+        "pattern": "^\\d$",
+        "usable@1": 1.0,
+        "vulnerable@1": 0.0
+      },
+      "control/vulnerable": {
+        "as_expected": true,
+        "base_task": "regexeval/2",
+        "pass@1": 0.0,
+        "pattern": "(a+)+b",
+        "usable@1": 0.0,
+        "vulnerable@1": 1.0
+      }
+    },
+    "controls_all_as_expected": true,
+    "cost_usd_per_task": 4.294e-05,
+    "cost_usd_total": 0.0579663,
+    "dataset": "Re(gEx|DoS)Eval",
+    "failure_detail": [
+      {
+        "error": "",
+        "status": "ok",
+        "task": "regexeval/323"
+      }
+    ],
+    "k": 3,
+    "max_tokens": 200,
+    "metrics": {
+      "dfa-eq@3": 0.09131403118040089,
+      "dfa-eq@3 (decided)": 0.12166172106824925,
+      "exact@3": 0.017817371937639197,
+      "pass@3": 0.39198218262806234,
+      "undecided": 112,
+      "usable@3": 0.18485523385300667,
+      "vulnerable@3": 0.11581291759465479
+    },
+    "metrics_as_sent": {
+      "dfa-eq@3": 0.0935412026726058,
+      "dfa-eq@3 (decided)": 0.1242603550295858,
+      "exact@3": 0.017817371937639197,
+      "pass@3": 0.39420935412026725,
+      "undecided": 111,
+      "usable@3": 0.1870824053452116,
+      "vulnerable@3": 0.11581291759465479
+    },
+    "model": "gpt-5.6-luna",
+    "model_requested": "openai/gpt-5.6-luna",
+    "provider_requested": {
+      "allow_fallbacks": false,
+      "order": [
+        "OpenAI"
+      ],
+      "require_parameters": true
+    },
+    "providers_resolved": [
+      "OpenAI"
+    ],
+    "python_version": "3.11.15",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
+    "regexbench_version": "0.4.0",
+    "response_failures": 1,
+    "table": "gpt-5.6-luna\n449 tasks, 449 answered\n  pass@3               39.2%\n  dfa-eq@3              9.1%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   12.2%  (engine limits excluded \u2014 model only)\n  exact@3               1.8%\n  usable@3             18.5%\n  vulnerable@3         11.6%  (lower is better)\n  112 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+    "tasks_answered": 1349,
+    "tasks_attempted": 1350,
+    "tasks_scored": 449,
+    "tasks_short_of_k": 1,
+    "tasks_short_of_k_detail": [
+      "regexeval/323"
+    ],
+    "temperature": 0.0,
+    "wrapped_detail": {
+      "regexeval/1587": [
+        {
+          "as_sent": "\"[^\"]*\"",
+          "scored": "[^\"]*"
+        },
+        {
+          "as_sent": "\"[^\"]*\"",
+          "scored": "[^\"]*"
+        },
+        {
+          "as_sent": "\"[^\"]*\"",
+          "scored": "[^\"]*"
+        }
+      ],
+      "regexeval/2333": [
+        {
+          "as_sent": "\"[^\"\\n]*\"",
+          "scored": "[^\"\\n]*"
+        },
+        {
+          "as_sent": "\"(?:\\\\.|[^\"\\\\])*\"",
+          "scored": "(?:\\\\.|[^\"\\\\])*"
+        },
+        {
+          "as_sent": "\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"",
+          "scored": "[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*"
+        }
+      ],
+      "regexeval/3753": [
+        {
+          "as_sent": "r'(?<!\\d)(?:\\+98|0098|98)?(?:0)?9(?:0[1-5]|1[0-9]|2[0-9]|3[0-9]|9[0-9])\\d{7}(?!\\d)'",
+          "scored": "(?<!\\d)(?:\\+98|0098|98)?(?:0)?9(?:0[1-5]|1[0-9]|2[0-9]|3[0-9]|9[0-9])\\d{7}(?!\\d)"
+        }
+      ],
+      "regexeval/3803": [
+        {
+          "as_sent": "r'\\bQ\\)\\s*[A-Z]{4}/[A-Z]{4}\\s*/\\s*Q\\)\\s*[A-Z]{4}/[A-Z]{4}\\s*/\\s*(\\d{4}[NS])\\s*(\\d{5}[EW])\\s*(\\d{3})\\s*N?M?\\b'",
+          "scored": "\\bQ\\)\\s*[A-Z]{4}/[A-Z]{4}\\s*/\\s*Q\\)\\s*[A-Z]{4}/[A-Z]{4}\\s*/\\s*(\\d{4}[NS])\\s*(\\d{5}[EW])\\s*(\\d{3})\\s*N?M?\\b"
+        }
+      ],
+      "regexeval/936": [
+        {
+          "as_sent": "\"([^\"]*)\"",
+          "scored": "([^\"]*)"
+        }
+      ]
+    },
+    "wrapped_responses": 9
   },
   {
     "completion_tokens_total": 89136,
@@ -1576,12 +1621,15 @@
       "Anthropic"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "claude-sonnet-5\n450 tasks, 450 answered\n  pass@3               40.7%\n  dfa-eq@3             10.4%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   13.3%  (engine limits excluded \u2014 model only)\n  exact@3               3.3%\n  usable@3             18.0%\n  vulnerable@3         10.9%  (lower is better)\n  97 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 1350,
     "tasks_attempted": 1350,
+    "tasks_scored": 450,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/1587": [
@@ -1695,12 +1743,15 @@
       "Google AI Studio"
     ],
     "python_version": "3.11.15",
-    "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
+    "regexbench_commit": "05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd",
     "regexbench_version": "0.4.0",
     "response_failures": 0,
     "table": "gemini-3.1-flash-lite\n450 tasks, 450 answered\n  pass@3               38.7%\n  dfa-eq@3              9.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   11.8%  (engine limits excluded \u2014 model only)\n  exact@3               3.1%\n  usable@3             17.1%\n  vulnerable@3         12.0%  (lower is better)\n  95 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 1350,
     "tasks_attempted": 1350,
+    "tasks_scored": 450,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/1587": [

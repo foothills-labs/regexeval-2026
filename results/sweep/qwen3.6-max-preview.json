@@ -70,6 +70,9 @@
   "table": "qwen3.6-max-preview\n450 tasks, 450 answered\n  pass@3               42.4%\n  dfa-eq@3             13.8%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.4%  (engine limits excluded \u2014 model only)\n  exact@3               3.8%\n  usable@3             21.6%\n  vulnerable@3          9.1%  (lower is better)\n  94 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
   "tasks_answered": 1350,
   "tasks_attempted": 1350,
+  "tasks_scored": 450,
+  "tasks_short_of_k": 0,
+  "tasks_short_of_k_detail": [],
   "temperature": 0.0,
   "wrapped_detail": {
     "regexeval/1587": [

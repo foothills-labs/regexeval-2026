@@ -236,7 +236,7 @@ Measured: about 105 prompt and 36 completion tokens per task.
 
 | Component | Pin |
 | --- | --- |
-| Scorer | `regexbench` 0.4.0, commit `412eaa95a3f512b5a7bd3d8de2ae70c003d6a206` |
+| Scorer | `regexbench` 0.4.0, commit `05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd` |
 | Python | 3.11 |
 | Corpus | `RegexEval.json` from `s2e-lab/RegexEval@master` |
 | Models | full slug, e.g. `openai/gpt-4o-mini` |
@@ -246,16 +246,6 @@ Measured: about 105 prompt and 36 completion tokens per task.
 `regexbench` 0.4.0 is **not on PyPI** — `pip install regexbench==0.4.0`
 does not resolve to it. The pin is a git commit for that reason, and it
 matters: 0.4.0 changed how some patterns are scored relative to 0.3.0.
-
-> **Note on the commit pin (2026-08-19).** `regexbench` history was rewritten on
-> this date to correct the author email on past commits. The rewrite changed
-> commit identities only — every tree is byte-identical to before — but it did
-> renumber the SHAs. The pin above, and the `regexbench_commit` field in every
-> result file, now name the post-rewrite commit
-> `412eaa95a3f512b5a7bd3d8de2ae70c003d6a206`. The pre-rewrite SHA for the same
-> tree was `05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd`; it appears in earlier
-> revisions of this file and no longer resolves in the repository. The tag
-> `v0.4.0` tracks the new commit and is the stable way to reach this code.
 
 ### Can I check your numbers without trusting you?
 
@@ -283,8 +273,8 @@ committing them.
    model correctness.
 2. **Coverage is not perfectly uniform.** Nine models cover all 450 tasks;
    `kimi-k3` covers 447 because the budget ran out mid-collection, and
-   `claude-opus-5` covers 444 because of content-filter refusals (this said
-   445; 444 tasks have at least one scored sample). Under 1%,
+   `claude-opus-5` covers 444 because of content-filter refusals and one
+   truncated response. Under 2%,
    and it moves no ranking, but the denominators differ.
 3. **450 of 762 tasks**, chosen by budget rather than by principle. The
    sample is spread evenly, but it is a sample.

@@ -135,20 +135,20 @@ candidate against a reference by language equivalence and stop there.
 
 ## Passing looks about twice as easy as shipping
 
-Between **38.0% and 47.5% of answers pass their tests**, depending on the
-model. Between **17.1% and 24.8% survive all three questions**.
+Between **38.0% and 46.5% of answers pass their tests**, depending on the
+model. Between **17.1% and 23.8% survive all three questions**.
 
 | Model | passes tests | survives all three | vulnerable |
 | --- | ---: | ---: | ---: |
-| `kimi-k3` | 47.2% | 24.8% | 14.1% |
-| `claude-opus-5` | 47.5% | 23.0% | 15.5% |
+| `kimi-k3` | 46.5% | 23.8% | 12.9% |
 | `qwen3.6-max-preview` | 42.4% | 21.6% | 9.1% |
-| `gpt-5.6-sol` | 42.2% | 21.1% | 10.2% |
+| `gpt-5.6-sol` | 42.1% | 20.9% | 10.0% |
+| `claude-opus-5` | 46.1% | 20.8% | 13.2% |
 | `deepseek-v4-flash-0731` | 38.0% | 19.8% | 12.0% |
 | `qwen3.6-plus` | 39.8% | 19.8% | 9.8% |
 | `glm-5.2` | 42.4% | 18.7% | 14.2% |
-| `gpt-5.6-luna` | 39.3% | 18.7% | 11.8% |
 | `gpt-5.6-terra` | 42.2% | 18.7% | 12.0% |
+| `gpt-5.6-luna` | 39.2% | 18.5% | 11.6% |
 | `claude-sonnet-5` | 40.7% | 18.0% | 10.9% |
 | `gemini-3.1-flash-lite` | 38.7% | 17.1% | 12.0% |
 
@@ -156,9 +156,11 @@ Half of what looks like success does not survive contact with the other two
 questions, and that holds for the most expensive model on the board as much
 as the cheapest.
 
-We also found **135 patterns that passed every test and were exploitable**.
-They are ordinary things: email validators, hostname validators, a pattern
-for matching comma-separated names. The kind of thing that gets approved.
+We also found **390 generations that passed every test and were
+exploitable**, out of 5,269 that passed — 7.4%, or 144 of the 2,051
+model-task pairs where anything passed at all. They are ordinary things: email
+validators, hostname validators, a pattern for matching comma-separated names.
+The kind of thing that gets approved.
 
 We were ready to publish that table. It lines up neatly with what BaxBench
 and SecureAgentBench found in other domains, and we took the agreement as
@@ -272,7 +274,7 @@ closest we can get to comparing like with like:
 | RegexLib, published for reuse | read | 1,684 | 20.1% |
 | Stack Overflow answers | read | 4,000 | 17.3% |
 | Re(gEx\|DoS)Eval gold answers | read | 538 | 13.4% |
-| **our eleven models** | — | — | **9.0%** |
+| **our eleven models** | — | 3,613 | **9.8%** |
 | **production code** | **run** | 4,000 | **8.9%** |
 
 Real shipped code is safer than every model we tested, so the endemic reading
@@ -284,7 +286,15 @@ the column we did not expect to need.
 
 Everything written to be *read* sits between 13% and 20%. The one population
 that has been *executed*, under real traffic, in code somebody installed,
-sits at 8.9%. The models sit with it.
+sits at 8.9%. The models sit with it, at 9.8% — a difference that does not
+resolve (*p* = 0.20).
+
+The model row is restricted the same way as every other row: we keep only the
+models' own anchored outputs. An earlier draft put the models in at their
+unrestricted rate, comparing a restricted human population against an
+unrestricted machine one, which is exactly the confound the restriction exists
+to remove. Fixing it moved the models slightly *toward* the answer key and
+away from production code, and the conclusion held anyway.
 
 That is not a story about carelessness. A pattern published to a library, or
 posted in an answer, or written to key a benchmark, is authored once to
@@ -330,14 +340,15 @@ repository that needs no API key to re-run.
 
 The eleven models span a 98× range in price.
 
-| Model | survives all three | cost per task |
+| Model | survives all three | cost per request |
 | --- | ---: | ---: |
 | `deepseek-v4-flash-0731` | 19.8% | $0.000026 |
-| `claude-opus-5` | 23.0% | $0.002514 |
+| `claude-opus-5` | 20.8% | $0.002514 |
 
-DeepSeek's model costs **98× less** and scores 3.2 points lower, a gap so
-small our own statistics can barely resolve it. The whole field fits inside
-eight percentage points.
+DeepSeek's model costs **98× less** and scores a point *higher* — a difference
+comfortably inside what our own statistics can resolve, which is to say the
+two are indistinguishable. The whole field fits inside seven percentage
+points.
 
 For this task, specifically, model choice is close to a rounding error and
 cost is not. That is a claim about writing regular expressions and nothing

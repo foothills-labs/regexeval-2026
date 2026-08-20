@@ -29,13 +29,21 @@ ITERATIONS = 10000
 SEED = 20260812  # fixed so the published intervals are reproducible
 
 
-def load(run: str, metric: str):
+def load(run: str, metric: str, k: int = 3):
+    """Per-task outcomes, over the tasks that carry a full k samples.
+
+    The @k estimator is defined for n >= k, so a task that came back short is
+    excluded here exactly as it is from the scores themselves. Without that
+    filter these intervals would sit around a different point estimate than
+    the table they annotate, for no reason a reader could see.
+    """
     d = config.RESULTS_DIR / run / "per_task"
     models, data = [], {}
     for f in sorted(d.glob("*.json")):
         models.append(f.stem)
-        data[f.stem] = {k: v[metric] for k, v in json.loads(f.read_text()).items()}
-    # only tasks every model attempted, so comparisons are like-for-like
+        rows = json.loads(f.read_text())
+        data[f.stem] = {name: v[metric] for name, v in rows.items() if v["samples"] >= k}
+    # only tasks every model answered in full, so comparisons are like-for-like
     common = set.intersection(*(set(v) for v in data.values()))
     return models, data, sorted(common)
 
@@ -61,11 +69,49 @@ def pct(xs, p):
     return s[max(0, min(len(s) - 1, int(p * len(s))))]
 
 
+def emit_intervals(run: str) -> dict:
+    """Paired-bootstrap intervals for every model on every headline metric.
+
+    The main results table used to carry no intervals at all, which is an odd
+    silence in a paper arguing for inferential care. It cannot carry
+    independent binomial ones either -- that is the estimator this section
+    exists to reject. These are the intervals the same bootstrap produces for
+    a single model's score: resample tasks, rescore, take the percentiles.
+    Task difficulty still varies across resamples here (it only cancels in a
+    *difference*), so these are wider than a binomial interval would be, which
+    is the honest width for a score estimated on 450 shared items.
+    """
+    out: dict = {"run": run, "iterations": ITERATIONS, "seed": SEED, "models": {}}
+    for metric in ("usable", "pass", "vulnerable"):
+        models, data, _ = load(run, metric)
+        for m in models:
+            # Each model's own interval is bootstrapped over its own scored
+            # tasks, so it brackets the score the table reports. The common
+            # subset belongs to the pairwise differences, not here: narrowing
+            # every model to the tasks the worst-covered one answered would
+            # move nine models' point estimates to annotate two.
+            own = sorted(data[m])
+            _, draws, _ = bootstrap([m], {m: data[m]}, own)
+            out["models"].setdefault(m, {})[metric] = [pct(draws[m], 0.025),
+                                                       pct(draws[m], 0.975)]
+            out.setdefault("tasks", {}).setdefault(metric, {})[m] = len(own)
+    path = config.RESULTS_DIR / run / "paired_intervals.json"
+    path.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
+    print(f"wrote {path}")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--run", default="sweep")
     ap.add_argument("--metric", default="usable", choices=["usable", "pass", "vulnerable"])
+    ap.add_argument("--emit-intervals", action="store_true",
+                    help="write per-model intervals for the paper's tables and exit")
     args = ap.parse_args()
+
+    if args.emit_intervals:
+        emit_intervals(args.run)
+        return
 
     models, data, tasks = load(args.run, args.metric)
     point, draws, diffs = bootstrap(models, data, tasks)

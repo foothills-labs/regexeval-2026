@@ -115,22 +115,22 @@
   "k": 3,
   "max_tokens": 200,
   "metrics": {
-    "dfa-eq@3": 0.15212527964205816,
-    "dfa-eq@3 (decided)": 0.17534246575342466,
-    "exact@3": 0.06263982102908278,
-    "pass@3": 0.4720357941834452,
-    "undecided": 82,
-    "usable@3": 0.2483221476510067,
-    "vulnerable@3": 0.14093959731543623
+    "dfa-eq@3": 0.14058956916099774,
+    "dfa-eq@3 (decided)": 0.17079889807162535,
+    "exact@3": 0.049886621315192746,
+    "pass@3": 0.46485260770975056,
+    "undecided": 78,
+    "usable@3": 0.23809523809523808,
+    "vulnerable@3": 0.1292517006802721
   },
   "metrics_as_sent": {
-    "dfa-eq@3": 0.15436241610738255,
-    "dfa-eq@3 (decided)": 0.1780821917808219,
-    "exact@3": 0.06263982102908278,
-    "pass@3": 0.4742729306487696,
-    "undecided": 82,
-    "usable@3": 0.2505592841163311,
-    "vulnerable@3": 0.14093959731543623
+    "dfa-eq@3": 0.14285714285714285,
+    "dfa-eq@3 (decided)": 0.17355371900826447,
+    "exact@3": 0.049886621315192746,
+    "pass@3": 0.4671201814058957,
+    "undecided": 78,
+    "usable@3": 0.24036281179138322,
+    "vulnerable@3": 0.1292517006802721
   },
   "model": "kimi-k3",
   "model_requested": "moonshotai/kimi-k3",
@@ -148,9 +148,19 @@
   "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
   "regexbench_version": "0.4.0",
   "response_failures": 16,
-  "table": "kimi-k3\n447 tasks, 447 answered\n  pass@3               47.2%\n  dfa-eq@3             15.2%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.5%  (engine limits excluded \u2014 model only)\n  exact@3               6.3%\n  usable@3             24.8%\n  vulnerable@3         14.1%  (lower is better)\n  82 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "table": "kimi-k3\n441 tasks, 441 answered\n  pass@3               46.5%\n  dfa-eq@3             14.1%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   17.1%  (engine limits excluded \u2014 model only)\n  exact@3               5.0%\n  usable@3             23.8%\n  vulnerable@3         12.9%  (lower is better)\n  78 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
   "tasks_answered": 1334,
   "tasks_attempted": 1350,
+  "tasks_scored": 441,
+  "tasks_short_of_k": 6,
+  "tasks_short_of_k_detail": [
+    "regexeval/1744",
+    "regexeval/1776",
+    "regexeval/1813",
+    "regexeval/1855",
+    "regexeval/2588",
+    "regexeval/4043"
+  ],
   "temperature": 0.0,
   "wrapped_detail": {
     "regexeval/1587": [
@@ -165,12 +175,6 @@
       {
         "as_sent": "\"[^\"]*\"",
         "scored": "[^\"]*"
-      }
-    ],
-    "regexeval/1776": [
-      {
-        "as_sent": "`(?:(?:0[1-9]|[12][0-9]|3[01])(?:[-/. ])(?:0[13578]|1[02])\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|[12][0-9]|30)(?:[-/. ])(?:0[469]|11)\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|1[0-9]|2[0-8])(?:[-/. ])02\\2(?:19\\d{2}|[2-9]\\d{3})|29(?:[-/. ])02\\2(?:(?:19|[2-9]\\d)(?:0[48]|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00))`",
-        "scored": "(?:(?:0[1-9]|[12][0-9]|3[01])(?:[-/. ])(?:0[13578]|1[02])\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|[12][0-9]|30)(?:[-/. ])(?:0[469]|11)\\2(?:19\\d{2}|[2-9]\\d{3})|(?:0[1-9]|1[0-9]|2[0-8])(?:[-/. ])02\\2(?:19\\d{2}|[2-9]\\d{3})|29(?:[-/. ])02\\2(?:(?:19|[2-9]\\d)(?:0[48]|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00))"
       }
     ],
     "regexeval/184": [
@@ -250,5 +254,5 @@
       }
     ]
   },
-  "wrapped_responses": 18
+  "wrapped_responses": 17
 }

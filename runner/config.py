@@ -18,6 +18,19 @@ REGEXEVAL_URL = (
     "/DatasetCollection/RegexEval.json"
 )
 
+# The cross-population ReDoS screen (runner/cross_corpus_redos.py) reads three
+# further artifacts. They are large and are not needed to reproduce any
+# model-side number, so `make setup` does not fetch them; `make setup-corpora`
+# does. Both are pinned by commit, because both are living repositories whose
+# contents have changed since we screened them.
+DEEP_REGEX_DIR = Path(os.environ.get("DEEP_REGEX_DIR", DATA_DIR / "deep-regex"))
+DEEP_REGEX_URL = "https://github.com/nicholaslocascio/deep-regex.git"
+DEEP_REGEX_COMMIT = "096490db7f4b0394fbb46b914cb35a0aa1cba29c"
+
+LINGUA_FRANCA_DIR = Path(os.environ.get("LINGUA_FRANCA_DIR", DATA_DIR / "lf"))
+LINGUA_FRANCA_URL = "https://github.com/VTLeeLab/LinguaFranca-FSE19.git"
+LINGUA_FRANCA_COMMIT = "a75bd51713d14aa9b48c32e103a3da500854f518"
+
 PREDICTIONS_DIR = REPO / "predictions"
 RESULTS_DIR = REPO / "results"
 
@@ -47,3 +60,14 @@ def require_dataset() -> Path:
             f"Run:  make setup     (downloads it from {REGEXEVAL_URL})"
         )
     return REGEXEVAL_PATH
+
+
+def require_corpora() -> tuple[Path, Path]:
+    """The two external artifacts the cross-population screen reads."""
+    missing = [str(d) for d in (DEEP_REGEX_DIR, LINGUA_FRANCA_DIR) if not d.exists()]
+    if missing:
+        raise SystemExit(
+            "Cross-corpus artifacts not found: " + ", ".join(missing) + "\n"
+            "Run:  make setup-corpora     (clones both at their pinned commits, ~250 MB)"
+        )
+    return DEEP_REGEX_DIR, LINGUA_FRANCA_DIR

@@ -1,0 +1,507 @@
+{
+  "models": {
+    "claude-opus-5": {
+      "both": {
+        "ci95_pct": 3.9,
+        "errors": 0,
+        "exponential": 28,
+        "n": 283,
+        "polynomial": 9,
+        "rate_pct": 13.1,
+        "vulnerable": 37
+      },
+      "outputs": {
+        "ci95_pct": 3.3,
+        "errors": 0,
+        "exponential": 30,
+        "n": 356,
+        "polynomial": 11,
+        "rate_pct": 11.5,
+        "vulnerable": 41
+      },
+      "tasks": {
+        "ci95_pct": 3.6,
+        "errors": 0,
+        "exponential": 30,
+        "n": 327,
+        "polynomial": 10,
+        "rate_pct": 12.2,
+        "vulnerable": 40
+      },
+      "unrestricted": {
+        "ci95_pct": 2.9,
+        "errors": 0,
+        "exponential": 33,
+        "n": 444,
+        "polynomial": 14,
+        "rate_pct": 10.6,
+        "vulnerable": 47
+      }
+    },
+    "claude-sonnet-5": {
+      "both": {
+        "ci95_pct": 4.1,
+        "errors": 0,
+        "exponential": 25,
+        "n": 255,
+        "polynomial": 8,
+        "rate_pct": 12.9,
+        "vulnerable": 33
+      },
+      "outputs": {
+        "ci95_pct": 3.4,
+        "errors": 0,
+        "exponential": 26,
+        "n": 326,
+        "polynomial": 9,
+        "rate_pct": 10.7,
+        "vulnerable": 35
+      },
+      "tasks": {
+        "ci95_pct": 3.4,
+        "errors": 0,
+        "exponential": 26,
+        "n": 330,
+        "polynomial": 11,
+        "rate_pct": 11.2,
+        "vulnerable": 37
+      },
+      "unrestricted": {
+        "ci95_pct": 2.6,
+        "errors": 0,
+        "exponential": 27,
+        "n": 450,
+        "polynomial": 13,
+        "rate_pct": 8.9,
+        "vulnerable": 40
+      }
+    },
+    "deepseek-v4-flash-0731": {
+      "both": {
+        "ci95_pct": 3.7,
+        "errors": 0,
+        "exponential": 16,
+        "n": 226,
+        "polynomial": 4,
+        "rate_pct": 8.8,
+        "vulnerable": 20
+      },
+      "outputs": {
+        "ci95_pct": 3.0,
+        "errors": 0,
+        "exponential": 16,
+        "n": 284,
+        "polynomial": 4,
+        "rate_pct": 7.0,
+        "vulnerable": 20
+      },
+      "tasks": {
+        "ci95_pct": 3.1,
+        "errors": 0,
+        "exponential": 18,
+        "n": 330,
+        "polynomial": 13,
+        "rate_pct": 9.4,
+        "vulnerable": 31
+      },
+      "unrestricted": {
+        "ci95_pct": 2.4,
+        "errors": 0,
+        "exponential": 20,
+        "n": 450,
+        "polynomial": 13,
+        "rate_pct": 7.3,
+        "vulnerable": 33
+      }
+    },
+    "gemini-3.1-flash-lite": {
+      "both": {
+        "ci95_pct": 4.2,
+        "errors": 0,
+        "exponential": 17,
+        "n": 247,
+        "polynomial": 15,
+        "rate_pct": 13.0,
+        "vulnerable": 32
+      },
+      "outputs": {
+        "ci95_pct": 3.5,
+        "errors": 0,
+        "exponential": 18,
+        "n": 312,
+        "polynomial": 17,
+        "rate_pct": 11.2,
+        "vulnerable": 35
+      },
+      "tasks": {
+        "ci95_pct": 3.5,
+        "errors": 0,
+        "exponential": 21,
+        "n": 330,
+        "polynomial": 18,
+        "rate_pct": 11.8,
+        "vulnerable": 39
+      },
+      "unrestricted": {
+        "ci95_pct": 2.7,
+        "errors": 0,
+        "exponential": 23,
+        "n": 450,
+        "polynomial": 21,
+        "rate_pct": 9.8,
+        "vulnerable": 44
+      }
+    },
+    "glm-5.2": {
+      "both": {
+        "ci95_pct": 3.8,
+        "errors": 0,
+        "exponential": 21,
+        "n": 265,
+        "polynomial": 9,
+        "rate_pct": 11.3,
+        "vulnerable": 30
+      },
+      "outputs": {
+        "ci95_pct": 3.2,
+        "errors": 0,
+        "exponential": 21,
+        "n": 339,
+        "polynomial": 13,
+        "rate_pct": 10.0,
+        "vulnerable": 34
+      },
+      "tasks": {
+        "ci95_pct": 3.3,
+        "errors": 0,
+        "exponential": 23,
+        "n": 330,
+        "polynomial": 12,
+        "rate_pct": 10.6,
+        "vulnerable": 35
+      },
+      "unrestricted": {
+        "ci95_pct": 2.8,
+        "errors": 0,
+        "exponential": 26,
+        "n": 450,
+        "polynomial": 20,
+        "rate_pct": 10.2,
+        "vulnerable": 46
+      }
+    },
+    "gpt-5.6-luna": {
+      "both": {
+        "ci95_pct": 3.7,
+        "errors": 0,
+        "exponential": 15,
+        "n": 264,
+        "polynomial": 13,
+        "rate_pct": 10.6,
+        "vulnerable": 28
+      },
+      "outputs": {
+        "ci95_pct": 3.1,
+        "errors": 0,
+        "exponential": 16,
+        "n": 334,
+        "polynomial": 15,
+        "rate_pct": 9.3,
+        "vulnerable": 31
+      },
+      "tasks": {
+        "ci95_pct": 3.1,
+        "errors": 0,
+        "exponential": 15,
+        "n": 330,
+        "polynomial": 15,
+        "rate_pct": 9.1,
+        "vulnerable": 30
+      },
+      "unrestricted": {
+        "ci95_pct": 2.5,
+        "errors": 0,
+        "exponential": 18,
+        "n": 450,
+        "polynomial": 18,
+        "rate_pct": 8.0,
+        "vulnerable": 36
+      }
+    },
+    "gpt-5.6-sol": {
+      "both": {
+        "ci95_pct": 4.4,
+        "errors": 0,
+        "exponential": 18,
+        "n": 215,
+        "polynomial": 8,
+        "rate_pct": 12.1,
+        "vulnerable": 26
+      },
+      "outputs": {
+        "ci95_pct": 3.6,
+        "errors": 0,
+        "exponential": 18,
+        "n": 267,
+        "polynomial": 9,
+        "rate_pct": 10.1,
+        "vulnerable": 27
+      },
+      "tasks": {
+        "ci95_pct": 3.3,
+        "errors": 0,
+        "exponential": 20,
+        "n": 330,
+        "polynomial": 15,
+        "rate_pct": 10.6,
+        "vulnerable": 35
+      },
+      "unrestricted": {
+        "ci95_pct": 2.7,
+        "errors": 0,
+        "exponential": 23,
+        "n": 450,
+        "polynomial": 19,
+        "rate_pct": 9.3,
+        "vulnerable": 42
+      }
+    },
+    "gpt-5.6-terra": {
+      "both": {
+        "ci95_pct": 3.6,
+        "errors": 0,
+        "exponential": 18,
+        "n": 275,
+        "polynomial": 10,
+        "rate_pct": 10.2,
+        "vulnerable": 28
+      },
+      "outputs": {
+        "ci95_pct": 3.1,
+        "errors": 0,
+        "exponential": 18,
+        "n": 348,
+        "polynomial": 15,
+        "rate_pct": 9.5,
+        "vulnerable": 33
+      },
+      "tasks": {
+        "ci95_pct": 3.2,
+        "errors": 0,
+        "exponential": 20,
+        "n": 330,
+        "polynomial": 12,
+        "rate_pct": 9.7,
+        "vulnerable": 32
+      },
+      "unrestricted": {
+        "ci95_pct": 2.6,
+        "errors": 0,
+        "exponential": 22,
+        "n": 450,
+        "polynomial": 17,
+        "rate_pct": 8.7,
+        "vulnerable": 39
+      }
+    },
+    "kimi-k3": {
+      "both": {
+        "ci95_pct": 4.1,
+        "errors": 0,
+        "exponential": 20,
+        "n": 262,
+        "polynomial": 14,
+        "rate_pct": 13.0,
+        "vulnerable": 34
+      },
+      "outputs": {
+        "ci95_pct": 3.3,
+        "errors": 0,
+        "exponential": 20,
+        "n": 332,
+        "polynomial": 15,
+        "rate_pct": 10.5,
+        "vulnerable": 35
+      },
+      "tasks": {
+        "ci95_pct": 3.6,
+        "errors": 0,
+        "exponential": 22,
+        "n": 330,
+        "polynomial": 19,
+        "rate_pct": 12.4,
+        "vulnerable": 41
+      },
+      "unrestricted": {
+        "ci95_pct": 2.9,
+        "errors": 0,
+        "exponential": 24,
+        "n": 447,
+        "polynomial": 24,
+        "rate_pct": 10.7,
+        "vulnerable": 48
+      }
+    },
+    "qwen3.6-max-preview": {
+      "both": {
+        "ci95_pct": 3.5,
+        "errors": 0,
+        "exponential": 20,
+        "n": 289,
+        "polynomial": 10,
+        "rate_pct": 10.4,
+        "vulnerable": 30
+      },
+      "outputs": {
+        "ci95_pct": 2.9,
+        "errors": 0,
+        "exponential": 20,
+        "n": 364,
+        "polynomial": 11,
+        "rate_pct": 8.5,
+        "vulnerable": 31
+      },
+      "tasks": {
+        "ci95_pct": 3.1,
+        "errors": 0,
+        "exponential": 20,
+        "n": 330,
+        "polynomial": 10,
+        "rate_pct": 9.1,
+        "vulnerable": 30
+      },
+      "unrestricted": {
+        "ci95_pct": 2.4,
+        "errors": 0,
+        "exponential": 21,
+        "n": 450,
+        "polynomial": 12,
+        "rate_pct": 7.3,
+        "vulnerable": 33
+      }
+    },
+    "qwen3.6-plus": {
+      "both": {
+        "ci95_pct": 3.5,
+        "errors": 0,
+        "exponential": 20,
+        "n": 282,
+        "polynomial": 9,
+        "rate_pct": 10.3,
+        "vulnerable": 29
+      },
+      "outputs": {
+        "ci95_pct": 3.0,
+        "errors": 0,
+        "exponential": 21,
+        "n": 351,
+        "polynomial": 11,
+        "rate_pct": 9.1,
+        "vulnerable": 32
+      },
+      "tasks": {
+        "ci95_pct": 3.2,
+        "errors": 0,
+        "exponential": 21,
+        "n": 330,
+        "polynomial": 12,
+        "rate_pct": 10.0,
+        "vulnerable": 33
+      },
+      "unrestricted": {
+        "ci95_pct": 2.6,
+        "errors": 0,
+        "exponential": 23,
+        "n": 450,
+        "polynomial": 15,
+        "rate_pct": 8.4,
+        "vulnerable": 38
+      }
+    }
+  },
+  "pooled": {
+    "both": {
+      "ci95_pct": 1.2,
+      "errors": 0,
+      "exponential": 218,
+      "n": 2863,
+      "polynomial": 109,
+      "rate_pct": 11.4,
+      "vulnerable": 327
+    },
+    "outputs": {
+      "ci95_pct": 1.0,
+      "errors": 0,
+      "exponential": 224,
+      "n": 3613,
+      "polynomial": 130,
+      "rate_pct": 9.8,
+      "vulnerable": 354
+    },
+    "tasks": {
+      "ci95_pct": 1.0,
+      "errors": 0,
+      "exponential": 236,
+      "n": 3627,
+      "polynomial": 147,
+      "rate_pct": 10.6,
+      "vulnerable": 383
+    },
+    "unrestricted": {
+      "ci95_pct": 0.8,
+      "errors": 0,
+      "exponential": 260,
+      "n": 4941,
+      "polynomial": 186,
+      "rate_pct": 9.0,
+      "vulnerable": 446
+    }
+  },
+  "reference": {
+    "both": {
+      "ci95_pct": 3.7,
+      "errors": 0,
+      "exponential": 26,
+      "n": 330,
+      "polynomial": 20,
+      "rate_pct": 13.9,
+      "vulnerable": 46
+    },
+    "outputs": {
+      "ci95_pct": 3.7,
+      "errors": 0,
+      "exponential": 26,
+      "n": 330,
+      "polynomial": 20,
+      "rate_pct": 13.9,
+      "vulnerable": 46
+    },
+    "tasks": {
+      "ci95_pct": 3.7,
+      "errors": 0,
+      "exponential": 26,
+      "n": 330,
+      "polynomial": 20,
+      "rate_pct": 13.9,
+      "vulnerable": 46
+    },
+    "unrestricted": {
+      "ci95_pct": 3.2,
+      "errors": 0,
+      "exponential": 29,
+      "n": 450,
+      "polynomial": 32,
+      "rate_pct": 13.6,
+      "vulnerable": 61
+    }
+  },
+  "run": "sweep",
+  "tasks_scored": 450,
+  "tasks_with_anchored_reference": 330,
+  "vs_production_anchored": {
+    "models_pct": 9.8,
+    "p_two_sided": 0.204,
+    "production_pct": 8.9,
+    "z": 1.27
+  }
+}

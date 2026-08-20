@@ -71,6 +71,9 @@
     "table": "gpt-4o-mini\n10 tasks, 10 answered\n  pass@1               40.0%\n  dfa-eq@1             10.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)   12.5%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1             10.0%\n  vulnerable@1         20.0%  (lower is better)\n  2 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 10,
     "tasks_attempted": 10,
+    "tasks_scored": 10,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {},
     "wrapped_responses": 0
@@ -150,6 +153,9 @@
     "table": "llama-3.1-8b-instruct\n10 tasks, 10 answered\n  pass@1               20.0%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              0.0%\n  vulnerable@1          0.0%  (lower is better)\n  4 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 10,
     "tasks_attempted": 10,
+    "tasks_scored": 10,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/1268": [
@@ -257,6 +263,9 @@
     "table": "qwen-2.5-7b-instruct\n10 tasks, 10 answered\n  pass@1               10.0%\n  dfa-eq@1              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              0.0%\n  vulnerable@1         10.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
     "tasks_answered": 10,
     "tasks_attempted": 10,
+    "tasks_scored": 10,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {
       "regexeval/2339": [
@@ -376,6 +385,9 @@
     "table": null,
     "tasks_answered": 0,
     "tasks_attempted": 10,
+    "tasks_scored": 0,
+    "tasks_short_of_k": 0,
+    "tasks_short_of_k_detail": [],
     "temperature": 0.0,
     "wrapped_detail": {},
     "wrapped_responses": 0

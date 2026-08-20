@@ -40,22 +40,22 @@
   "k": 3,
   "max_tokens": 200,
   "metrics": {
-    "dfa-eq@3": 0.09333333333333334,
+    "dfa-eq@3": 0.09131403118040089,
     "dfa-eq@3 (decided)": 0.12166172106824925,
-    "exact@3": 0.02,
-    "pass@3": 0.3933333333333333,
-    "undecided": 113,
-    "usable@3": 0.18666666666666668,
-    "vulnerable@3": 0.11777777777777777
+    "exact@3": 0.017817371937639197,
+    "pass@3": 0.39198218262806234,
+    "undecided": 112,
+    "usable@3": 0.18485523385300667,
+    "vulnerable@3": 0.11581291759465479
   },
   "metrics_as_sent": {
-    "dfa-eq@3": 0.09555555555555556,
+    "dfa-eq@3": 0.0935412026726058,
     "dfa-eq@3 (decided)": 0.1242603550295858,
-    "exact@3": 0.02,
-    "pass@3": 0.39555555555555555,
-    "undecided": 112,
-    "usable@3": 0.18888888888888888,
-    "vulnerable@3": 0.11777777777777777
+    "exact@3": 0.017817371937639197,
+    "pass@3": 0.39420935412026725,
+    "undecided": 111,
+    "usable@3": 0.1870824053452116,
+    "vulnerable@3": 0.11581291759465479
   },
   "model": "gpt-5.6-luna",
   "model_requested": "openai/gpt-5.6-luna",
@@ -73,9 +73,14 @@
   "regexbench_commit": "412eaa95a3f512b5a7bd3d8de2ae70c003d6a206",
   "regexbench_version": "0.4.0",
   "response_failures": 1,
-  "table": "gpt-5.6-luna\n450 tasks, 450 answered\n  pass@3               39.3%\n  dfa-eq@3              9.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   12.2%  (engine limits excluded \u2014 model only)\n  exact@3               2.0%\n  usable@3             18.7%\n  vulnerable@3         11.8%  (lower is better)\n  113 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
+  "table": "gpt-5.6-luna\n449 tasks, 449 answered\n  pass@3               39.2%\n  dfa-eq@3              9.1%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   12.2%  (engine limits excluded \u2014 model only)\n  exact@3               1.8%\n  usable@3             18.5%\n  vulnerable@3         11.6%  (lower is better)\n  112 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
   "tasks_answered": 1349,
   "tasks_attempted": 1350,
+  "tasks_scored": 449,
+  "tasks_short_of_k": 1,
+  "tasks_short_of_k_detail": [
+    "regexeval/323"
+  ],
   "temperature": 0.0,
   "wrapped_detail": {
     "regexeval/1587": [

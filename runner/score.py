@@ -63,11 +63,17 @@ def rebuild_summary(run_name: str) -> list[dict]:
     merged run and a single run produce the same summary.
     """
     result_dir = config.RESULTS_DIR / run_name
-    entries = [
-        json.loads(f.read_text())
-        for f in sorted(result_dir.glob("*.json"))
-        if f.name != "summary.json"
-    ]
+    # Selected by content rather than by name. This directory also holds
+    # analysis outputs -- paired intervals, McNemar, the adjudicated
+    # disagreement sample -- and an exclusion list by filename silently breaks
+    # the next time one is added, which is exactly how it broke.
+    entries = []
+    for f in sorted(result_dir.glob("*.json")):
+        if f.name == "summary.json":
+            continue
+        blob = json.loads(f.read_text())
+        if isinstance(blob, dict) and "metrics" in blob and "model" in blob:
+            entries.append(blob)
     entries.sort(key=lambda e: (-(headline(e, "usable")
                                  if headline(e, "usable") is not None else -1), e["model"]))
     (result_dir / "summary.json").write_text(json.dumps(entries, indent=2, sort_keys=True))
@@ -131,8 +137,32 @@ def score_run(run_name: str, only: set[str] | None = None) -> list[dict]:
             if notes:
                 wrapped.setdefault(name, []).append({"as_sent": r["pattern"], "scored": pat})
 
-        tasks = [by_name[n] for n in normalized]
         k_actual = max((len(v) for v in normalized.values()), default=0)
+
+        # Tasks that came back with fewer than k samples are dropped from the
+        # @k estimate rather than scored on what arrived.
+        #
+        # This is not a stylistic choice. `regexbench.harness.pass_at_k`
+        # early-returns 1.0 when `n - c < k`, a guard that is sound only for
+        # n >= k: it means "so many samples succeeded that any k of them must
+        # include one". When a task lost samples to a refusal or a spending
+        # limit, `n - c <= n < k` holds unconditionally and the task scores a
+        # full 1.0 on every metric whether or not anything succeeded --
+        # `pass_at_k(1, 0, 3) == 1.0`. Left in, that inflated exactly the two
+        # models that lost the most samples, which were the two at the top of
+        # the table.
+        #
+        # The unbiased estimator of Chen et al. is defined for n >= k, so
+        # excluding is the standard treatment and is what the @1-vs-@3 table
+        # has always done. Excluded counts are reported per model so the
+        # denominator is never silently different from 450.
+        short = sorted(n for n, v in normalized.items() if len(v) < k_actual)
+        for n in short:
+            normalized.pop(n)
+            as_sent.pop(n, None)
+            wrapped.pop(n, None)
+
+        tasks = [by_name[n] for n in normalized]
 
         rep = run(tasks, normalized, name=label, workers=WORKERS) if tasks else None
         # Only worth scoring the unnormalized set when normalization actually
@@ -160,6 +190,9 @@ def score_run(run_name: str, only: set[str] | None = None) -> list[dict]:
             "max_tokens": config.MAX_TOKENS,
             "tasks_attempted": len(task_rows),
             "tasks_answered": len(answered),
+            "tasks_scored": len(tasks),
+            "tasks_short_of_k": len(short),
+            "tasks_short_of_k_detail": short,
             "response_failures": len(failed),
             "failure_detail": [
                 {"task": r["task_name"], "status": r["status"], "error": (r.get("error") or "")[:300]}

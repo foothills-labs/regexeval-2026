@@ -70,6 +70,9 @@
   "table": "gemini-3.1-flash-lite\n450 tasks, 450 answered\n  pass@3               38.7%\n  dfa-eq@3              9.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   11.8%  (engine limits excluded \u2014 model only)\n  exact@3               3.1%\n  usable@3             17.1%\n  vulnerable@3         12.0%  (lower is better)\n  95 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
   "tasks_answered": 1350,
   "tasks_attempted": 1350,
+  "tasks_scored": 450,
+  "tasks_short_of_k": 0,
+  "tasks_short_of_k_detail": [],
   "temperature": 0.0,
   "wrapped_detail": {
     "regexeval/1587": [
