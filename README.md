@@ -1,5 +1,36 @@
 # regexleaderboard
 
+> ### Status, 2026-08-20 — the figures below are the corrected ones
+>
+> **The name is wrong: this is a study, not a leaderboard.**
+> [`ARTICLE.md`](ARTICLE.md) is the current statement of what this work
+> claims, and its "What we are not claiming" section is explicit: *"We
+> started out building a leaderboard. We are not publishing one. [...] Bands
+> are defensible. A numbered list from one to eleven is not."* 62% of the
+> tasks give every model the identical result; only 167 of 450 separate them
+> at all. **Read the table below as a banding, not a ranking.**
+>
+> The three defects the 2026-08-19 note listed have been fixed, and the
+> figures here are regenerated from the corrected scores:
+>
+> 1. `regexbench.harness.pass_at_k` scored any task with **fewer than `k`
+>    samples** as a full pass ([regexbench#8](https://github.com/foothills-labs/regexbench/issues/8)).
+>    Short-sample tasks are now excluded from the `@k` estimate. `kimi-k3`
+>    `usable@3` 24.8 → 23.8, `claude-opus-5` 23.0 → 20.8, moving opus from
+>    second to fourth. **The fix is local to `runner/score.py`; the upstream
+>    issue is still open**, and `REGEXBENCH_COMMIT` still records the
+>    unpatched engine.
+> 2. **48.3%** of `usable` credits rest on an **UNDECIDABLE** equivalence
+>    verdict rather than demonstrated equivalence. Measured, reported per
+>    model, and given its own section in the paper — it is a reason to
+>    distrust the composite, not a defect in these figures.
+> 3. **"135 such patterns" is withdrawn.** The reproducible figure is 390 of
+>    5,269 correct samples (7.4%), or 144 of 2,051 model-task pairs.
+>
+> Every table in this file is generated from `results/` by
+> `runner/render_docs.py`, and `make check` fails if they drift. Nothing here
+> has been published to the site.
+
 **How good are language models at writing regular expressions you could
 actually ship?**
 
@@ -12,10 +43,11 @@ your server.
 
 ---
 
-## The result
+## The run
 
 Every model passes roughly **40%** of tasks. Every model produces something
-shippable on roughly **20%**. That gap is the finding.
+shippable on roughly **20%**. That gap is the finding, and it survives every
+correction below.
 
 <!-- generated: leaderboard -->
 | Model | usable@3 | pass@3 | vulnerable@3 | tasks | failed | $/request |
@@ -113,8 +145,10 @@ That is **100% correct** on every example it was given. It is also
 > failing suffix*
 
 This is a realistic, production-looking pattern. Put it on a signup form
-and you have a denial-of-service bug. **135 such patterns** appeared across
-the run: correct, and unsafe.
+and you have a denial-of-service bug. This shape is common in the run —
+though **the figure once quoted here, 135, is not reproducible from the
+released data** and is withdrawn pending the revision. The defensible
+per-sample count is **390 of 5,269 correct samples (7.4%)**.
 
 ### It passed every test and it's still wrong
 
@@ -238,7 +272,8 @@ APPENDIX.md    the harder metrics and the honest limitations
 ```
 
 Scoring by [`regexbench`](https://github.com/foothills-labs/regexbench)
-(Apache-2.0), pinned to commit `05d7547b`. Corpus:
+(Apache-2.0), pinned to `regexbench==0.4.0` on PyPI, which is commit
+`412eaa95`; both are recorded in every result file. Corpus:
 [Re(gEx|DoS)Eval](https://github.com/s2e-lab/RegexEval), not redistributed
 here — `make setup` fetches it.
 
