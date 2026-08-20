@@ -164,6 +164,14 @@ def _parse_detector(out: str) -> dict[int, dict]:
                 verdicts[index]["verdict"] = kind
         elif "SKIPPED" in line:
             verdicts[index]["verdict"] = "SKIPPED"
+        elif line.startswith("TIMEOUT in "):
+            # The detector gave up on this pattern. Recording it as SAFE --
+            # which is what defaulting the block would do -- would count the
+            # patterns hardest to analyse as evidence that nothing is there,
+            # and those are concentrated in exactly the long, deeply nested
+            # patterns whose distribution differs between the populations
+            # being compared. Unanalysable is its own verdict.
+            verdicts[index]["verdict"] = "TIMEOUT"
     return verdicts
 
 
@@ -435,7 +443,7 @@ def main():
             "screen_vulnerable": sum(1 for r in rows if r["screen"] == "VULNERABLE"),
             "detector_vulnerable": sum(1 for r in rows if r["detector"] in ("EDA", "IDA")),
             "detector_unanalysable": sum(1 for r in rows
-                                         if r["detector"] in ("SKIPPED", "UNKNOWN")),
+                                         if r["detector"] in ("SKIPPED", "UNKNOWN", "TIMEOUT")),
             "dynamically_confirmed": len(confirmed),
             "confirmed_and_caught": len(caught),
             "recall_pct": round(100 * len(caught) / len(confirmed), 1) if confirmed else None,
