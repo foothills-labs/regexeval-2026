@@ -1,16 +1,22 @@
-# correct and safe are separate properties in generated regular expressions
+# whether a regular expression is dangerous depends on whether anyone ever ran it
 
 Foothills Labs · 2026-08-20
 
 > Eleven current language models wrote 450 regular expressions each, three
 > times over, scored three ways: whether the pattern passes its tests,
 > whether it means what the task asked for, and whether it is vulnerable to
-> regular-expression denial of service. The project began as a leaderboard
-> and stopped being one when the metric producing the headline number turned
-> out to be measuring the benchmark's own answer key. Three results survived,
-> 7.4% of the patterns that work are exploitable. ReDoS prevalence depends on
-> whether a pattern was ever executed rather than on whether a human or a
-> model wrote it. And on a second benchmark, that 7.4% came back as 16.5%.
+> regular-expression denial of service. Then we took the safety screen, which
+> needs no model at all, and pointed it at five more populations of regular
+> expressions, half a million of them pulled out of shipped packages.
+>
+> Three things came out of it. **Vulnerability tracks whether a pattern was
+> ever executed, and not whether a human or a model wrote it**: everything
+> written to be read screens at 13% to 20%, while shipped code sits at 8.9%
+> and the models sit with it at 9.8%. **7.4% of the patterns that work are
+> exploitable**, which is a tenth of what the equivalent benchmarks for
+> backend code report, so the correctness-to-security penalty is a fact about
+> a domain rather than about models. And **that 7.4% came back as 16.5% on a
+> second benchmark**, so it is a fact about a corpus too.
 
 Claude Opus 5 produced the following pattern for a domain-name validation
 task. It passes every test the benchmark supplies.
@@ -52,7 +58,7 @@ GPT-3.5-Turbo on all of it and reported which model wrote regexes that were
 correct *and* secure. What we are doing is running their
 apparatus on eleven models that did not exist when they built it, taking
 their composite metric apart, and pointing their safety check back at the
-own answer key we score the models on. 
+answer key we score the models on. 
 
 **Scoring correctness and security together is a live area.** Four
 benchmarks published in the last two years do it for general code:
@@ -124,10 +130,12 @@ candidate against a reference by language equivalence and stop there.
 
 ---
 
-## passing looks about twice as easy as shipping
+## the numbers
 
 Between **38.0% and 46.5% of answers pass their tests**, depending on the
-model. Between **17.1% and 23.8% survive all three questions**.
+model. Between **17.1% and 23.8% survive all three questions**, and that
+second column is a conjunction of the three, which we take apart much further
+down because it does not mean what it looks like it means.
 
 | Model | passes tests | survives all three | vulnerable |
 | --- | ---: | ---: | ---: |
@@ -143,67 +151,20 @@ model. Between **17.1% and 23.8% survive all three questions**.
 | `claude-sonnet-5` | 40.7% | 18.0% | 10.9% |
 | `gemini-3.1-flash-lite` | 38.7% | 17.1% | 12.0% |
 
-Half of what looks like success does not survive contact with the other two
-questions, and *that holds for the most expensive model on the board as much*
-*as the cheapest*.
+The one number in that table to hold on to is the last column. We found **390
+generations that passed every test and were exploitable**, out of 5,269 that
+passed, or put another way, 7.4%, or 144 of the 2,051 model-task pairs where
+anything passed at all. The interesting thing is that they are basically
+ordinary things: email validators, hostname validators, a pattern for matching
+comma-separated names.
 
-We also found **390 generations that passed every test and were
-exploitable**, out of 5,269 that passed, or put another way, 7.4%, or 144 of the 2,051
-model-task pairs where anything passed at all. The interesting thing is that they are basically ordinary things: email validators, hostname validators, a pattern for matching comma-separated names.
-
-We were ready to publish that table. It lines up neatly with what BaxBench
-and SecureAgentBench found in other domains, and were happy with the results. 
-
----
-
-## the gap is not what it looks like
-
-The composite has three conjuncts, two of them run a real regex engine
-against real strings, while the third compares against a human's answer. When we
-asked which conjunct was actually producing the gap, the split was not close:
-
-| Conjunct removed | Cost to the score |
-| --- | ---: |
-| Safety | 2.9 points |
-| Semantic equivalence | 18.9 points |
-
-**87% of our headline gap comes from the equivalence term.** And the
-equivalence term, as the audit further down shows, is 85% noise from
-bad reference answers and prompts that never specified the property in
-dispute.
-
-Dropping it and scoring only the two criteria that never consult a human
-answer key, which is also the construction the general-code benchmarks use,
-leaves the finding that **7.4% of the regular expressions that work are ReDoS-vulnerable.**
-
-That number is much smaller than the composite suggested, and it does not
-match what the rest of the field reports.
-
-| | functional | correct-and-secure |
-| --- | ---: | ---: |
-| BaxBench (backends) | — | ~ half of correct solutions exploitable |
-| SecureAgentBench (repo-level agents) | higher | 15.2% best agent, 9.2% mean |
-| DualGauge (specification-only) | >50% | <12% |
-| **This work (regexes)** | **38–47%** | **security removes 7.4%** |
-
-The security criterion demolishes most of what passes in those settings. In
-ours it takes off a sliver. We have explanations for that and no way to
-separate them with this data. A regex is one expression with one failure
-mode while a backend has many independently exploitable parts. ReDoS is a
-structural anti-pattern, plausibly better represented in training data than
-CWE-classified defects are. And our functional pass rate is low enough that
-the correct subset may skew toward simple tasks with less room for
-catastrophic backtracking.
-
-**We assumed the correctness to security penalty transfers between domains,
-and it does not.** Additionally our composite showed a penalty of about the
-expected size for entirely the wrong reason. If we had reported it without
-decomposing, we would have published a right-looking number built on our
-least trustworthy measurement.
+Everything below is either an attempt to find out what that 7.4% is really a
+fact about, or an attempt to find out whether the column next to it can be
+trusted.
 
 ---
 
-## surprise, surprise, ground truth is hard
+## the human answers are more dangerous than the machine ones
 
 The obvious conclusion at this stage is that language models write dangerous
 regular expressions, but we decided to turn the same safety screen on the **human-written
@@ -221,13 +182,12 @@ The models range from 7.3% to 10.7%. Pooled across all eleven, 9.0%.
 | All models pooled | 9.0% |
 
 Every model screens safer than the answer key, though how many of them do so
-*provably* is a smaller number and we got it wrong at first. Our first pass
-compared eleven independent confidence intervals, which is the wrong test:
-every model answered the same 450 tasks, so the comparison is paired and an
-unpaired interval throws away the pairing. The right test here is McNemar's,
-run on the tasks where a model and the answer key disagree. Correcting for
-having run eleven of them, **six of the eleven separate at 95%**, not all
-eleven. The three that do not are the three most vulnerable models, which is
+*provably* is a smaller number. Eleven independent confidence intervals are
+the wrong test here: every model answered the same 450 tasks, so the
+comparison is paired and an unpaired interval throws away the pairing. The
+right test is McNemar's, run on the tasks where a model and the answer key
+disagree. Correcting for having run eleven of them, **six of the eleven
+separate at 95%**, not all eleven. The three that do not are the three most vulnerable models, which is
 what you would expect and is not what a row of point estimates told us.
 
 As far as we can tell this comparison had not been run before, and it is only
@@ -235,14 +195,14 @@ possible because this corpus ships human answers. The general-code benchmarks ex
 exploits instead of comparing against a gold artifact, so they have nothing
 to point the screen at.
 
-We were about to draw the obvious conclusion from that: dangerous regular
-expressions are endemic to how people write them, and the models learned it
-from us. Then we noticed the conclusion rested on one corpus, and that the
-corpus in question is an answer key rather than working code.
+The obvious conclusion from that is that dangerous regular expressions are
+endemic to how people write them and the models learned it from us. That
+conclusion rests on one corpus, and the corpus in question is an answer key
+rather than working code, so the next section goes and gets five more.
 
 ---
 
-## we then checked five more populations
+## the dividing line is whether the pattern was ever run
 
 The really nice thing about this is that none of this needs a single API call. The safety screen reads patterns, so running it on somebody else's corpus costs nothing but CPU cycles. We screened the
 gold answers of [KB13][kb13], the machine-generated patterns of
@@ -281,11 +241,12 @@ sits at 8.9%. The models sit with it, at 9.8%, a difference that does not
 resolve (*p* = 0.20).
 
 The model row is restricted the same way as every other row: we keep only the
-models' own anchored outputs. An earlier draft put the models in at their
-unrestricted rate, comparing a restricted human population against an
-unrestricted machine one, which is exactly the confound the restriction exists
-to remove. Fixing it moved the models slightly *toward* the answer key and
-away from production code, and the conclusion held anyway.
+models' own anchored outputs, because the rule keys on the pattern and not on
+who wrote it. Putting the models in at their unrestricted rate would compare a
+restricted human population against an unrestricted machine one, which is
+exactly the confound the restriction exists to remove. Restricting them moves
+the models slightly *toward* the answer key and away from production code, and
+the conclusion holds anyway.
 
 That is not really a story about carelessness. A pattern published to a library, or
 posted in an answer, or written to key a benchmark, is authored once to
@@ -303,7 +264,7 @@ anger or on a system that is failing at 5 am.
 
 ---
 
-## we then asked whether our own instrument could measure what we care about
+## we measured our own blind spot
 
 Everything above rests on one screen deciding which patterns are dangerous.
 If that screen is blinder in shipped code than it is in showcase validators,
@@ -366,31 +327,60 @@ repository that needs no API key to re-run.
 
 ---
 
-## paying more buys almost nothing
+## how big is the correctness-to-security penalty, really
 
-The eleven models span a 98× range in price.
+Back to that composite for a moment, because the number we want is inside it.
+It has three conjuncts, two of them run a real regex engine against real
+strings, while the third compares against a human's answer. Ask which conjunct
+is producing the gap and the split is not close:
 
-| Model | survives all three | cost per request |
+| Conjunct removed | Cost to the score |
+| --- | ---: |
+| Safety | 2.9 points |
+| Semantic equivalence | 18.9 points |
+
+**87% of our headline gap comes from the equivalence term.** And the
+equivalence term, as the audit further down shows, is 85% noise from
+bad reference answers and prompts that never specified the property in
+dispute.
+
+Dropping it and scoring only the two criteria that never consult a human
+answer key, which is also the construction the general-code benchmarks use,
+leaves the finding that **7.4% of the regular expressions that work are ReDoS-vulnerable.**
+
+That number is much smaller than the composite suggested, and it does not
+match what the rest of the field reports.
+
+| | functional | correct-and-secure |
 | --- | ---: | ---: |
-| `deepseek-v4-flash-0731` | 19.8% | $0.000026 |
-| `claude-opus-5` | 20.8% | $0.002514 |
+| BaxBench (backends) | — | ~ half of correct solutions exploitable |
+| SecureAgentBench (repo-level agents) | higher | 15.2% best agent, 9.2% mean |
+| DualGauge (specification-only) | >50% | <12% |
+| **This work (regexes)** | **38–47%** | **security removes 7.4%** |
 
-DeepSeek's model costs **98× less** and scores a point *higher*, a difference
-comfortably inside what our own statistics can resolve, which is to say the
-two are indistinguishable. **The whole field fits inside seven percentage**
-**points.**
+The security criterion demolishes most of what passes in those settings. In
+ours it takes off a sliver. We have explanations for that and no way to
+separate them with this data. A regex is one expression with one failure
+mode while a backend has many independently exploitable parts. ReDoS is a
+structural anti-pattern, plausibly better represented in training data than
+CWE-classified defects are. And our functional pass rate is low enough that
+the correct subset may skew toward simple tasks with less room for
+catastrophic backtracking.
 
-For this task specifically, model choice is close to a rounding error and
-cost is not. Read generously, it is evidence that regular expressions turn up
-often enough and uniformly enough in text that every one of these training
-runs picked up about the same competence at them.
+**The correctness-to-security penalty does not transfer between domains, it
+has to be measured in the one you are claiming it for.** That is a weaker
+claim than "correct code is often insecure" and a more useful one. It is also
+the reason a joint metric should never be published without its decomposition:
+ours reported a penalty of about the size the literature would predict, and
+almost none of it was the penalty.
 
 ---
 
 ## yes, we ran even more benchmarks
 
-Everything up to here rests on one corpus. The 7.4% is a fact about
-Re(gEx|DoS)Eval until somebody checks it somewhere else, so we checked.
+The screen has now been on six populations, but every number that involved a
+model has come from one corpus. The 7.4% is a fact about Re(gEx|DoS)Eval until
+somebody checks it somewhere else, so we checked.
 
 [StructuredRegex][sr] is a second benchmark for the same task, and it has the
 one thing the older ones lack: example strings for every problem, both
@@ -413,10 +403,12 @@ way round: StructuredRegex is *easier*, by about twenty points. Its problems
 are built out of repetition and optional parts, and models answering those
 write more of the shape that backtracks.
 
-We had already argued that this penalty depends on the domain, on the
+The section above argued that this penalty depends on the domain, on the
 strength of BaxBench and SecureAgentBench doing something rather different in
-other languages. This is the same task, the same language, the same screen, the same eleven models, and the answer is 2.2 times apart. It is a better version of our own argument and it is aimed at our
-own headline number.
+other languages. This is the same task, the same language, the same screen,
+the same eleven models, and the answer is 2.2 times apart. It is a much
+stronger version of the same argument, and it applies to our own number as
+much as to anybody else's.
 
 The ordering moved too, which is interesting. Sonnet 5 comes first here and sits in the middle of
 the other table. Kimi K3 comes first there and eighth here. We already said a
@@ -430,14 +422,59 @@ survived and move on. Instead we checked what the other ten models did on the
 problems Opus lost, and those problems turned out to be **8.1 points harder**
 than average. So the leftovers flattered Opus, while counting the refusals as
 wrong answers punished it, both at once. Every number above is on the 513
-problems all eleven models actually answered. This is a very strange finiding. Everyone agrees Anthropic does some weird things with their content filters and they apply a stricter hand to the tasks the model will actually run (if this is a good thing or not is very much not the point of this paper though), so this makes sense but it is weird seeing it in live data like this. We think maybe it's adjacent enough to other attack surfaces like SQL injection that it is the reason why they maybe get blocked. 
+problems all eleven models actually answered. This is a very strange finding. Everyone agrees Anthropic does some weird things with their content filters and they apply a stricter hand to the tasks the model will actually run (if this is a good thing or not is very much not the point of this paper though), so this makes sense but it is weird seeing it in live data like this. We think maybe it's adjacent enough to other attack surfaces like SQL injection that it is the reason why they maybe get blocked. 
+
+---
+
+## the difficulty objection
+
+There is an obvious deflationary reading of our 7.4%: maybe the patterns
+models get *right* are the easy ones, and easy patterns have less room to
+go wrong. If so the number is a selection effect, not a finding.
+
+We can test that inside one corpus, which is better than comparing two
+corpora written by different processes. Sort the tasks by how many of the
+eleven models solved them, which is almost like the benchmark's own measure of difficulty and
+look at vulnerability inside each band. On tasks six or more models solved,
+7.1% of correct patterns are dangerous. On tasks only one to five solved,
+10.7%.
+
+The objection survives, weakly and against us: the number moves in the
+direction the objection predicts. Resampled, the difference is −3.6 points
+with an interval running from −12.2 to +3.8, so this corpus cannot actually
+establish it. What the exercise does establish is a ceiling. Even on the
+hardest tasks any model solved, vulnerability among the answers they got
+right is 10.7%, not the roughly 50% that BaxBench reports for backend code.
+The difficulty effect is real enough to mention and far too small to be the
+explanation.
+
+---
+
+## paying more buys almost nothing
+
+The eleven models span a 98× range in price.
+
+| Model | survives all three | cost per request |
+| --- | ---: | ---: |
+| `deepseek-v4-flash-0731` | 19.8% | $0.000026 |
+| `claude-opus-5` | 20.8% | $0.002514 |
+
+DeepSeek's model costs **98× less** and scores a point *higher*, a difference
+comfortably inside what our own statistics can resolve, which is to say the
+two are indistinguishable. **The whole field fits inside seven percentage**
+**points.**
+
+For this task specifically, model choice is close to a rounding error and
+cost is not. Read generously, it is evidence that regular expressions turn up
+often enough and uniformly enough in text that every one of these training
+runs picked up about the same competence at them.
 
 ---
 
 ## does it mean anything, though?
 
 The second question, *does it mean the right thing?*, compares the model's
-pattern against a peoples. That measures the model only if the person was
+pattern against a person's. That measures the model only if the person was
 right.
 
 This is not a new worry in the abstract. [Northcutt, Athalye and
@@ -494,38 +531,46 @@ judgement is written down in the repository so it can be argued with.
 
 ---
 
-## the difficulty objection
+## which of the three metrics held up
 
-There is an obvious deflationary reading of our 7.4%: maybe the patterns
-models get *right* are the easy ones, and easy patterns have less room to
-go wrong. If so the number is a selection effect, not a finding.
+The two questions that never look at the human answer key, *does it work* and
+*is it safe*, held up. They run a real regex engine against real strings, and
+no defect in an answer key can corrupt them.
 
-We can test that inside one corpus, which is better than comparing two
-corpora written by different processes. Sort the tasks by how many of the
-eleven models solved them, which is almost like the benchmark's own measure of difficulty and
-look at vulnerability inside each band. On tasks six or more models solved,
-7.1% of correct patterns are dangerous. On tasks only one to five solved,
-10.7%.
+The question that compares against a human did not, and it failed twice over.
+In our sample it was 85% noise from bad answer keys and ambiguous prompts. And
+48% of the credit it *awarded* went to patterns nobody checked, because the
+composite scores "cannot tell" as a pass and the equivalence engine could not
+parse one side or the other. The tidy story about that would be
+backreferences, where equivalence really is undecidable and a model could earn
+credit for putting its answer beyond checking. The real answer is the parser:
+of 470 such credits, backreferences account for twenty.
 
-The objection survives, weakly and against us: the number moves in the
-direction the objection predicts. Resampled, the difference is −3.6 points
-with an interval running from −12.2 to +3.8, so this corpus cannot actually
-establish it. What the exercise does establish is a ceiling. Even on the
-hardest tasks any model solved, vulnerability among the answers they got
-right is 10.7%, not the roughly 50% that BaxBench reports for backend code.
-The difficulty effect is real enough to mention and far too small to be the
-explanation.
+> **The metrics that consult a human answer key behaved differently from the
+> metrics that do not, and only the second kind survived scrutiny.**
+
+Reading the disagreements is what exposes the first failure and decomposing
+the metric is what exposes the second, and neither is expensive. Fourteen
+cases and one afternoon of arithmetic were enough.
+
+The two surviving metrics are not unconditionally clean either, and we know
+how dirty they are because we measured it. The safety screen misses between 7%
+and 33% of what is genuinely dangerous, and misses unevenly across the
+populations we compare. That is a real limitation, quantified, and it is small
+enough not to move the ordering. Knowing the size of a limitation is a
+different thing from having caveated it.
 
 ---
 
-## What we are not claiming
+## what we are not claiming
 
-We started out building a leaderboard. We are not publishing one.
+We are not publishing a leaderboard.
 
-When we compared the models properly, accounting for the fact that they all
-answered the same questions, nine of the fifty-five possible pairwise
-comparisons come out distinguishable. Our first analysis got that wrong and
-resolved exactly one. The fix is not ours either: the paired bootstrap is
+Comparing the models properly, which means accounting for the fact that they
+all answered the same questions, nine of the fifty-five possible pairwise
+comparisons come out distinguishable. Unpaired intervals on the same data
+resolve exactly one, which is a ninefold difference from choosing the right
+test. The test is not ours either: the paired bootstrap is
 [Berg-Kirkpatrick, Burkett and Klein][bkk], following Koehn's
 bootstrap-resampling protocol for machine translation, and using it instead
 of unpaired intervals is [standard advice][dror]. What we can report is how
@@ -540,11 +585,10 @@ do any work telling these models apart.
 Bands are defensible. A numbered list from one to eleven is not, and anyone
 who re-ran this and got a different order would be right to.
 
-We are not claiming any of these percentages travel. We used to say the
-model numbers rested on one corpus and leave it there. Now we have run two,
+We are not claiming any of these percentages travel. We have run two corpora
 and the vulnerability rate among working patterns came out 2.2× apart, so
 treat every figure in this article as a fact about the benchmark it was
-measured on. *Does it mean the right thing* is still single-corpus and
+measured on until somebody runs a third. *Does it mean the right thing* is still single-corpus and
 always will be, because no other benchmark for this task ships an answer key
 in ordinary regex syntax.
 
@@ -557,38 +601,45 @@ work.
 
 ---
 
-## Which of the three metrics held up
+## how we got here, in order
 
-The two questions that never look at the human answer key, *does it work* and
-*is it safe*, held up. They run a real regex engine against real strings, and
-no defect in an answer key can corrupt them.
+Three of the results above replaced an earlier reading of the same data, and
+the checks that replaced them were all cheap. Putting them in one place, since
+they are the part of this that transfers to work that has nothing to do with
+regular expressions.
 
-The question that compares against a human did not, and it failed twice over.
-In our sample it was 85% noise from bad answer keys and ambiguous prompts. And
-48% of the credit it *awarded* went to patterns nobody checked, because our own
-equivalence engine could not parse one side or the other and we had chosen to
-score "cannot tell" as a pass. We assumed that was backreferences, where
-equivalence really is undecidable. It was not, it was our parser: of 470 such
-credits, backreferences account for twenty.
+**The composite came before the decomposition.** We built the three-way
+conjunction because that is what the joint-benchmark literature reports, and
+it gave a gap of about the size that literature would predict. 87% of it was
+the equivalence term, and the equivalence term was 85% noise. A composite is
+no more reliable than its worst conjunct and it does not tell you which
+conjunct is binding, so publish the decomposition or do not publish the
+composite.
 
-> **The metrics that consult a human answer key behaved differently from the
-> metrics that do not, and only the second kind survived scrutiny.**
+**The human baseline came before the control.** One corpus said models are
+safer than people. Six populations said the variable is execution, not
+authorship. One population cannot separate a fact about people from a fact
+about the artifact that population happens to be, and the extension cost a few
+hours of CPU and no API calls at all.
 
-Reading the disagreements is what exposed the first failure. Decomposing the
-metric instead of correlating against it exposed the second. Most of what that
-metric counted was not the thing it was meant to measure, and half of what it
-credited it credited by default.
+**Reference-independent did not mean corpus-independent.** The 7.4% consults
+no answer key, which makes it more trustworthy than the composite and does not
+make it general. StructuredRegex said 16.5%. Treat an effect size as local to
+its corpus until a second one disagrees, and the second corpus is usually
+cheaper than the first.
 
-The two surviving metrics are not unconditionally clean either — we spent the
-second pass establishing how dirty they are. The safety screen misses between
-7% and 33% of what is genuinely dangerous, and misses unevenly across the
-populations we compare. That is a real limitation, quantified, and it is small
-enough not to move the ordering. Knowing the size of a limitation is a
-different thing from having caveated it.
+**Two estimator bugs were sitting in per-sample records, invisible in every
+aggregate.** The standard `pass@k` shortcut returns 1.0 when fewer than `k`
+samples came back, which is correct on the domain the estimator is defined on
+and silently wrong below it, so tasks that returned one sample were scoring as
+full passes. Fixing it moved Opus from second to fourth. Separately, the
+timing oracle was labelling every timeout exponential, which is precisely the
+error we criticise in the section above. Both were found by reading raw output
+rather than summaries.
 
 ---
 
-## Reproduction
+## reproduction
 
 Every response from every model is committed to the repository. The scores
 compute from those files and nothing else, so reproduction costs nothing and
@@ -634,7 +685,7 @@ on the way through.
 
 ---
 
-## What is next
+## what is next
 
 The large open question is whether letting these models think helps. We have
 a twelve-task comparison, which is too small to mean anything, and one firm
@@ -648,7 +699,7 @@ probably its own article.
 
 ---
 
-## References
+## references
 
 Natural-language-to-regex generation, where language equivalence against a
 reference became the standard criterion:
