@@ -340,14 +340,15 @@ repository that needs no API key to re-run.
 
 The eleven models span a 98× range in price.
 
-| Model | survives all three | cost per task |
+| Model | survives all three | cost per request |
 | --- | ---: | ---: |
 | `deepseek-v4-flash-0731` | 19.8% | $0.000026 |
-| `claude-opus-5` | 23.0% | $0.002514 |
+| `claude-opus-5` | 20.8% | $0.002514 |
 
-DeepSeek's model costs **98× less** and scores 3.2 points lower, a gap so
-small our own statistics can barely resolve it. The whole field fits inside
-eight percentage points.
+DeepSeek's model costs **98× less** and scores a point *higher* — a difference
+comfortably inside what our own statistics can resolve, which is to say the
+two are indistinguishable. The whole field fits inside seven percentage
+points.
 
 For this task, specifically, model choice is close to a rounding error and
 cost is not. That is a claim about writing regular expressions and nothing
