@@ -323,18 +323,39 @@ if undec:
 
 
 # --- screen calibration ------------------------------------------------------
+def wilson(k, n, z=1.96):
+    """Wilson interval, which behaves at the small counts this table has.
+
+    Recall here rests on tens of confirmed patterns, not thousands, and a
+    normal-approximation interval on 2 of 3 would run outside [0, 1]. Reporting
+    a bare percentage would invite exactly the cross-population comparison the
+    counts cannot support.
+    """
+    if n == 0:
+        return None
+    p = k / n
+    d = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / d
+    half = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / d
+    return (max(0.0, centre - half) * 100, min(1.0, centre + half) * 100)
+
+
 cal = optional(RESULTS / "screen_calibration.json")
 if cal:
     body = []
     for name, b in sorted(cal["populations"].items(),
                           key=lambda kv: -(kv[1]["recall_pct"] or 0)):
+        n, k = b["dynamically_confirmed"], b["confirmed_and_caught"]
+        interval = wilson(k, n)
+        cell = ("---" if interval is None
+                else f"[{interval[0]:.0f}, {interval[1]:.0f}]")
         body.append(f"{name.replace('|', '$|$')} & {b['sampled']} & "
-                    f"{b['dynamically_confirmed']} & {pct(b['recall_pct'])} & "
-                    f"{pct(b['agreement_pct'])} & {b['median_length']} & "
-                    f"{b['median_quantifiers']} \\\\")
-    write("tab_calibration.tex", "lrrrrrr",
-          r"Population & sampled & confirmed & recall (\%) & agreement (\%) & "
-          r"med. len & med. quant. \\", body)
+                    f"{b['detector_unanalysable']} & {k}/{n} & "
+                    f"{pct(b['recall_pct'])} & {cell} & "
+                    f"{pct(b['agreement_pct'])} & {b['median_length']} \\\\")
+    write("tab_calibration.tex", "lrrrrcrr",
+          r"Population & sampled & unanalysable & caught/confirmed & recall (\%) & "
+          r"95\% CI & agreement (\%) & med.\ len \\", body)
 
 # Numbers the prose states in words rather than in a table. Emitted last, so
 # every input has been read and nothing here is a second computation of a

@@ -935,14 +935,17 @@ about the engine this paper screens with, not a second opinion.
 \footnotesize
 \setlength{\tabcolsep}{4pt}
 \input{tab_calibration}
-\caption{Screen sensitivity per population. \emph{Confirmed} counts patterns
-an independent detector flagged and a timing measurement then confirmed blow
-up under CPython; \emph{recall} is the share of those our screen also caught;
-\emph{agreement} is how often our screen and the detector return the same
-verdict. Recall is measured against what the detector finds, so it is a
-relative sensitivity and not an absolute one --- which is what the
-cross-population comparison needs, since the question is whether the
-instrument is equally blind everywhere rather than how blind it is.}
+\caption{Screen sensitivity per population. \emph{Unanalysable} counts
+patterns the independent detector skipped or timed out on, which are neither
+evidence for nor against. \emph{Caught/confirmed} is our screen's hits over
+the patterns the detector flagged \emph{and} a timing measurement then
+confirmed blow up under CPython. Recall is measured against what the detector
+finds, so it is a relative sensitivity rather than an absolute one --- which
+is what the cross-population comparison needs, since the question is whether
+the instrument is equally blind everywhere and not how blind it is. The
+intervals are wide because dynamically confirmed vulnerabilities are scarce
+in a sample of a few hundred; they are given so that the comparison is read
+at the precision the counts support.}
 \label{tab:calibration}
 \end{table}
 
