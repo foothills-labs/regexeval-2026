@@ -1,6 +1,6 @@
 # What we learned measuring 11 language models on regular expressions
 
-*Draft for review — Foothills Labs, 2026-08-12*
+*Draft for review — Plicara Labs, 2026-08-12*
 
 We set out to build a leaderboard. The data told us not to publish one.
 What follows instead is a set of findings that hold across every model we
@@ -642,7 +642,7 @@ Every model response is committed. Scores compute from those files and
 nothing else — no API key, no cost, no need to trust us:
 
 ```bash
-git clone https://github.com/foothills-labs/regexeval-2026
+git clone https://github.com/plicara/regexeval-2026
 cd regexeval-2026
 make setup
 make score RUN=sweep

@@ -14,7 +14,7 @@
 > figures here are regenerated from the corrected scores:
 >
 > 1. `regexbench.harness.pass_at_k` scored any task with **fewer than `k`
->    samples** as a full pass ([regexbench#8](https://github.com/foothills-labs/regexbench/issues/8)).
+>    samples** as a full pass ([regexbench#8](https://github.com/plicara/regexbench/issues/8)).
 >    Short-sample tasks are now excluded from the `@k` estimate. `kimi-k3`
 >    `usable@3` 24.8 → 23.8, `claude-opus-5` 23.0 → 20.8, moving opus from
 >    second to fourth. **The fix is local to `runner/score.py`; the upstream
@@ -205,7 +205,7 @@ from those files and nothing else, so you can recheck the arithmetic
 without an API key, without spending anything, and without trusting us:
 
 ```bash
-git clone https://github.com/foothills-labs/regexeval-2026
+git clone https://github.com/plicara/regexeval-2026
 cd regexeval-2026
 make setup    # installs the pinned scorer, downloads the corpus
 make score RUN=sweep
@@ -271,7 +271,7 @@ METHODOLOGY.md how it was run and every judgement call
 APPENDIX.md    the harder metrics and the honest limitations
 ```
 
-Scoring by [`regexbench`](https://github.com/foothills-labs/regexbench)
+Scoring by [`regexbench`](https://github.com/plicara/regexbench)
 (Apache-2.0), pinned to `regexbench==0.4.0` on PyPI, which is commit
 `412eaa95`; both are recorded in every result file. Corpus:
 [Re(gEx|DoS)Eval](https://github.com/s2e-lab/RegexEval), not redistributed

@@ -1,4 +1,4 @@
-"""Generate the /benchmarks/ page for foothills-labs.com from results.
+"""Generate the /benchmarks/ page for plicara.com from results.
 
 DO NOT PUBLISH THIS PAGE AS IT STANDS. It emits a table ordered one to eleven
 by usable@3, and the study declines to publish a ranking -- see ARTICLE.md,
@@ -7,7 +7,7 @@ to eleven is not." 62% of tasks give every model the identical result, and
 only 167 of 450 separate them at all. The scores it reads are also inflated
 by the pass_at_k short-task defect in REVISION-PLAN.md part 2 item 5.
 
-This ran once, to foothills-labs.com, and was reverted the same day. Fix the
+This ran once, to plicara.com, and was reverted the same day. Fix the
 presentation (bands, not a list) and the upstream metric before it runs
 again.
 
@@ -67,13 +67,13 @@ def render(summary: list[dict], run_date: str, k: int, task_count: int) -> str:
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Benchmarks &middot; Foothills Labs</title>
+    <title>Benchmarks &middot; Plicara Labs</title>
     <meta
       name="description"
       content="How good are language models at writing regular expressions you could
 actually ship? regexbench scored across {len(summary)} models on Re(gEx|DoS)Eval."
     />
-    <link rel="canonical" href="https://foothills-labs.com/benchmarks/" />
+    <link rel="canonical" href="https://plicara.com/benchmarks/" />
     <!-- Blueprint's ground, --fh-print. Kept in step with tokens.css by hand;
          the previous value here (#2e3a42) was a leftover from a palette two
          repaints ago and tinted the mobile browser chrome off-brand. -->
@@ -106,14 +106,14 @@ actually ship? regexbench scored across {len(summary)} models on Re(gEx|DoS)Eval
       <div class="wrap">
         <a class="brand" href="/">
           <span class="brand-mark" aria-hidden="true"></span>
-          Foothills Labs
+          Plicara Labs
         </a>
         <nav class="site-nav" aria-label="Primary">
           <a href="/#mission">Mission</a>
           <a href="/#models">Models</a>
           <a href="/#tools">Tools</a>
           <a href="/#principles">Principles</a>
-          <a href="https://github.com/foothills-labs">GitHub</a>
+          <a href="https://github.com/plicara">GitHub</a>
         </nav>
       </div>
     </header>
@@ -162,23 +162,23 @@ actually ship? regexbench scored across {len(summary)} models on Re(gEx|DoS)Eval
         disabled so every model faces the same conditions. Scored with
         <code>regexbench</code> 0.4.0. Run {html.escape(run_date)}. Every raw
         response is committed, and the scores recompute from them offline &mdash;
-        <a href="https://github.com/foothills-labs/regexeval-2026">see the
+        <a href="https://github.com/plicara/regexeval-2026">see the
         repository</a> for the method, the limitations, and a re-run command.
       </p>
 
       <div class="cta-row">
-        <a class="btn btn-primary" href="https://github.com/foothills-labs/regexeval-2026">Results and method</a>
-        <a class="btn btn-ghost" href="https://github.com/foothills-labs/regexbench">regexbench</a>
+        <a class="btn btn-primary" href="https://github.com/plicara/regexeval-2026">Results and method</a>
+        <a class="btn btn-ghost" href="https://github.com/plicara/regexbench">regexbench</a>
         <a class="btn btn-ghost" href="/">&larr; Back to the lab</a>
       </div>
     </main>
 
     <footer class="site-footer">
       <div class="wrap">
-        <span>&copy; Foothills Labs</span>
+        <span>&copy; Plicara Labs</span>
         <div class="footer-links">
-          <a href="mailto:info@foothills-labs.com">info@foothills-labs.com</a>
-          <a href="https://github.com/foothills-labs">GitHub</a>
+          <a href="mailto:info@plicara.com">info@plicara.com</a>
+          <a href="https://github.com/plicara">GitHub</a>
           <a href="/">Home</a>
         </div>
       </div>
