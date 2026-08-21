@@ -114,7 +114,7 @@
       }
     ],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.14058956916099774,
       "dfa-eq@3 (decided)": 0.17079889807162535,
@@ -162,7 +162,7 @@
       "regexeval/2588",
       "regexeval/4043"
     ],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -291,7 +291,7 @@
     "dataset": "Re(gEx|DoS)Eval",
     "failure_detail": [],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.13777777777777778,
       "dfa-eq@3 (decided)": 0.17415730337078653,
@@ -332,7 +332,7 @@
     "tasks_scored": 450,
     "tasks_short_of_k": 0,
     "tasks_short_of_k_detail": [],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -431,7 +431,7 @@
       }
     ],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.0935412026726058,
       "dfa-eq@3 (decided)": 0.13291139240506328,
@@ -474,7 +474,7 @@
     "tasks_short_of_k_detail": [
       "regexeval/41"
     ],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -728,7 +728,7 @@
       }
     ],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.11574074074074074,
       "dfa-eq@3 (decided)": 0.1524390243902439,
@@ -782,7 +782,7 @@
       "regexeval/742",
       "regexeval/977"
     ],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -863,7 +863,7 @@
     "dataset": "Re(gEx|DoS)Eval",
     "failure_detail": [],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.11333333333333333,
       "dfa-eq@3 (decided)": 0.14285714285714285,
@@ -907,7 +907,7 @@
     "tasks_scored": 450,
     "tasks_short_of_k": 0,
     "tasks_short_of_k_detail": [],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -1026,7 +1026,7 @@
     "dataset": "Re(gEx|DoS)Eval",
     "failure_detail": [],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.11555555555555555,
       "dfa-eq@3 (decided)": 0.14814814814814814,
@@ -1067,7 +1067,7 @@
     "tasks_scored": 450,
     "tasks_short_of_k": 0,
     "tasks_short_of_k_detail": [],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -1148,7 +1148,7 @@
     "dataset": "Re(gEx|DoS)Eval",
     "failure_detail": [],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.10444444444444445,
       "dfa-eq@3 (decided)": 0.12912087912087913,
@@ -1192,7 +1192,7 @@
     "tasks_scored": 450,
     "tasks_short_of_k": 0,
     "tasks_short_of_k_detail": [],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/12": [
         {
@@ -1323,7 +1323,7 @@
     "dataset": "Re(gEx|DoS)Eval",
     "failure_detail": [],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.10222222222222223,
       "dfa-eq@3 (decided)": 0.13142857142857142,
@@ -1364,7 +1364,7 @@
     "tasks_scored": 450,
     "tasks_short_of_k": 0,
     "tasks_short_of_k_detail": [],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -1461,7 +1461,7 @@
       }
     ],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.09131403118040089,
       "dfa-eq@3 (decided)": 0.12166172106824925,
@@ -1504,7 +1504,7 @@
     "tasks_short_of_k_detail": [
       "regexeval/323"
     ],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -1589,7 +1589,7 @@
     "dataset": "Re(gEx|DoS)Eval",
     "failure_detail": [],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.10444444444444445,
       "dfa-eq@3 (decided)": 0.13314447592067988,
@@ -1630,7 +1630,7 @@
     "tasks_scored": 450,
     "tasks_short_of_k": 0,
     "tasks_short_of_k_detail": [],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {
@@ -1711,7 +1711,7 @@
     "dataset": "Re(gEx|DoS)Eval",
     "failure_detail": [],
     "k": 3,
-    "max_tokens": 200,
+    "max_tokens": 400,
     "metrics": {
       "dfa-eq@3": 0.09333333333333334,
       "dfa-eq@3 (decided)": 0.11830985915492957,
@@ -1752,7 +1752,7 @@
     "tasks_scored": 450,
     "tasks_short_of_k": 0,
     "tasks_short_of_k_detail": [],
-    "temperature": 0.0,
+    "temperature": null,
     "wrapped_detail": {
       "regexeval/1587": [
         {

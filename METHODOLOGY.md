@@ -273,8 +273,8 @@ committing them.
    model correctness.
 2. **Coverage is not perfectly uniform.** Nine models cover all 450 tasks;
    `kimi-k3` covers 447 because the budget ran out mid-collection, and
-   `claude-opus-5` covers 444 because of content-filter refusals and one
-   truncated response. Under 2%,
+   `claude-opus-5` covers 444 because of content-filter refusals and one task
+   whose every reply was a bare code fence. Under 2%,
    and it moves no ranking, but the denominators differ.
 3. **450 of 762 tasks**, chosen by budget rather than by principle. The
    sample is spread evenly, but it is a sample.

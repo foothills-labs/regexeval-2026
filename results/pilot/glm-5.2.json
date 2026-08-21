@@ -32,7 +32,7 @@
   "dataset": "Re(gEx|DoS)Eval",
   "failure_detail": [],
   "k": 3,
-  "max_tokens": 200,
+  "max_tokens": 400,
   "metrics": {
     "dfa-eq@3": 0.16666666666666666,
     "dfa-eq@3 (decided)": 0.2222222222222222,
@@ -73,7 +73,7 @@
   "table": "glm-5.2\n12 tasks, 12 answered\n  pass@3               33.3%\n  dfa-eq@3             16.7%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)   22.2%  (engine limits excluded \u2014 model only)\n  exact@3               8.3%\n  usable@3             16.7%\n  vulnerable@3          0.0%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
   "tasks_answered": 36,
   "tasks_attempted": 36,
-  "temperature": 0.0,
+  "temperature": null,
   "wrapped_detail": {},
   "wrapped_responses": 0
 }

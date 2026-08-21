@@ -1486,7 +1486,8 @@ reduces to any-of-3.
 \paragraph{Coverage asymmetry.} Nine models cover all 450 tasks.
 \texttt{kimi-k3} covers 447, having exhausted our budget mid-run, and
 \texttt{claude-opus-5} covers 444, losing five tasks to content-filter
-refusals and one to truncation (\cref{app:failures}). Tasks that came back
+refusals and one to replies that were nothing but a code fence
+(\cref{app:failures}). Tasks that came back
 with fewer than $k$ samples are excluded from that model's @$k$ estimate
 rather than scored on what arrived (\cref{sec:metrics}), so the denominators
 in \cref{tab:main} are 432--450.
@@ -1625,22 +1626,25 @@ excluded.
 Model & Cause & Count \\
 \midrule
 \texttt{claude-opus-5} & content-filter refusal & 29 \\
-\texttt{claude-opus-5} & truncated: open fence, no pattern & 7 \\
+\texttt{claude-opus-5} & code fence, no pattern inside & 7 \\
 \texttt{kimi-k3} & account spending limit reached mid-run & 11 \\
 \texttt{kimi-k3} & response without resolved provider & 3 \\
-\texttt{kimi-k3} & truncated: open fence, no pattern & 2 \\
+\texttt{kimi-k3} & code fence, no pattern inside & 2 \\
 \texttt{gpt-5.6-sol} & response without resolved provider & 1 \\
-\texttt{gpt-5.6-luna} & truncated: open fence, no pattern & 1 \\
+\texttt{gpt-5.6-luna} & code fence, no pattern inside & 1 \\
 \midrule
 & \textit{total} & \textit{54} \\
 \bottomrule
 \end{tabular}
 \caption{Request failures by cause. Responses lacking a resolved provider are
 discarded rather than scored, as provenance is a precondition for
-reproducibility. The truncation rows are responses the API returned as
-successful: the model emitted an opening code fence and hit the 200-token cap
-before writing a pattern, so extraction yields the empty string. An earlier
-draft of this table omitted them and accounted for only 44 of the 54.}
+reproducibility. The code-fence rows are responses the API returned as
+successful, from which extraction yields the empty string: nine emitted a
+fence with nothing inside it beyond an optional language tag, and one wrote a
+pattern followed by an unmatched closing fence, which leaves the last fenced
+block empty. All ten are short replies of 2--18 completion tokens; none is a
+truncation against the 400-token cap. An earlier draft of this table omitted
+them and accounted for only 44 of the 54.}
 \end{table}
 
 Empty completions are classified by reported \texttt{finish\_reason} into
@@ -1714,8 +1718,10 @@ succeeded when resent unchanged. Five retry rounds recovered 98, with the
 per-round yield collapsing (51, 31, 9, 2, 5), which shows a stochastic
 component over a hard core the filter rejects every time. That leaves 84
 prompts the filter rejected on every attempt. A further 25 responses came back
-successful but truncated, an opening fence with no pattern, which is the same
-failure mode as \cref{app:failures}'s and is not the filter's doing. Together
+successful but yielded no pattern, and are not the filter's doing: 24 are a
+bare code fence of one or two tokens, the same failure mode as
+\cref{app:failures}'s, and one is a genuine truncation, having spent the whole
+400-token budget inside a \texttt{<thinking>} block. Together
 $84 + 25 = 109$, and final coverage was $622 - 109 = 513$.
 
 The retry effort was not uniform across models, because nothing else needed

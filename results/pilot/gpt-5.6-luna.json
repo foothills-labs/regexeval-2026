@@ -32,7 +32,7 @@
   "dataset": "Re(gEx|DoS)Eval",
   "failure_detail": [],
   "k": 3,
-  "max_tokens": 200,
+  "max_tokens": 400,
   "metrics": {
     "dfa-eq@3": 0.0,
     "dfa-eq@3 (decided)": 0.0,
@@ -70,7 +70,7 @@
   "table": "gpt-5.6-luna\n12 tasks, 12 answered\n  pass@3               16.7%\n  dfa-eq@3              0.0%  (whole corpus \u2014 a lower bound)\n  dfa-eq@3 (decided)    0.0%  (engine limits excluded \u2014 model only)\n  exact@3               0.0%\n  usable@3              0.0%\n  vulnerable@3          8.3%  (lower is better)\n  3 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
   "tasks_answered": 36,
   "tasks_attempted": 36,
-  "temperature": 0.0,
+  "temperature": null,
   "wrapped_detail": {},
   "wrapped_responses": 0
 }
