@@ -1,6 +1,6 @@
 # Correct and safe are separate properties in generated regular expressions
 
-*Eleven models, two benchmarks, and three results. Foothills Labs · 2026-08-14*
+*Eleven models, two benchmarks, and three results. Plicara Labs · 2026-08-14*
 
 > Eleven current language models wrote 450 regular expressions each, three
 > times over, scored three ways: whether the pattern passes its tests,
