@@ -1,5 +1,10 @@
 # Handoff — regex leaderboard
 
+> **Historical document.** Written when the lab traded as Foothills Labs;
+> the org is now `plicara` and the lab is Plicara Labs (renamed 2026-08-20,
+> before anything citable shipped). Foothills-era naming rules below are
+> obsolete. Kept as the record of the handoff, not as guidance.
+
 Context for an agent starting a **new repository** in the `foothills-labs`
 GitHub org. Written 2026-08-02. No prior context assumed.
 
@@ -43,7 +48,7 @@ fine-tune, then anything above it — needs these baselines to beat.
 ## 2. `regexbench` — the dependency
 
 `pip install regexbench` (v0.2.0). MIT-adjacent: **Apache-2.0**. Source:
-`github.com/foothills-labs/regexbench`. Read its README and CHANGELOG first.
+`github.com/plicara/regexbench`. Read its README and CHANGELOG first.
 
 ### What it measures
 

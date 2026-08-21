@@ -46,7 +46,7 @@ from GitHub at commit `412eaa95a3f512b5a7bd3d8de2ae70c003d6a206`
 must be pinned and recorded** until a PyPI release exists — `pip install
 regexbench==0.4.0` will silently resolve to nothing or a future differently
 -pinned commit; use `pip install
-"git+https://github.com/foothills-labs/regexbench.git@412eaa95a3f512b5a7bd3d8de2ae70c003d6a206"`
+"git+https://github.com/plicara/regexbench.git@412eaa95a3f512b5a7bd3d8de2ae70c003d6a206"`
 verbatim in the runner's setup and in METHODOLOGY.md.
 
 What changed, verified against the live package:
@@ -152,7 +152,7 @@ once real Phase 1 numbers replace this estimate.
 
 | Handoff claim | Result |
 | --- | --- |
-| `regexbench` on PyPI, Apache-2.0, source at `github.com/foothills-labs/regexbench` | ✅ Installs; `License-Expression: Apache-2.0`; homepage matches |
+| `regexbench` on PyPI, Apache-2.0, source at `github.com/plicara/regexbench` | ✅ Installs; `License-Expression: Apache-2.0`; homepage matches |
 | API: `from regexbench import run`; `datasets.load_regexeval / load_deep_regex / load_tasks` | ✅ All import on 0.3.0; `run(tasks, predictions, *, name, timeout, workers, progress)` |
 | CLI: `regexbench run` with `--use-reference --workers --limit --k --json` + predictions file | ✅ All flags present. Predictions are a **JSON mapping** task-name → pattern (or list of patterns), or an aligned JSON array — not JSONL |
 | Metrics: `pass@k`, `dfa-eq@k`, `exact@k`, `vulnerable@k`, `usable@k`, `dfa-eq@k (decided)`; unbiased Chen et al. pass@k | ✅ All appear in real output; README states the unbiased estimator |
