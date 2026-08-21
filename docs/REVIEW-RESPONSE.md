@@ -180,12 +180,12 @@ All ten confirmed. Two came out differently than described.
 
 | # | Resolution |
 | --- | --- |
-| Failure taxonomy 54 vs 44 | The missing 10 are responses the API returned as successful that hit the 200-token cap after an opening code fence, yielding no pattern: 7 opus, 2 kimi, 1 luna. A fifth row, and the table now totals. |
+| Failure taxonomy 54 vs 44 | The missing 10 are responses the API returned as successful from which extraction yields no pattern: 7 opus, 2 kimi, 1 luna. Nine are a code fence with nothing inside it; one is a pattern followed by an unmatched closing fence. All are 2–18 completion tokens, so none is a truncation against the 400-token cap. A fifth row, and the table now totals. |
 | opus coverage | **444** is right; 445 was wrong in four places. |
 | `vuln.\|correct` column | Per-sample while the rest of the row is @3, exactly as you inferred. Labelled in the caption. |
 | 7.4% denominator | See above. |
 | Population sizes | Two different denominators. NL-RX-Synth: 10,000 rows → 9,648 distinct → 5,840 screened. KB13: 824 → 732 → 532. The 3,948 and 212 were DSL counts over raw rows. |
-| StructuredRegex coverage | 182 blocked − 98 recovered = 84 hard refusals, **plus 25 truncated responses** (same mode as the taxonomy above). 84 + 25 = 109 = 622 − 513. |
+| StructuredRegex coverage | 182 blocked − 98 recovered = 84 hard refusals, **plus 25 responses that yielded no pattern** — 24 a bare code fence, the same mode as the taxonomy above, and one a genuine 400-token truncation inside a `<thinking>` block. 84 + 25 = 109 = 622 − 513. |
 | Table 9 caption | Cost per *request*; the column header was wrong too. |
 | §3.2 "100%" | 761 of 762. The exception does not mismatch — it **times out** at the scorer's one-second limit on a negative example, and the safety screen independently flags it exponential. The one reference that fails its own tests fails because it is ReDoS-vulnerable. It is now a paragraph. |
 | Table 2 caption | States the restricted denominator. |

@@ -685,7 +685,8 @@ a row without provenance isn't reproducible.
 
 **Coverage is therefore not perfectly uniform.** Nine models cover all 450
 tasks. `kimi-k3` covers 447 — the budget ran out during its collection.
-`claude-opus-5` covers 444, from the refusals and one truncation. The gap is under 2% and
+`claude-opus-5` covers 444, from the refusals and one task where every reply
+was a bare code fence. The gap is under 2% and
 moves no conclusion, but the denominators genuinely differ and we'd rather
 say so.
 

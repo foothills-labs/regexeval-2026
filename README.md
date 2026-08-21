@@ -244,8 +244,8 @@ than score, because a row without provenance is not reproducible.
 
 - **Coverage is not perfectly uniform.** Nine models cover all 450 tasks.
   `kimi-k3` covers 447 — the budget ran out mid-collection. `claude-opus-5`
-  covers 444, from content-filter refusals and one truncation. Under 2%, no ranking
-  changes, but the denominators differ.
+  covers 444, from content-filter refusals and one task where every reply was
+  a bare code fence. Under 2%, no ranking changes, but the denominators differ.
 - **The reference answers contain errors** (see above), so `dfa-eq`
   understates model correctness by an unmeasured amount.
 - **"Not vulnerable" is a screening result, not a proof** — no known-bad
