@@ -5,7 +5,7 @@
 > before anything citable shipped). Foothills-era naming rules below are
 > obsolete. Kept as the record of the handoff, not as guidance.
 
-Context for an agent starting a **new repository** in the `foothills-labs`
+Context for an agent starting a **new repository** in the `plicara`
 GitHub org. Written 2026-08-02. No prior context assumed.
 
 **Working name:** `regexbench-results` (or `regex-leaderboard` — see §9).

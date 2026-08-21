@@ -533,7 +533,7 @@ compute from those files and nothing else, so reproduction costs nothing and
 needs no API key:
 
 ```bash
-git clone https://github.com/foothills-labs/regexeval-2026
+git clone https://github.com/plicara/regexeval-2026
 cd regexeval-2026
 make setup
 make score RUN=sweep
@@ -664,13 +664,13 @@ every adjudicated case, is in [`paper/main.tex`][paper] in the repository.
 [dror]: https://aclanthology.org/P18-1128/
 [sainz]: https://aclanthology.org/2023.findings-emnlp.722/
 [codex]: https://arxiv.org/abs/2107.03374
-[paper]: https://github.com/foothills-labs/regexeval-2026/blob/main/paper/main.tex
+[paper]: https://github.com/plicara/regexeval-2026/blob/main/paper/main.tex
 [sr]: https://aclanthology.org/2020.acl-main.541/
 [linguafranca]: https://github.com/VTLeeLab/LinguaFranca-FSE19
-[crosscorpus]: https://github.com/foothills-labs/regexeval-2026/blob/main/results/cross_corpus_redos.json
+[crosscorpus]: https://github.com/plicara/regexeval-2026/blob/main/results/cross_corpus_redos.json
 [kb13]: https://aclanthology.org/N13-1103/
 [nlrx]: https://aclanthology.org/D16-1197/
 [koehn]: https://aclanthology.org/W04-3250/
-[regexbench]: https://github.com/foothills-labs/regexbench
+[regexbench]: https://github.com/plicara/regexbench
 [brics]: https://www.brics.dk/automaton/
 [pinning]: https://www.lesswrong.com/posts/KsyoSAyBRXtwzSugg/
