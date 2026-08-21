@@ -7,3 +7,6 @@ paper/*.blg
 paper/*.log
 paper/*.out
 logs/
+
+.DS_Store
+._*
