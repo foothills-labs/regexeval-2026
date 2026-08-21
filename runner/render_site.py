@@ -1,4 +1,4 @@
-"""Generate the /benchmarks/ page for plicara.com from results.
+"""Generate the /benchmarks/ page for plicara.ai from results.
 
 DO NOT PUBLISH THIS PAGE AS IT STANDS. It emits a table ordered one to eleven
 by usable@3, and the study declines to publish a ranking -- see ARTICLE.md,
@@ -7,7 +7,7 @@ to eleven is not." 62% of tasks give every model the identical result, and
 only 167 of 450 separate them at all. The scores it reads are also inflated
 by the pass_at_k short-task defect in REVISION-PLAN.md part 2 item 5.
 
-This ran once, to plicara.com, and was reverted the same day. Fix the
+This ran once, to plicara.ai, and was reverted the same day. Fix the
 presentation (bands, not a list) and the upstream metric before it runs
 again.
 
@@ -73,7 +73,7 @@ def render(summary: list[dict], run_date: str, k: int, task_count: int) -> str:
       content="How good are language models at writing regular expressions you could
 actually ship? regexbench scored across {len(summary)} models on Re(gEx|DoS)Eval."
     />
-    <link rel="canonical" href="https://plicara.com/benchmarks/" />
+    <link rel="canonical" href="https://plicara.ai/benchmarks/" />
     <!-- Blueprint's ground, --fh-print. Kept in step with tokens.css by hand;
          the previous value here (#2e3a42) was a leftover from a palette two
          repaints ago and tinted the mobile browser chrome off-brand. -->
@@ -177,7 +177,7 @@ actually ship? regexbench scored across {len(summary)} models on Re(gEx|DoS)Eval
       <div class="wrap">
         <span>&copy; Plicara Labs</span>
         <div class="footer-links">
-          <a href="mailto:info@plicara.com">info@plicara.com</a>
+          <a href="mailto:info@plicara.ai">info@plicara.ai</a>
           <a href="https://github.com/plicara">GitHub</a>
           <a href="/">Home</a>
         </div>
