@@ -48,9 +48,29 @@ RUN_DATES = {
     "sweep": "2026-08-12",
 }
 
-# Sampling, recorded with every result.
+# What runner/run_preview.py sends. Only that runner reads them. The sweep's
+# sampling lives in runner/models.json, and what a result file reports as
+# having been sent is read back off the responses themselves -- see
+# `sampling_of` in runner/score.py. These were once the source for both, and
+# that is exactly how every file in results/ came to claim max_tokens 200
+# while the published sweep was collected at 400.
 TEMPERATURE = 0.0
 MAX_TOKENS = 200
+
+# Sampling for the two runs whose predictions predate the per-row config
+# fingerprint (`config_fingerprint` in runner/sweep.py). A closed list, not a
+# default: everything collected since records its own settings on every row,
+# and neither of these runs will be collected again. Values are literals on
+# purpose -- pointing them at the constants above would reintroduce the drift
+# they exist to document.
+LEGACY_SAMPLING = {
+    # Collected by runner/sweep.py at the runner/models.json defaults, in the
+    # roster revision that had already dropped temperature. Corroborated by
+    # the run's longest completion, 290 tokens, which a 200 cap cannot produce.
+    "pilot": {"max_tokens": 400, "temperature": None},
+    # Collected by runner/run_preview.py, which sent the two constants above.
+    "preview": {"max_tokens": 200, "temperature": 0.0},
+}
 
 
 def require_dataset() -> Path:

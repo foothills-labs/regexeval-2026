@@ -32,7 +32,7 @@
   "dataset": "Re(gEx|DoS)Eval",
   "failure_detail": [],
   "k": 3,
-  "max_tokens": 200,
+  "max_tokens": 400,
   "metrics": {
     "dfa-eq@3": 0.09333333333333334,
     "dfa-eq@3 (decided)": 0.11830985915492957,
@@ -73,7 +73,7 @@
   "tasks_scored": 450,
   "tasks_short_of_k": 0,
   "tasks_short_of_k_detail": [],
-  "temperature": 0.0,
+  "temperature": null,
   "wrapped_detail": {
     "regexeval/1587": [
       {

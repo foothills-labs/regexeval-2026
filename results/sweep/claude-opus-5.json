@@ -213,7 +213,7 @@
     }
   ],
   "k": 3,
-  "max_tokens": 200,
+  "max_tokens": 400,
   "metrics": {
     "dfa-eq@3": 0.11574074074074074,
     "dfa-eq@3 (decided)": 0.1524390243902439,
@@ -267,7 +267,7 @@
     "regexeval/742",
     "regexeval/977"
   ],
-  "temperature": 0.0,
+  "temperature": null,
   "wrapped_detail": {
     "regexeval/1587": [
       {

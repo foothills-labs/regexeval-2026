@@ -80,6 +80,52 @@ def rebuild_summary(run_name: str) -> list[dict]:
     return entries
 
 
+def sampling_of(rows: list[dict], run_name: str) -> dict:
+    """What these responses were actually produced under.
+
+    Read back off the rows, never from a constant in this repo. A constant
+    describes whatever it says today, not what was sent: this header used to
+    copy config.MAX_TOKENS / config.TEMPERATURE, so every file in results/
+    reported `max_tokens: 200, temperature: 0.0` -- including the published
+    sweep, which was collected at 400 with temperature not sent at all. A
+    reanalysis that reads the header instead of predictions/ then gets the
+    run config wrong.
+
+    runner/sweep.py stamps the settings of each request onto its row as a
+    `config` fingerprint, and refuses to resume a file holding rows from a
+    different one, so one file means one configuration. The two runs
+    collected before the fingerprint existed are named in
+    config.LEGACY_SAMPLING; anything else without one is an error rather
+    than a guess.
+    """
+    seen = {}
+    for r in rows:
+        raw = r.get("config")
+        # sweep.py writes a JSON object; sweep_structuredregex.py writes a
+        # hash of one, which cannot be read back and is not scored here.
+        if not (isinstance(raw, str) and raw.startswith("{")):
+            continue
+        fp = json.loads(raw)
+        got = {"max_tokens": fp.get("max_tokens"), "temperature": fp.get("temperature")}
+        seen[json.dumps(got, sort_keys=True)] = got
+    if len(seen) > 1:
+        raise SystemExit(
+            f"{run_name}: predictions hold rows from {len(seen)} configurations "
+            f"({', '.join(sorted(seen))}). One result file cannot describe both."
+        )
+    if seen:
+        return next(iter(seen.values()))
+    legacy = config.LEGACY_SAMPLING.get(run_name)
+    if legacy is None:
+        raise SystemExit(
+            f"{run_name}: rows carry no config fingerprint, so what was sent "
+            f"cannot be recovered from them, and there is no entry in "
+            f"config.LEGACY_SAMPLING. Recollect with runner/sweep.py, which "
+            f"records it, rather than publishing an unverified value."
+        )
+    return dict(legacy)
+
+
 def headline(e, metric):
     m = e.get("metrics") or {}
     return next((v for kk, v in m.items() if kk.startswith(metric + "@")), None)
@@ -101,6 +147,7 @@ def score_run(run_name: str, only: set[str] | None = None) -> list[dict]:
         if only and label not in only:
             continue
         rows = [json.loads(x) for x in pred_file.read_text().splitlines() if x.strip()]
+        sampling = sampling_of(rows, run_name)
         controls = [r for r in rows if r["task_name"].startswith("control/")]
         task_rows = [r for r in rows if not r["task_name"].startswith("control/")]
 
@@ -186,8 +233,8 @@ def score_run(run_name: str, only: set[str] | None = None) -> list[dict]:
             "python_version": sys.version.split()[0],
             "dataset": "Re(gEx|DoS)Eval",
             "k": k_actual,
-            "temperature": config.TEMPERATURE,
-            "max_tokens": config.MAX_TOKENS,
+            "temperature": sampling["temperature"],
+            "max_tokens": sampling["max_tokens"],
             "tasks_attempted": len(task_rows),
             "tasks_answered": len(answered),
             "tasks_scored": len(tasks),

@@ -14,6 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import config  # noqa: E402
 from openrouter_client import call, extract_pattern  # noqa: E402
+from sweep import config_fingerprint  # noqa: E402
 
 from regexbench.datasets import load_regexeval  # noqa: E402
 
@@ -77,8 +78,14 @@ def main():
     selected = [tasks[i] for i in TASK_INDICES]
     PREVIEW_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Stamped on every row so a result file can report what was sent by
+    # reading it back, rather than by copying a constant that may since have
+    # moved. See `sampling_of` in runner/score.py.
+    d = {"temperature": config.TEMPERATURE, "max_tokens": config.MAX_TOKENS}
+
     for m in MODELS:
         out_path = PREVIEW_DIR / f"{m['label']}.jsonl"
+        fp = config_fingerprint(m, d, None)
         rows = []
         print(f"=== {m['label']} ===", flush=True)
 
@@ -93,6 +100,7 @@ def main():
                 {
                     "task_name": cname,
                     "base_task": ctask.name,
+                    "config": fp,
                     "prompt_sent": None,
                     "model_requested": m["slug"],
                     "provider_requested": m["provider"],
@@ -120,6 +128,7 @@ def main():
             pattern = extract_pattern(res.content) if res.ok else None
             row = {
                 "task_name": task.name,
+                "config": fp,
                 "prompt_sent": prompt,
                 "model_requested": res.model_requested,
                 "provider_requested": res.provider_requested,

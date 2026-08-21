@@ -32,7 +32,7 @@
   "dataset": "Re(gEx|DoS)Eval",
   "failure_detail": [],
   "k": 1,
-  "max_tokens": 200,
+  "max_tokens": 4000,
   "metrics": {
     "dfa-eq@1": 0.08333333333333333,
     "dfa-eq@1 (decided)": 0.125,
@@ -70,7 +70,7 @@
   "table": "qwen3.6-max-preview\n12 tasks, 12 answered\n  pass@1               16.7%\n  dfa-eq@1              8.3%  (whole corpus \u2014 a lower bound)\n  dfa-eq@1 (decided)   12.5%  (engine limits excluded \u2014 model only)\n  exact@1               0.0%\n  usable@1              8.3%\n  vulnerable@1          0.0%  (lower is better)\n  4 task(s) undecidable \u2014 counted against dfa-eq, excluded from dfa-eq (decided)",
   "tasks_answered": 12,
   "tasks_attempted": 12,
-  "temperature": 0.0,
+  "temperature": null,
   "wrapped_detail": {},
   "wrapped_responses": 0
 }
