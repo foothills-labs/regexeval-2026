@@ -236,16 +236,32 @@ Measured: about 105 prompt and 36 completion tokens per task.
 
 | Component | Pin |
 | --- | --- |
-| Scorer | `regexbench` 0.4.0, commit `05d7547b1a71e6dd5cb00d71bf4dac7732be3ecd` |
+| Scorer | `regexbench` 0.4.1, commit `ff25e6a5ef463141ae95d512cd43a214e4e7b111` |
 | Python | 3.11 |
 | Corpus | `RegexEval.json` from `s2e-lab/RegexEval@master` |
 | Models | full slug, e.g. `openai/gpt-4o-mini` |
 | Sampling | `k=3`, max_tokens 400, `reasoning:{enabled:false}`, temperature not sent |
 | Provider | pinned per model in `runner/models.json`, `allow_fallbacks:false` |
 
-`regexbench` 0.4.0 is **not on PyPI** — `pip install regexbench==0.4.0`
-does not resolve to it. The pin is a git commit for that reason, and it
-matters: 0.4.0 changed how some patterns are scored relative to 0.3.0.
+`regexbench` 0.4.1 is on PyPI, and `make setup` installs it from there. The
+commit is pinned alongside the release because the release is what a
+replicator installs and the commit is what these numbers were produced by,
+and only one of those is immutable.
+
+Two notes on the pin's history, so an external citation of either still
+resolves. `regexbench`'s history was rewritten on 2026-08-19 to correct an
+author email; trees are byte-identical and only commit identities changed, so
+the 0.4.0 pin recorded in earlier versions of this file, `05d7547b`, is the
+same tree as `412eaa95`. And 0.4.1 supersedes 0.4.0 for a reason that matters
+here: `pass_at_k` credited a full pass to any task with fewer than `k`
+samples, which inflated the two models that had lost the most samples. Every
+run in `results/` was recomputed against 0.4.1. The sweep, the preview and
+the thinking slice did not move, because `score.py` had already been fixed to
+exclude short tasks; the estimator now refuses them as well, so the guard
+exists on both sides. The pilot did move — it was scored before that fix and
+never rescored, so it had been carrying the inflated numbers. It is not cited
+anywhere in this write-up, but it was wrong in the repository and is now
+right.
 
 ### Can I check your numbers without trusting you?
 
@@ -282,7 +298,7 @@ committing them.
    may partly measure memorisation. A private task set to size that gap is
    not yet built — the difference between public and private scores would
    itself be the finding.
-5. **No `crosscheck()` pass.** `regexbench` 0.4.0 can verify its equivalence
+5. **No `crosscheck()` pass.** `regexbench` 0.4.1 can verify its equivalence
    engine string-by-string against Python's own `re`. Running it on the
    controls would be an independent check on the scorer and has not been
    done.

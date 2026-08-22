@@ -483,14 +483,29 @@ bootstrap-resampling protocol for machine translation, and using it instead
 of unpaired intervals is [standard advice][dror]. What we can report is how
 much it changes here, which is ninefold.
 
-Even corrected, the best model separates from seven of the other ten and the
+Even corrected, the best model separates from six of the other ten and the
 middle of the table does not separate at all. There is a structural reason.
 **62% of the tasks give every single model the identical result**, either
 right across the board or wrong across the board. Only 167 of the 450 tasks
 do any work telling these models apart.
 
 Bands are defensible. A numbered list from one to eleven is not, and anyone
-who re-ran this and got a different order would be right to.
+who re-ran this and got a different order would be right to. So here are the
+bands, which are all we will publish:
+
+- **Ahead of at least one model, behind none.** `claude-opus-5`, `kimi-k3`,
+  `qwen3.6-max-preview`.
+- **No comparison resolves either way.** `deepseek-v4-flash-0731`,
+  `gpt-5.6-sol`.
+- **Behind at least one model, ahead of none.** `claude-sonnet-5`,
+  `gemini-3.1-flash-lite`, `glm-5.2`, `gpt-5.6-luna`, `gpt-5.6-terra`,
+  `qwen3.6-plus`.
+
+Read those as statements about each model, not as three rungs. The bands are
+not ordered against each other either: `claude-opus-5` is in the first and
+`glm-5.2` in the last, and those two are not distinguishable. Only `kimi-k3`
+separates from more than two others. Every pairwise interval is in
+`results/sweep/paired_intervals.json`.
 
 We are not claiming any of these percentages travel. We used to say the
 model numbers rested on one corpus and leave it there. Now we have run two,
