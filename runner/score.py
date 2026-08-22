@@ -80,6 +80,51 @@ def rebuild_summary(run_name: str) -> list[dict]:
     return entries
 
 
+def check_summary_matches_models(run_name: str) -> list[str]:
+    """Committed summary.json against the committed per-model files.
+
+    summary.json is derived from those files and must agree with them field
+    for field. It has silently stopped agreeing twice, both times through a
+    merge rather than a run: `regexbench_commit` was repointed after an
+    upstream history rewrite, and two later branches carried the pre-rewrite
+    value back into the summary while all eleven per-model files kept the new
+    one. Nothing caught it, because --check compares `metrics` and the drift
+    was in provenance.
+
+    This compares what is on disk before anything is rescored, so it reports
+    the state of the repository rather than the state of this process.
+    """
+    result_dir = config.RESULTS_DIR / run_name
+    summary_path = result_dir / "summary.json"
+    if not summary_path.exists():
+        return []
+    summary = {e["model"]: e for e in json.loads(summary_path.read_text())}
+    problems, seen = [], set()
+    # Selected by content, not by name: this directory also holds analysis
+    # outputs, and an exclusion list by filename breaks the next time one is
+    # added -- which is how it broke before.
+    for f in sorted(result_dir.glob("*.json")):
+        if f.name == "summary.json":
+            continue
+        blob = json.loads(f.read_text())
+        if not (isinstance(blob, dict) and "metrics" in blob and "model" in blob):
+            continue
+        seen.add(blob["model"])
+        entry = summary.get(blob["model"])
+        if entry is None:
+            problems.append(f"{blob['model']}: in {f.name}, absent from summary.json")
+            continue
+        for key in sorted(set(blob) | set(entry)):
+            if blob.get(key) != entry.get(key):
+                problems.append(
+                    f"{blob['model']}.{key}: {f.name} says {blob.get(key)!r}, "
+                    f"summary.json says {entry.get(key)!r}"
+                )
+    for m in sorted(set(summary) - seen):
+        problems.append(f"{m}: in summary.json, no per-model file")
+    return problems
+
+
 def sampling_of(rows: list[dict], run_name: str) -> dict:
     """What these responses were actually produced under.
 
@@ -323,6 +368,9 @@ def main():
 
     committed_path = config.RESULTS_DIR / args.run / "summary.json"
     committed = json.loads(committed_path.read_text()) if committed_path.exists() else None
+    # Read before score_run rewrites anything, so this reports the repository
+    # rather than this process.
+    stale = check_summary_matches_models(args.run)
 
     only = {m.strip() for m in args.models.split(",")} if args.models else None
     summary = score_run(args.run, only)
@@ -336,6 +384,14 @@ def main():
     if args.check:
         if committed is None:
             raise SystemExit(f"--check: nothing committed at {committed_path}")
+        if stale:
+            print("\nFAIL: committed summary.json disagrees with the committed "
+                  "per-model files it is derived from:")
+            for problem in stale:
+                print(f"  {problem}")
+            print("  fix with:  python3 runner/score.py --run "
+                  f"{args.run} --merge")
+            raise SystemExit(1)
         drift = []
         old = {e["model"]: e.get("metrics") for e in committed}
         for e in summary:
