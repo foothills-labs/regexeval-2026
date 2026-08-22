@@ -3,7 +3,7 @@
 
 PY ?= python3
 RUN ?= preview
-REGEXBENCH_PIN = regexbench==0.4.0
+REGEXBENCH_PIN = regexbench==0.4.1
 
 DEEP_REGEX_URL = https://github.com/nicholaslocascio/deep-regex.git
 DEEP_REGEX_COMMIT = 096490db7f4b0394fbb46b914cb35a0aa1cba29c

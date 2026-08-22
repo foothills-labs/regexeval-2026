@@ -38,6 +38,10 @@ unchanged from the original.
 > `regexbench==0.4.0` rather than the commit. Verified by re-scoring the
 > committed predictions against the PyPI build: every metric is
 > byte-identical. The commit is still recorded in every result file.
+>
+> **Superseded again 2026-08-22.** 0.4.1 replaces 0.4.0: `pass_at_k` credited
+> a full pass to any task with fewer than `k` samples. The pin is now
+> `regexbench==0.4.1`, commit `ff25e6a5`. Re-scored; no metric moved.
 > The reasoning below was correct when written and is kept as written.
 
 Not yet published to PyPI (still shows 0.3.0 as latest there) — installed
